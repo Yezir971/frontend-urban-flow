@@ -4,5 +4,21 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxt/test-utils/module',
+    '@nuxt/ui'
   ],
+  css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    public: {
+      urlPhoton: "empty URL_PHOTON",
+      urlBaseOtp: "empty urlBaseOtp",
+      urlOtp: "empty urlOtp",
+    }
+  },
+  nitro: {
+    routeRules: {
+      '/otp-api/**': {
+        proxy: `http://localhost:8080/**`
+      }
+    }
+  }
 })

@@ -1,5 +1,4 @@
 
-const OTP_URL = import.meta.env.NUXT_URL_OTP
 
 export interface Location {
     lon: number,
@@ -10,31 +9,32 @@ export type ItineraryMode = 'TRANSIT' | 'WALK' | 'BICYCLE' | 'CAR';
 
 
 export async function planTrip(from : Location, to : Location, modes: ItineraryMode[]) {
-    const query = `
-    {
-      plan(
-        from: { lat: ${from.lat}, lon: ${from.lon} }
-        to: { lat: ${to.lat}, lon: ${to.lon} }
-        numItineraries: 3
-        transportModes: [${modes.map(m => `{mode: ${m}}`).join(', ')}]
-      ) {
-        itineraries {
+  const transportModesString = modes.map(m => `{mode: ${m}}`).join(', ')
+  const query = `
+  {
+    plan(
+      from: { lat: ${from.lat}, lon: ${from.lon} }
+      to: { lat: ${to.lat}, lon: ${to.lon} }
+      numItineraries: 3
+      transportModes: [${transportModesString}]
+    ) {
+      itineraries {
+        duration
+        legs {
+          mode
           duration
-          legs {
-            mode
-            distance
-            startTime
-            endTime
-            from { name lat lon }
-            to { name lat lon }
-            route {
-              shortName
-              longName
-            }
+          distance
+          from { name lat lon }
+          to { name lat lon }
+          legGeometry { points }
+          route {
+            shortName
+            longName
           }
         }
       }
     }
+  }
   ` 
   const config = useRuntimeConfig()
 
@@ -45,6 +45,5 @@ export async function planTrip(from : Location, to : Location, modes: ItineraryM
   })
 
   const data = await res.json()
-  console.log(data)
   return data
 }

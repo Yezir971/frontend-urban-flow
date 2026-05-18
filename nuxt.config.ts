@@ -4,7 +4,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxt/test-utils/module',
-    '@nuxt/ui'
+    '@nuxt/ui',
+    '@nuxtjs/leaflet'
   ],
   css: ['~/assets/css/main.css'],
   runtimeConfig: {

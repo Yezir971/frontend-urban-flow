@@ -5,7 +5,8 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/test-utils/module',
     '@nuxt/ui',
-    '@nuxtjs/leaflet'
+    '@nuxtjs/leaflet',
+    '@balalarast/vue-bottom-sheet/nuxt'
   ],
   css: ['~/assets/css/main.css'],
   runtimeConfig: {

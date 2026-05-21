@@ -1,36 +1,7 @@
-
-interface ResponsePhotonFeatures {
-    type: string, 
-    properties: ResponsePhotonProperties,
-    geometry: ResponsePhotonGeometry
-}
-interface ResponsePhotonProperties{
-    osm_type: string,
-    osm_id: number, 
-    osm_key: string, 
-    osm_value: string, 
-    type: string,
-    name: string,
-    district: string,
-    city: string,
-    county: string,
-    state: string,
-    country: string,
-    postcode: string,
-    countrycode: string
-}
-interface ResponsePhotonGeometry {
-    type: string,
-    coordinates: number[]
-}
-interface ResponsePhoton {
-    type: string,
-    features: ResponsePhotonFeatures[]
-}
-
-
+import type { ResponsePhoton } from "~/types/photon" 
 export async function geoloc(position: string): Promise<number[]>{
     if (!position) return [0,0]
+    console.log(position)
     const config = useRuntimeConfig()
     try {
         let response = await fetch(`${config.public.urlPhoton}&q=${encodeURIComponent(position)}`)

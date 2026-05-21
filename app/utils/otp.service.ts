@@ -1,12 +1,4 @@
-
-
-export interface Location {
-    lon: number,
-    lat: number
-}
-
-export type ItineraryMode = 'TRANSIT' | 'WALK' | 'BICYCLE' | 'CAR';
-
+import type { ItineraryMode, Location } from "~/types/otp"
 
 export async function planTrip(from : Location, to : Location, modes: ItineraryMode[]) {
   const transportModesString = modes.map(m => `{mode: ${m}}`).join(', ')

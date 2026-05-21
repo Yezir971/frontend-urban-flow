@@ -1,34 +1,34 @@
 <script setup lang="ts">
+import type { ResponseTrip } from '~/types/plan';
+const sheetRef = ref<{ open: () => void } | null>(null)
 
 
-interface ResponsePlan {
-    itineraries: Array<{
-        duration: number;
-        legs: Array<{
-            mode: string;
-            distance: number;
-            startTime: number;
-            endTime: number;
-            from: {
-                name: string;
-            };
-            to: {
-                name: string;
-            };
-            legGeometry: {
-                points: string
-            };
-            route: any; 
-        }>;
-    }>;
+function openSheet() {
+  sheetRef.value?.open()
+}
+import { ref } from 'vue'
+
+export interface LocationData {
+    name: string;
+    lat: number;
+    lon: number;
+    otpValue: [number, number];
+}
+
+const startCoordinates = ref([0,0])
+const endCoordinates = ref([0,0])
+
+const setStartLocation = (locationDataStart: LocationData) => {
+  console.log("Prêt pour OTP :", locationDataStart.otpValue)
+  startCoordinates.value = locationDataStart.otpValue
+}
+
+const setEndLocation = (locationDataEnd: LocationData) => {
+  console.log("Prêt pour OTP :", locationDataEnd.otpValue)
+  endCoordinates.value = locationDataEnd.otpValue
 }
 
 
-interface ResponseTrip {
-    data : {
-        plan: ResponsePlan;
-    }
-}
 
 const props = defineProps({
     start: String, 
@@ -37,18 +37,12 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:start', 'update:end', 'update:planning'])
 
-const localStart = ref(props.start)
-const localEnd = ref(props.end)
+// const localStart = ref(props.start)
+// const localEnd = ref(props.end)
 const planning = ref(props.planning)
 
 const onSearch = async () => {
-    emit('update:start', localStart.value);
-    emit('update:end', localEnd.value);
-    let [cordStartx, cordStarty] = await geoloc(localStart?.value ?? "")
-    let [cordEndx, cordEndy] = await geoloc(localEnd?.value ?? "")
-    console.log("cordStartx : " + cordStartx + " cordStarty : " + cordStarty)
-    console.log("cordEndx : " + cordEndx + " cordEndy : " + cordEndy)
-    let result : ResponseTrip = await planTrip({lon : cordStartx! , lat : cordStarty!}, {lon : cordEndx!, lat : cordEndy!}, ["WALK"])
+    let result : ResponseTrip = await planTrip({lon : startCoordinates.value?.[0]! , lat : startCoordinates.value?.[1]!}, {lon : endCoordinates.value?.[0]!, lat : endCoordinates.value?.[1]!}, ["WALK"])
 
     planning.value = result;
     emit('update:planning', result);
@@ -59,13 +53,25 @@ const onSearch = async () => {
 </script>
 <template>
     <main>
-        <form @submit.prevent="onSearch" action="" class="mx-auto flex flex-col w-1/3 gap-4 bg-black rounded-lg p-4">
-            <div class="flex flex-col gap-3">
-                <input class="bg-surface-container-low p-2" type="text" v-model="localStart" placeholder="Localisation">
-                <input class="bg-surface-container-low p-2" type="text" v-model="localEnd" placeholder="Destination">
-            </div>
-            <button type="submit" class="bg-primary text-on-primary rounded-lg p-2">Rechercher</button>
-        </form>
+        <button @click="openSheet">Open Bottom Sheet</button>
+
+        <BottomSheet :hideScrollbar="true" :darkMode="true" ref="sheetRef" :overlay="false" :canSwipeClose="false">
+            <template #header>
+                <h3>Bottom Sheet Header</h3>
+            </template>
+            <template #default>
+                <form @submit.prevent="onSearch" action="" class="mx-auto flex flex-col gap-4 bg-black rounded-lg p-4">
+                    <div class="flex flex-col gap-3">
+                        <PhotonAutocomplete @location-selected="setStartLocation" placeholder="Localisation" />
+                        <PhotonAutocomplete @location-selected="setEndLocation" placeholder="Destination" />
+                    </div>
+                    <button type="submit" class="bg-primary text-on-primary rounded-lg p-2">Rechercher</button>
+                </form>
+            </template>
+        </BottomSheet>  
+
+
+
         <p class="text-red">temps en s : {{ planning?.data?.plan?.itineraries?.[0]?.duration }}</p>
         <p class="text-red">distance en m : {{ planning?.data?.plan?.itineraries?.[0]?.legs?.[0]?.distance }}</p>
         <ClientOnly>

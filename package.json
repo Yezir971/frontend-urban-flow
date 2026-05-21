@@ -12,6 +12,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@balalarast/vue-bottom-sheet": "^0.4.1",
     "@mapbox/polyline": "^1.2.1",
     "@nuxt/ui": "^4.7.1",
     "@nuxtjs/leaflet": "^1.3.2",

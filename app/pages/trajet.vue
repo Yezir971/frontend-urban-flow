@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { ResponseTrip } from '~/types/plan';
+import { ref } from 'vue'
+import { useGeoStore } from '~/stores/geo';
+
 const sheetRef = ref<{ open: () => void } | null>(null)
-
-
+const geo = useGeoStore()
 function openSheet() {
   sheetRef.value?.open()
 }
-import { ref } from 'vue'
 
 export interface LocationData {
     name: string;
@@ -62,7 +63,7 @@ const onSearch = async () => {
             <template #default>
                 <form @submit.prevent="onSearch" action="" class="mx-auto flex flex-col gap-4 bg-black rounded-lg p-4">
                     <div class="flex flex-col gap-3">
-                        <PhotonAutocomplete @location-selected="setStartLocation" placeholder="Localisation" />
+                        <PhotonAutocomplete  :activateCurrentPosition=true @location-selected="setStartLocation" placeholder="Localisation" />
                         <PhotonAutocomplete @location-selected="setEndLocation" placeholder="Destination" />
                     </div>
                     <button type="submit" class="bg-primary text-on-primary rounded-lg p-2">Rechercher</button>
@@ -78,6 +79,11 @@ const onSearch = async () => {
             <MapLeafet v-if="planning" :otpData="planning" />
         </ClientOnly>
     </main>
+
+    <p>Latitude : {{ geo.lat }}</p>
+    <p>Longitude : {{ geo.lng }}</p>
+    <p v-if="!geo.isTracking">Tracking inactif</p>
+    <USwitch v-model="geo.isTracking" :label="geo.isTracking ? 'Tracking actif' : 'Tracking inactif'" />
 
 </template>
 

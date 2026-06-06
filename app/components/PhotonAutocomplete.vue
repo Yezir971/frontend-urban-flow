@@ -14,10 +14,27 @@ const emit = defineEmits(['location-selected'])
 defineProps({
   placeholder: {
     type: String,
-    default: 'Rechercher une adresse...'
+    default: 'Rechercher une adresse...',
+  },
+  activateCurrentPosition: {
+    type: Boolean,
+    default: false
   }
 })
 
+let defaultPostion : ResponseFeaturePhoton = {    
+    properties: {
+      name: "Ma position actuelle",
+      street: "",
+      postcode: "",
+      city: "",
+      country: "",
+      osm_id: 0,
+    },
+    geometry: {
+        coordinates: [0, 0],
+    }
+}
 
 // Formater le texte secondaire pour qu'il soit lisible
 const formatDetails = (properties: ResponseFeaturePhoton['properties']) => {
@@ -29,7 +46,7 @@ const formatDetails = (properties: ResponseFeaturePhoton['properties']) => {
 }
 
 const onSearch = () => {
-    const config = useRuntimeConfig()
+  const config = useRuntimeConfig()
   clearTimeout(timeout as ReturnType<typeof setTimeout>)
 
   timeout = setTimeout(async () => {
@@ -47,7 +64,7 @@ const onSearch = () => {
           lang: 'fr'
         }
       })
-      console.log('Réponse Photon:', response)
+      console.log('Réponse Photon:', response.features)
 
       results.value = response.features || []
     } catch (error) {
@@ -58,7 +75,19 @@ const onSearch = () => {
 
 
 
-const selectLocation = (feature: ResponseFeaturePhoton) => {
+const selectLocation = (feature: ResponseFeaturePhoton, isCurrentPosition: boolean = true) => {
+  if (isCurrentPosition) {
+    const geo = useGeoStore()
+    console.log("Position actuelle sélectionnée :", geo.lat, geo.lng)
+     // On prépare l'objet parfait pour OpenTripPlanner
+     const locationData : LocationDataPhoton = {
+      name: feature.properties.name || 'Ma position actuelle',
+      lat: geo?.lat,
+      lon: geo?.lng,
+      otpValue: [geo?.lng, geo?.lat]
+    }
+    emit('location-selected', locationData)
+  }
   // On met à jour l'input avec le nom formaté
   query.value = feature.properties.name || feature.properties.street || ''
   results.value = [] // On ferme le menu déroulant
@@ -77,6 +106,7 @@ const selectLocation = (feature: ResponseFeaturePhoton) => {
   // On envoie les données au composant parent
   emit('location-selected', locationData)
 }
+
 </script>
 
 <template>
@@ -87,14 +117,22 @@ const selectLocation = (feature: ResponseFeaturePhoton) => {
       @input="onSearch"
       type="text"
       :placeholder=placeholder
-      class="bg-surface-container-low p-2"
+      class="bg-surface-container-low p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary"
     />
 
     <!-- Liste des suggestions -->
     <ul
       v-if="results.length > 0"
-      class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg"
+      class="absolute z-10 w-full mt-1 bg-green-300 border border-gray-300 rounded shadow-lg"
     >
+    <!-- Position actuelle -->
+    <li
+      v-if="activateCurrentPosition"
+      @click="selectLocation(defaultPostion, true)"
+      class="p-2 cursor-pointer hover:bg-gray-100 flex flex-col"
+    >
+        <span class="font-bold">{{ defaultPostion.properties.name }}</span>
+      </li>
       <li
         v-for="result in results"
         :key="result.properties.osm_id"

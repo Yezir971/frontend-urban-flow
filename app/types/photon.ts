@@ -1,8 +1,8 @@
 export interface LocationDataPhoton {
     name: string;
-    lat: number;
-    lon: number;
-    otpValue: [number, number];
+    lat: number | null;
+    lon: number | null;
+    otpValue: [number | null, number | null];
 }
 
 export interface ResponseFeaturePhoton {

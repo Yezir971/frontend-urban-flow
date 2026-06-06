@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module',
     '@nuxt/ui',
     '@nuxtjs/leaflet',
-    '@balalarast/vue-bottom-sheet/nuxt'
+    '@balalarast/vue-bottom-sheet/nuxt',
+    '@pinia/nuxt'
   ],
   css: ['~/assets/css/main.css'],
   runtimeConfig: {

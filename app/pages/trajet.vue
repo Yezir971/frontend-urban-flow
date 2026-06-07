@@ -2,6 +2,7 @@
 import type { ResponseTrip } from '~/types/plan';
 import { ref } from 'vue'
 import { useGeoStore } from '~/stores/geo';
+import Button from '~/components/ui/button.vue';
 
 const sheetRef = ref<{ open: () => void } | null>(null)
 const geo = useGeoStore()
@@ -56,18 +57,18 @@ const onSearch = async () => {
     <main>
         <button @click="openSheet">Open Bottom Sheet</button>
 
-        <BottomSheet :hideScrollbar="true" sheetClass="" ref="sheetRef" :overlay="false" :canSwipeClose="false">
+        <BottomSheet :hideScrollbar="true" ref="sheetRef" :overlay="false" :canSwipeClose="false">
             <template #header>
                 <h1 class="text-headline-md text-on-surface">Où allez vous ?</h1>
                 <p class="text-body-md text-on-surface">Planifiez votre trajet éco-responsable.</p>
             </template>
             <template #default>
-                <form @submit.prevent="onSearch" action="" class="mx-auto flex flex-col gap-4 bg-surface-container-low rounded-lg p-4">
-                    <div class="flex flex-col gap-3">
+                <form @submit.prevent="onSearch" action="" class="mx-auto flex flex-col gap-4 ">
+                    <div class="flex flex-col gap-3 bg-surface-container-low rounded-lg p-4">
                         <PhotonAutocomplete :activateCurrentPosition=true @location-selected="setStartLocation" placeholder="Localisation" />
                         <PhotonAutocomplete @location-selected="setEndLocation" placeholder="Destination" />
                     </div>
-                    <button type="submit" class="bg-primary text-on-primary rounded-lg p-2">Rechercher</button>
+                    <Button type="submit" text="Rechecher" />  
                 </form>
             </template>
         </BottomSheet>  

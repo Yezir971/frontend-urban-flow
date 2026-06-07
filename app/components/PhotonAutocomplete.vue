@@ -22,6 +22,7 @@ defineProps({
   }
 })
 
+
 let defaultPostion : ResponseFeaturePhoton = {    
     properties: {
       name: "Ma position actuelle",
@@ -75,29 +76,35 @@ const onSearch = () => {
 
 
 
-const selectLocation = (feature: ResponseFeaturePhoton, isCurrentPosition: boolean = true) => {
+const selectLocation = async (feature: ResponseFeaturePhoton, isCurrentPosition: boolean = false) => {
+  let lat: number | null = feature.geometry.coordinates[1]
+  let lon: number | null = feature.geometry.coordinates[0]
+  let name = feature.properties.name || feature.properties.street || ''
+
   if (isCurrentPosition) {
+    query.value = "Récupération de votre position..."
     const geo = useGeoStore()
-    console.log("Position actuelle sélectionnée :", geo.lat, geo.lng)
-     // On prépare l'objet parfait pour OpenTripPlanner
-     const locationData : LocationDataPhoton = {
-      name: feature.properties.name || 'Ma position actuelle',
-      lat: geo?.lat,
-      lon: geo?.lng,
-      otpValue: [geo?.lng, geo?.lat]
+    try {
+      geo.startTracking()
+      lat = geo.lat
+      lon = geo.lng
+      name = "Ma position actuelle"
+      
+    } catch (error) {
+      console.error("Erreur de géolocalisation:", error)
+      query.value = ""
+      alert("Impossible de récupérer votre position. Vérifiez vos autorisations.")
+      return
     }
-    emit('location-selected', locationData)
   }
+
   // On met à jour l'input avec le nom formaté
-  query.value = feature.properties.name || feature.properties.street || ''
+  query.value = name
   results.value = [] // On ferme le menu déroulant
   
-  const [lon, lat] = feature.geometry.coordinates
-
-
   // On prépare l'objet parfait pour OpenTripPlanner
   const locationData : LocationDataPhoton = {
-    name: query.value,
+    name: name,
     lat: lat,
     lon: lon,
     otpValue: [lon, lat]

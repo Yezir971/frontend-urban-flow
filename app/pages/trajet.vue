@@ -56,14 +56,15 @@ const onSearch = async () => {
     <main>
         <button @click="openSheet">Open Bottom Sheet</button>
 
-        <BottomSheet :hideScrollbar="true" :darkMode="true" ref="sheetRef" :overlay="false" :canSwipeClose="false">
+        <BottomSheet :hideScrollbar="true" sheetClass="" ref="sheetRef" :overlay="false" :canSwipeClose="false">
             <template #header>
-                <h3>Bottom Sheet Header</h3>
+                <h1 class="text-headline-md text-on-surface">Où allez vous ?</h1>
+                <p class="text-body-md text-on-surface">Planifiez votre trajet éco-responsable.</p>
             </template>
             <template #default>
-                <form @submit.prevent="onSearch" action="" class="mx-auto flex flex-col gap-4 bg-black rounded-lg p-4">
+                <form @submit.prevent="onSearch" action="" class="mx-auto flex flex-col gap-4 bg-surface-container-low rounded-lg p-4">
                     <div class="flex flex-col gap-3">
-                        <PhotonAutocomplete  :activateCurrentPosition=true @location-selected="setStartLocation" placeholder="Localisation" />
+                        <PhotonAutocomplete :activateCurrentPosition=true @location-selected="setStartLocation" placeholder="Localisation" />
                         <PhotonAutocomplete @location-selected="setEndLocation" placeholder="Destination" />
                     </div>
                     <button type="submit" class="bg-primary text-on-primary rounded-lg p-2">Rechercher</button>

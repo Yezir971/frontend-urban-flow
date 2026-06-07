@@ -7,8 +7,14 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxtjs/leaflet',
     '@balalarast/vue-bottom-sheet/nuxt',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxt/fonts'
   ],
+  fonts: {
+    families: [
+      { name: 'Inter', provider: 'google' }
+    ]
+  },
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {

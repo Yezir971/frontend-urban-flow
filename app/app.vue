@@ -3,9 +3,9 @@ const geo = useGeoStore()
 
 </script>
 
-<template>
-  <div>
-    <UApp>
+<template >
+  <div class="bg-surface h-screen " >
+    <UApp >
       <NuxtPage :lat="geo.lat" :lng="geo.lng"  />
     </UApp>
   </div>

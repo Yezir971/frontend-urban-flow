@@ -117,7 +117,7 @@ const selectLocation = async (feature: ResponseFeaturePhoton, isCurrentPosition:
 </script>
 
 <template>
-  <div class="relative w-full max-w-md">
+  <div class="relative w-full ">
     <!-- Champ de recherche -->
     <input
       v-model="query"

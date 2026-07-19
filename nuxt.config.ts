@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     '@nuxtjs/leaflet',
     '@balalarast/vue-bottom-sheet/nuxt',
     '@pinia/nuxt',
-    '@nuxt/fonts'
+    '@nuxt/fonts',
+    '@vite-pwa/nuxt'
   ],
   fonts: {
     families: [
@@ -28,6 +29,62 @@ export default defineNuxtConfig({
       '/otp-api/**': {
         proxy: `http://localhost:8080/**`
       }
+    }
+  },
+  pwa: {
+    registerType: 'autoUpdate', // Met à jour l'app automatiquement en arrière-plan
+    strategies: 'generateSW',
+    // includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'], // Fichiers à mettre en cache globalement
+
+    devOptions: {
+      enabled: true,
+      type: 'module',
+    },
+    
+    manifest: {
+      name: 'Urban Flow',
+      short_name: 'UrbanFlow',
+      description: 'Application de mobilité urbaine sur Lyon',
+      theme_color: '#95D4B3',
+      background_color: '#F8FAF9',
+      display: 'standalone',
+      start_url: '/', // Point d'entrée de l'application
+      
+      screenshots: [
+        {
+          src: '/img/pwa/screen-desktop.png', 
+          sizes: '1280x720',
+          type: 'image/png',
+          form_factor: 'wide',
+          label: 'Application Desktop'
+        },
+        {
+          src: '/img/pwa/screen-mobile.png', 
+          sizes: '750x1334',
+          type: 'image/png',
+          form_factor: 'narrow',
+          label: 'Application Mobile'
+        }
+      ],
+      
+      icons: [
+        {
+          src: '/img/pwa/icons/pwa-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: '/img/pwa/icons/pwa-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'any maskable'
+        }
+      ]
+    },
+    
+    workbox: {
+      navigateFallback: '/',
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
     }
   }
 })

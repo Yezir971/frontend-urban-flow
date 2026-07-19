@@ -5,6 +5,7 @@ const geo = useGeoStore()
 
 
 <template>
+  <VitePwaManifest />
   <div class="bg-surface h-screen">
     <UApp>
       <NuxtLayout>

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'auth',
+});
 import type { ResponseTrip } from '~/types/plan';
 import { ref } from 'vue'
 import { useGeoStore } from '~/stores/geo';

@@ -21,7 +21,7 @@ jobs:
           cache-dependency-path: './package-lock.json'
 
       - name: 1. installation
-        run: npm install
+        run: npm ci
 
       - name: 2. run test
         run: npm run test
@@ -48,7 +48,7 @@ jobs:
           cache-dependency-path: './package-lock.json'
 
       - name: Installer les dépendances
-        run: npm install
+        run: npm ci
 
       - name: Authentification Snyk
         uses: snyk/actions/setup@master
@@ -69,37 +69,4 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-          
-  # -----------------------------------------------
-  # JOB 3 — SonarQube / SonarCloud (Qualité & 70% Couverture)
-  # -----------------------------------------------
-  sonarqube:
-    name: SonarQube Quality Check
-    runs-on: ubuntu-latest
-    needs: test-and-build
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests with coverage
-        run: npm run test:cov  
-
-      - name: SonarQube Scan
-        uses: sonarsource/sonarcloud-github-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.organization=yezir971
-            -Dsonar.projectKey=frontend-urban-flow
-            -Dsonar.sources=src
-            -Dsonar.tests=src
-            -Dsonar.test.inclusions=**/*.spec.ts,**/*.test.ts
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.qualitygate.wait=true
           

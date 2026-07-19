@@ -21,7 +21,7 @@ jobs:
           cache-dependency-path: './package-lock.json'
 
       - name: 1. installation
-        run: npm ci
+        run: npm install
 
       - name: 2. run test
         run: npm run test
@@ -48,7 +48,7 @@ jobs:
           cache-dependency-path: './package-lock.json'
 
       - name: Installer les dépendances
-        run: npm ci
+        run: npm install
 
       - name: Authentification Snyk
         uses: snyk/actions/setup@master

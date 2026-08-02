@@ -19,7 +19,7 @@
         type="submit"
         class="w-full bg-[#104e35] hover:bg-[#0c3a28] text-white font-semibold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#104e35]/10 active:scale-[0.98] transition-all cursor-pointer"
       >
-        <Play class="w-4 h-4 fill-current shrink-0" />
+        <Clock class="w-4 h-4" />
         <span>Partir maintenant</span>
       </button>
     </form>
@@ -79,7 +79,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import {
-  Play,
+  Clock,
   Train,
   Bus,
   Bike,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import type { ResponseTrip } from '~/types/plan'
 import type { LocationData } from '~/components/SearchPanel.vue'
 import { useGeoStore } from '~/stores/geo'
@@ -58,13 +58,32 @@ const onSearch = async (searchData?: { mode: string }) => {
   }
 }
 
+const isMobile = ref(false)
+
+const handleResize = () => {
+  const currentIsMobile = window.innerWidth < 768
+  if (currentIsMobile !== isMobile.value) {
+    isMobile.value = currentIsMobile
+    if (isMobile.value) {
+      sheetRef.value?.open()
+    } else {
+      sheetRef.value?.close()
+    }
+  }
+}
+
 onMounted(() => {
-  // Ouvre automatiquement le bottom-sheet sur mobile
-  if (window.innerWidth < 768) {
+  isMobile.value = window.innerWidth < 768
+  if (isMobile.value) {
     setTimeout(() => {
       sheetRef.value?.open()
     }, 300)
   }
+  window.addEventListener('resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 

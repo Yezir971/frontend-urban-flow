@@ -1,5 +1,5 @@
 <template>
-  <div class="relative bg-[#F3F5F4] rounded-2xl p-4 flex flex-col gap-3">
+  <div class="relative rounded-2xl p-4 flex flex-col gap-3">
     <!-- Input de départ -->
     <div class="flex items-center gap-3 bg-white rounded-xl px-3 py-2.5 border border-gray-100/50 shadow-sm focus-within:ring-2 focus-within:ring-[#104e35]/30 focus-within:border-[#104e35]/80 transition-all duration-200">
       <Navigation class="w-5 h-5 text-[#104e35] shrink-0 animate-pulse" />

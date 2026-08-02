@@ -17,7 +17,7 @@ defineProps({
 </script>
 
 <template>
-    <button @type="type" class="bg-primary-500 text-on-primary p-4 font-semibold rounded-lg w-full" @click="callback()">
+    <button :type="type" class="bg-primary-500 text-on-primary p-4 font-semibold rounded-lg w-full" @click="callback()">
         {{ text }}
     </button>
 

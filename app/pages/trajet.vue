@@ -1,95 +1,172 @@
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import type { ResponseTrip } from '~/types/plan'
+import type { LocationData } from '~/components/SearchPanel.vue'
+import { useGeoStore } from '~/stores/geo'
+import SearchPanel from '~/components/SearchPanel.vue'
+import MapLeafet from '~/components/mapLeafet.vue'
+
 definePageMeta({
   middleware: 'auth',
-});
-import type { ResponseTrip } from '~/types/plan';
-import { ref } from 'vue'
-import { useGeoStore } from '~/stores/geo';
-import Button from '~/components/ui/button.vue';
+  layout: 'map'
+})
 
-const sheetRef = ref<{ open: () => void } | null>(null)
+const sheetRef = ref<any>(null)
 const geo = useGeoStore()
-function openSheet() {
-  sheetRef.value?.open()
-}
 
-export interface LocationData {
-    name: string;
-    lat: number;
-    lon: number;
-    otpValue: [number, number];
-}
-
-const startCoordinates = ref([0,0])
-const endCoordinates = ref([0,0])
+const startCoordinates = ref<[number, number]>([0, 0])
+const endCoordinates = ref<[number, number]>([0, 0])
+const planning = ref<ResponseTrip | null>(null)
 
 const setStartLocation = (locationDataStart: LocationData) => {
-  console.log("Prêt pour OTP :", locationDataStart.otpValue)
+  console.log("Start location selected:", locationDataStart.otpValue)
   startCoordinates.value = locationDataStart.otpValue
 }
 
 const setEndLocation = (locationDataEnd: LocationData) => {
-  console.log("Prêt pour OTP :", locationDataEnd.otpValue)
+  console.log("End location selected:", locationDataEnd.otpValue)
   endCoordinates.value = locationDataEnd.otpValue
 }
 
+const onSearch = async (searchData?: { mode: string }) => {
+  let modes: string[] = ['WALK']
 
+  if (searchData?.mode === 'Trains & RER') {
+    modes = ['TRANSIT', 'WALK']
+  } else if (searchData?.mode === 'Bus') {
+    modes = ['TRANSIT', 'WALK']
+  } else if (searchData?.mode === 'Vélos') {
+    modes = ['BICYCLE']
+  }
 
-const props = defineProps({
-    start: String, 
-    end: String,
-    planning: Object as () => ResponseTrip | null
-})
-const emit = defineEmits(['update:start', 'update:end', 'update:planning'])
+  if (startCoordinates.value[0] !== 0 && endCoordinates.value[0] !== 0) {
+    try {
+      console.log('Requesting route via OTP service...')
+      const result: ResponseTrip = await planTrip(
+        { lon: startCoordinates.value[0], lat: startCoordinates.value[1] },
+        { lon: endCoordinates.value[0], lat: endCoordinates.value[1] },
+        modes as any
+      )
 
-// const localStart = ref(props.start)
-// const localEnd = ref(props.end)
-const planning = ref(props.planning)
-
-const onSearch = async () => {
-    let result : ResponseTrip = await planTrip({lon : startCoordinates.value?.[0]! , lat : startCoordinates.value?.[1]!}, {lon : endCoordinates.value?.[0]!, lat : endCoordinates.value?.[1]!}, ["WALK"])
-
-    planning.value = result;
-    emit('update:planning', result);
-    return planning
+      planning.value = result
+      console.log('Result from OTP:', result)
+    } catch (error) {
+      console.error('Error planning trip:', error)
+    }
+  } else {
+    alert("Veuillez sélectionner un point de départ et une destination.")
+  }
 }
 
+const isMobile = ref(false)
 
+const handleResize = () => {
+  const currentIsMobile = window.innerWidth < 768
+  if (currentIsMobile !== isMobile.value) {
+    isMobile.value = currentIsMobile
+    if (isMobile.value) {
+      sheetRef.value?.open()
+    } else {
+      sheetRef.value?.close()
+    }
+  }
+}
+
+onMounted(() => {
+  isMobile.value = window.innerWidth < 768
+  if (isMobile.value) {
+    setTimeout(() => {
+      sheetRef.value?.open()
+    }, 300)
+  }
+  window.addEventListener('resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+})
 </script>
+
 <template>
-    <main>
-        <button @click="openSheet">Open Bottom Sheet</button>
+  <div class="flex flex-col md:flex-row h-full w-full relative overflow-hidden bg-[#F7F9F8]">
+    
+    <!-- Panneau de recherche Desktop (visible sur md+) -->
+    <div class="hidden md:flex flex-col w-95 h-full bg-white border-r border-gray-200 p-6 overflow-y-auto shrink-0 z-10 shadow-lg">
+      <SearchPanel
+        @search="onSearch"
+        @location-selected-start="setStartLocation"
+        @location-selected-end="setEndLocation"
+      />
 
-        <BottomSheet :hideScrollbar="true" ref="sheetRef" :overlay="false" :canSwipeClose="false">
-            <template #header>
-                <h1 class="text-headline-md text-on-surface">Où allez vous ?</h1>
-                <p class="text-body-md text-on-surface">Planifiez votre trajet éco-responsable.</p>
-            </template>
-            <template #default>
-                <form @submit.prevent="onSearch" action="" class="mx-auto flex flex-col gap-4 ">
-                    <div class="flex flex-col gap-3 bg-surface-container-low rounded-lg p-4">
-                        <PhotonAutocomplete :activateCurrentPosition=true @location-selected="setStartLocation" placeholder="Localisation" />
-                        <PhotonAutocomplete @location-selected="setEndLocation" placeholder="Destination" />
-                    </div>
-                    <Button type="submit" text="Rechecher" />  
-                </form>
-            </template>
-        </BottomSheet>  
+      <!-- Options additionnelles / Infos trajet si disponibles -->
+      <div v-if="planning?.data?.plan?.itineraries?.[0]" class="mt-6 p-4 bg-[#EAF5F1] rounded-2xl border border-[#c5eadd]">
+        <h3 class="font-semibold text-[#104e35] text-sm mb-2">Détails de l'itinéraire</h3>
+        <p class="text-sm text-gray-700">
+          Temps estimé : 
+          <span class="font-bold">
+            {{ Math.round(planning.data.plan.itineraries[0].duration / 60) }} min
+          </span>
+        </p>
+        <p class="text-sm text-gray-700 mt-1">
+          Distance totale : 
+          <span class="font-bold">
+            {{ Math.round(planning.data.plan.itineraries[0].legs.reduce((acc, leg) => acc + leg.distance, 0)) }} m
+          </span>
+        </p>
+      </div>
+    </div>
 
+    <!-- Conteneur de la carte (Prend tout l'espace restant) -->
+    <div class="grow h-full w-full relative z-0">
+      <ClientOnly>
+        <MapLeafet :otpData="planning ?? undefined" />
+        <template #fallback>
+          <div class="flex items-center justify-center h-full w-full bg-[#f3f5f4] text-gray-500">
+            Chargement de la carte...
+          </div>
+        </template>
+      </ClientOnly>
+    </div>
 
+    <!-- Popup / Bottom Sheet Mobile (visible sur mobile uniquement) -->
+    <div class="block md:hidden">
+      <BottomSheet
+        :hideScrollbar="true"
+        ref="sheetRef"
+        :overlay="false"
+        :canSwipeClose="false"
+        class="mobile-bottom-sheet"
+      >
+        <template #header>
+          <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-2"></div>
+        </template>
+        <template #default>
+          <div class="px-4 pb-12 pt-2 max-h-[70vh] overflow-y-auto">
+            <SearchPanel
+              @search="onSearch"
+              @location-selected-start="setStartLocation"
+              @location-selected-end="setEndLocation"
+            />
 
-        <p class="text-red">temps en s : {{ planning?.data?.plan?.itineraries?.[0]?.duration }}</p>
-        <p class="text-red">distance en m : {{ planning?.data?.plan?.itineraries?.[0]?.legs?.[0]?.distance }}</p>
-        <ClientOnly>
-            <MapLeafet v-if="planning" :otpData="planning" />
-        </ClientOnly>
-    </main>
+            <!-- Résumé d'itinéraire sur Mobile -->
+            <div v-if="planning?.data?.plan?.itineraries?.[0]" class="mt-4 p-4 bg-[#EAF5F1] rounded-2xl border border-[#c5eadd]">
+              <h3 class="font-semibold text-[#104e35] text-sm mb-1">Détails de l'itinéraire</h3>
+              <div class="flex justify-between text-sm text-gray-700">
+                <p>Temps : <span class="font-bold">{{ Math.round(planning.data.plan.itineraries[0].duration / 60) }} min</span></p>
+                <p>Distance : <span class="font-bold">{{ Math.round(planning.data.plan.itineraries[0].legs.reduce((acc, leg) => acc + leg.distance, 0)) }} m</span></p>
+              </div>
+            </div>
+          </div>
+        </template>
+      </BottomSheet>
+    </div>
 
-    <p>Latitude : {{ geo.lat }}</p>
-    <p>Longitude : {{ geo.lng }}</p>
-    <p v-if="!geo.isTracking">Tracking inactif</p>
-    <USwitch v-model="geo.isTracking" :label="geo.isTracking ? 'Tracking actif' : 'Tracking inactif'" />
-
+  </div>
 </template>
 
-
+<style scoped>
+/* Ajustement de la hauteur pour correspondre à l'écran sans scroller */
+.h-full {
+  height: 100%;
+}
+</style>

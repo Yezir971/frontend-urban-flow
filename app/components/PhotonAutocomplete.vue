@@ -1,15 +1,21 @@
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { LocationDataPhoton, ResponseFeaturePhoton } from '../types/photon'
 
-const query = ref('')
+const query = defineModel<string>({ default: '' })
 const results = ref<ResponseFeaturePhoton[]>([])
-let timeout : ReturnType<typeof setTimeout> | null = null
+let timeout: ReturnType<typeof setTimeout> | null = null
+
+const isFocused = ref(false)
+const handleBlur = () => {
+  // Un délai de 200ms permet de s'assurer que le clic sur un élément de la liste soit bien pris en compte
+  setTimeout(() => {
+    isFocused.value = false
+  }, 200)
+}
 
 // Permet au composant parent d'écouter l'événement quand un lieu est choisi
 const emit = defineEmits(['location-selected'])
-
 
 defineProps({
   placeholder: {
@@ -22,19 +28,18 @@ defineProps({
   }
 })
 
-
-let defaultPostion : ResponseFeaturePhoton = {    
-    properties: {
-      name: "Ma position actuelle",
-      street: "",
-      postcode: "",
-      city: "",
-      country: "",
-      osm_id: 0,
-    },
-    geometry: {
-        coordinates: [0, 0],
-    }
+let defaultPostion: ResponseFeaturePhoton = {    
+  properties: {
+    name: "Ma position actuelle",
+    street: "",
+    postcode: "",
+    city: "",
+    country: "",
+    osm_id: 0,
+  },
+  geometry: {
+    coordinates: [0, 0],
+  }
 }
 
 // Formater le texte secondaire pour qu'il soit lisible
@@ -57,8 +62,7 @@ const onSearch = () => {
     }
 
     try {
-      // Photon returns an object with a `features` array
-      const response = await $fetch<{ features: ResponseFeaturePhoton[]  }>(`${config.public.urlPhoton}`, {
+      const response = await $fetch<{ features: ResponseFeaturePhoton[] }>(`${config.public.urlPhoton}`, {
         query: {
           q: query.value,
           limit: 5,
@@ -66,15 +70,12 @@ const onSearch = () => {
         }
       })
       console.log('Réponse Photon:', response.features)
-
       results.value = response.features || []
     } catch (error) {
       console.error('Erreur Photon:', error)
     }
   }, 300)
 }
-
-
 
 const selectLocation = async (feature: ResponseFeaturePhoton, isCurrentPosition: boolean = false) => {
   let lat: number | null = feature.geometry.coordinates[1]
@@ -89,7 +90,6 @@ const selectLocation = async (feature: ResponseFeaturePhoton, isCurrentPosition:
       lat = geo.lat
       lon = geo.lng
       name = "Ma position actuelle"
-      
     } catch (error) {
       console.error("Erreur de géolocalisation:", error)
       query.value = ""
@@ -98,58 +98,58 @@ const selectLocation = async (feature: ResponseFeaturePhoton, isCurrentPosition:
     }
   }
 
-  // On met à jour l'input avec le nom formaté
   query.value = name
-  results.value = [] // On ferme le menu déroulant
+  results.value = [] // Ferme le menu déroulant
   
-  // On prépare l'objet parfait pour OpenTripPlanner
-  const locationData : LocationDataPhoton = {
+  const locationData: LocationDataPhoton = {
     name: name,
     lat: lat,
     lon: lon,
     otpValue: [lon, lat]
   }
 
-  // On envoie les données au composant parent
   emit('location-selected', locationData)
 }
-
 </script>
 
 <template>
-  <div class="relative w-full ">
-    <!-- Champ de recherche -->
+  <div class="relative w-full">
+    <!-- Champ de recherche transparent avec texte gris foncé/noir conforme à la version desktop -->
     <input
       v-model="query"
       @input="onSearch"
+      @focus="isFocused = true"
+      @blur="handleBlur"
       type="text"
-      :placeholder=placeholder
-      class="bg-surface-container-low p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-primary"
+      :placeholder="placeholder"
+      class="w-full bg-transparent py-1.5 text-sm text-gray-900 placeholder-gray-400 border-none outline-none focus:outline-none"
     />
 
-    <!-- Liste des suggestions -->
+    <!-- Liste des suggestions en blanc cassé -->
     <ul
-      v-if="results.length > 0"
-      class="absolute z-10 w-full mt-1 bg-green-300 border border-gray-300 rounded shadow-lg"
+      v-if="isFocused && (results.length > 0 || (activateCurrentPosition && query.length >= 3))"
+      class="absolute left-0 right-0 z-50 mt-2 bg-[#FAF9F6] border border-gray-200/80 rounded-2xl shadow-xl overflow-hidden py-1.5"
     >
-    <!-- Position actuelle -->
-    <li
-      v-if="activateCurrentPosition"
-      @click="selectLocation(defaultPostion, true)"
-      class="p-2 cursor-pointer hover:bg-gray-100 flex flex-col"
-    >
-        <span class="font-bold">{{ defaultPostion.properties.name }}</span>
+      <!-- Position actuelle -->
+      <li
+        v-if="activateCurrentPosition && query.length >= 3"
+        @click="selectLocation(defaultPostion, true)"
+        class="px-4 py-2.5 cursor-pointer hover:bg-[#F3F5F4] flex flex-col transition-all duration-150"
+      >
+        <span class="text-sm font-semibold text-gray-900">{{ defaultPostion.properties.name }}</span>
       </li>
+
+      <!-- Suggestions Photon -->
       <li
         v-for="result in results"
         :key="result.properties.osm_id"
         @click="selectLocation(result)"
-        class="p-2 cursor-pointer hover:bg-gray-100 flex flex-col"
+        class="px-4 py-2.5 cursor-pointer hover:bg-[#F3F5F4] flex flex-col transition-all duration-150 border-t border-gray-100/50 first:border-none"
       >
-        <!-- Nom principal (ex: Tour Eiffel ou Rue de Rivoli) -->
-        <span class="font-bold">{{ result.properties.name || result.properties.street }}</span>
-        <!-- Détails (ex: 75007 Paris, France) -->
-        <span class="text-sm text-gray-500">{{ formatDetails(result.properties) }}</span>
+        <!-- Nom principal -->
+        <span class="text-sm font-semibold text-gray-900">{{ result.properties.name || result.properties.street }}</span>
+        <!-- Détails (code postal, ville, pays) -->
+        <span class="text-xs text-gray-500 mt-0.5">{{ formatDetails(result.properties) }}</span>
       </li>
     </ul>
   </div>

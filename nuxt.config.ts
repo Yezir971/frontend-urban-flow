@@ -75,13 +75,7 @@ export default defineNuxtConfig({
       urlPhoton: "empty URL_PHOTON",
       urlBaseOtp: "empty urlBaseOtp",
       urlOtp: "empty urlOtp",
-    }
-  },
-  nitro: {
-    routeRules: {
-      '/otp-api/**': {
-        proxy: `http://localhost:8080/**`
-      }
+      urlBack: "empty urlGateway"
     }
   },
   pwa: {

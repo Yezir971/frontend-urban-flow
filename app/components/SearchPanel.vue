@@ -17,7 +17,8 @@
       <!-- Bouton d'action -->
       <button
         type="submit"
-        class="w-full bg-[#104e35] hover:bg-[#0c3a28] text-white font-semibold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#104e35]/10 active:scale-[0.98] transition-all cursor-pointer"
+        :disabled="!startLocation || !endLocation"
+        class="w-full bg-[#104e35] hover:bg-[#0c3a28] text-white font-semibold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#104e35]/10 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#104e35]"
       >
         <Clock class="w-4 h-4" />
         <span>Partir maintenant</span>
@@ -170,6 +171,14 @@ function selectFavorite(fav: typeof favorites[0]) {
 }
 
 function handleSearch() {
+  const startVal = startLocation.value ? { lat: startLocation.value.lat, lon: startLocation.value.lon, name: startLocation.value.name } : null
+  const endVal = endLocation.value ? { lat: endLocation.value.lat, lon: endLocation.value.lon, name: endLocation.value.name } : null
+
+  if (!validateRouteInputs(startVal, endVal)) {
+    alert("Veuillez renseigner un point de départ et une destination valides.")
+    return
+  }
+
   emit('search', {
     mode: selectedFilter.value
   })

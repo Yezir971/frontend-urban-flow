@@ -1,41 +1,36 @@
 import type { ItineraryMode, Location } from "~/types/otp"
+import { useSupabaseSession } from '#imports'
 
-export async function planTrip(from : Location, to : Location, modes: ItineraryMode[]) {
-  const transportModesString = modes.map(m => `{mode: ${m}}`).join(', ')
-  const query = `
-  {
-    plan(
-      from: { lat: ${from.lat}, lon: ${from.lon} }
-      to: { lat: ${to.lat}, lon: ${to.lon} }
-      numItineraries: 3
-      transportModes: [${transportModesString}]
-    ) {
-      itineraries {
-        duration
-        legs {
-          mode
-          duration
-          distance
-          from { name lat lon }
-          to { name lat lon }
-          legGeometry { points }
-          route {
-            shortName
-            longName
-          }
-        }
-      }
-    }
-  }
-  ` 
+export async function planTrip(from: Location, to: Location, modes: ItineraryMode[]) {
   const config = useRuntimeConfig()
+  const gatewayUrl = config.public.urlBack || 'http://localhost:3000'
 
-  const res = await fetch(`${config.public.urlOtp}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query })
+  // Récupère la session Supabase pour obtenir le token JWT
+  const session = useSupabaseSession()
+  const token = session.value?.access_token
+
+  if (!token) {
+    throw new Error("Authentification requise : Jeton de session manquant.")
+  }
+
+  const startParam = `${from.lat},${from.lon}`
+  const endParam = `${to.lat},${to.lon}`
+  const modeParam = modes[0] || 'WALK'
+
+  // Envoi de la requête GET vers l'API Gateway NestJS avec le token JWT dans les en-têtes
+  const res = await fetch(`${gatewayUrl}/api/route?start=${encodeURIComponent(startParam)}&end=${encodeURIComponent(endParam)}&mode=${encodeURIComponent(modeParam)}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json'
+    }
   })
 
-  const data = await res.json()
-  return data
+  if (!res.ok) {
+    const errText = await res.text()
+    throw new Error(`Erreur API Gateway (${res.status}): ${errText}`)
+  }
+
+  // Renvoie { duree: number, distance: number, trace: string }
+  return await res.json()
 }

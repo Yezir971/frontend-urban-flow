@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import polyline from '@mapbox/polyline'
+import { mapGeometryToLeafletPoints } from '~/utils/geometry'
 
 const props = defineProps({
   otpData: {
@@ -27,55 +27,43 @@ const mapElement = ref<HTMLElement | null>(null)
 let map: any = null
 let routeLayerGroup: any = null
 
-const drawRoute = (L: any) => {
+/**
+ * Mappe la géométrie retournée par l'API et dessine le tracé polyline violet (#6366f1) sur Leaflet
+ */
+const drawLine = (L: any, geometryData: any) => {
   if (!map || !routeLayerGroup) return
 
   // Nettoyage des anciens tracés
   routeLayerGroup.clearLayers()
 
-  if (!props.otpData) return
+  // Conversion/Mapping des coordonnées [lon, lat] ou Polyline string vers [lat, lon] Leaflet
+  const points = mapGeometryToLeafletPoints(geometryData)
+  if (!points || points.length === 0) return
 
-  const legs = props.otpData?.data?.plan?.itineraries?.[0]?.legs || []
-  const allCoordinates: [number, number][] = []
+  // Tracé polyline violet (#6366f1)
+  const polylineLayer = L.polyline(points, {
+    color: '#6366f1',
+    weight: 6,
+    opacity: 0.9,
+    lineCap: 'round',
+    lineJoin: 'round'
+  }).addTo(routeLayerGroup)
 
-  legs.forEach((leg: any) => {
-    const encodedPoints = leg.legGeometry?.points
-    if (!encodedPoints) return
+  // Ajustement du centrage et du zoom de la carte sur la ligne tracée
+  const bounds = L.latLngBounds(points)
+  map.fitBounds(bounds, { padding: [50, 50] })
 
-    const coordinates = polyline.decode(encodedPoints)
-    allCoordinates.push(...coordinates)
-
-    // Code couleur selon le mode de transport
-    let routeColor = '#104e35' // Vert forêt par défaut (WALK / foot)
-    if (leg.mode === 'BUS' || leg.mode === 'bus') routeColor = '#ff5f00' // Orange pour les bus
-    if (leg.mode === 'TRAIN' || leg.mode === 'rail' || leg.mode === 'SUBWAY') routeColor = '#0066cc' // Bleu pour les trains/métros
-    if (leg.mode === 'BICYCLE' || leg.mode === 'bicycle') routeColor = '#95d4b3' // Vert clair pour les vélos
-
-    const polylineLayer = L.polyline(coordinates, {
-      color: routeColor,
-      weight: 6,
-      opacity: 0.85
-    }).addTo(routeLayerGroup)
-
-    polylineLayer.bindPopup(`<b>${leg.mode}</b> - ${Math.round(leg.distance)}m`)
-  })
-
-  // Centrage sur le tracé de l'itinéraire s'il y a des coordonnées
-  if (allCoordinates.length > 0) {
-    const bounds = L.latLngBounds(allCoordinates)
-    map.fitBounds(bounds, { padding: [50, 50] })
-  }
+  return polylineLayer
 }
 
 onMounted(async () => {
-  // Chargement dynamique de Leaflet pour le SSR de Nuxt
+  // Chargement dynamique de Leaflet pour compatibilité SSR Nuxt 3/4
   const L = await import('leaflet')
   await import('leaflet/dist/leaflet.css')
 
   if (!mapElement.value) return
 
-  // Initialisation de la carte avec les contraintes Bounding Box imposées par la Métropole de Lyon
-  // [[Sud-Ouest], [Nord-Est]]
+  // Contraintes de Bounding Box de la Métropole de Lyon
   const lyonBounds = L.latLngBounds(
     L.latLng(45.70, 4.77), // Sud-Ouest
     L.latLng(45.82, 4.90)  // Nord-Est
@@ -85,15 +73,15 @@ onMounted(async () => {
     maxBounds: lyonBounds,
     maxBoundsViscosity: 1.0,
     minZoom: 12,
-    zoomControl: false 
+    zoomControl: false
   }).setView([45.76, 4.83], 13)
 
-  // Ajout du bouton de zoom en bas à droite
+  // Contrôle de zoom
   L.control.zoom({
     position: 'bottomright'
   }).addTo(map)
 
-  // Couche de tuiles OpenStreetMap
+  // Couche OpenStreetMap
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap'
   }).addTo(map)
@@ -102,13 +90,19 @@ onMounted(async () => {
   routeLayerGroup = L.layerGroup().addTo(map)
 
   // Tracé initial
-  drawRoute(L)
+  if (props.otpData) {
+    drawLine(L, props.otpData)
+  }
 
-  // Regarder les changements de l'itinéraire calculé
+  // Écoute dynamique des modifications d'itinéraire
   watch(
     () => props.otpData,
-    () => {
-      drawRoute(L)
+    (newData) => {
+      if (newData) {
+        drawLine(L, newData)
+      } else {
+        routeLayerGroup?.clearLayers()
+      }
     },
     { deep: true }
   )

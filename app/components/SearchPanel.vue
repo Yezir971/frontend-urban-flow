@@ -120,25 +120,25 @@ const quickFilters = [
 const favorites = [
   {
     title: 'Domicile',
-    address: '12 rue de la Paix, Paris',
-    lat: 48.8694,
-    lon: 2.3303,
+    address: 'Place Bellecour, Lyon',
+    lat: 45.7578,
+    lon: 4.8322,
     icon: Home,
     iconColor: 'green'
   },
   {
     title: 'Travail',
-    address: "Station F, 5 Parvis Alan Turing",
-    lat: 48.8344,
-    lon: 2.3718,
+    address: 'Gare Part-Dieu, Lyon',
+    lat: 45.7602,
+    lon: 4.8596,
     icon: Briefcase,
     iconColor: 'green'
   },
   {
-    title: 'Gare de Lyon',
-    address: 'Place Louis-Armand, Paris',
-    lat: 48.8443,
-    lon: 2.3744,
+    title: 'Gare Perrache',
+    address: 'Place Carnot, Lyon',
+    lat: 45.7485,
+    lon: 4.8258,
     icon: History,
     iconColor: 'gray'
   }

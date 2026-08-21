@@ -75,7 +75,7 @@ export default defineNuxtConfig({
       urlPhoton: "empty URL_PHOTON",
       urlBaseOtp: "empty urlBaseOtp",
       urlOtp: "empty urlOtp",
-      urlBack: "empty urlGateway"
+      urlBack: "empty urlBack"
     }
   },
   pwa: {

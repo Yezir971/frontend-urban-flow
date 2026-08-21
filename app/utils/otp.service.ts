@@ -3,7 +3,8 @@ import { useSupabaseSession } from '#imports'
 
 export async function planTrip(from: Location, to: Location, modes: ItineraryMode[]) {
   const config = useRuntimeConfig()
-  const gatewayUrl = config.public.urlBack || 'http://localhost:3000'
+  const gatewayUrl = config.public.urlBack || 'http://localhost:3002'
+  console.log(`Appel de l'API Gateway à l'URL: ${config.public.urlBack}/api/route`)
 
   // Récupère la session Supabase pour obtenir le token JWT
   const session = useSupabaseSession()

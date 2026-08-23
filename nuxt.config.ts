@@ -3,7 +3,22 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   supabase: {
-    redirect: false
+    redirect: false,
+    url: process.env.NUXT_PUBLIC_SUPABASE_URL || 'http://localhost:8000',
+    key: process.env.NUXT_PUBLIC_SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJhbm9uIiwKICAgICJpc3MiOiAic3VwYWJhc2UtZGVtbyIsCiAgICAiaWF0IjogMTY0MTc2OTIwMCwKICAgICJleHAiOiAxNzk5NTM1NjAwCn0.dc_X5iR_VP_qT0zsiyj_I_OZ2T9FtRU2BBNWN8Bu4GE',
+    
+  },
+  nitro: {
+    externals: {
+      inline: [
+        'vue',
+        '@vue/server-renderer',
+        '@vue/runtime-core',
+        '@vue/runtime-dom',
+        '@vue/shared',
+        'vue-router'
+      ]
+    }
   },
   modules: [
     '@nuxt/test-utils/module',

@@ -1,23 +1,17 @@
-# Build stage
-FROM node:22-alpine AS builder
+FROM node:22-alpine
 
 WORKDIR /app
 
-# Install dependencies
+# Augmenter la mémoire allouée au build
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
+# Installation des dépendances dans l'environnement Linux
 COPY package*.json ./
 RUN npm install
 
-# Copy source and build
+# Copie du code source et build de l'application Nuxt
 COPY . .
 RUN npm run build
-
-# Production stage
-FROM node:22-alpine AS runner
-
-WORKDIR /app
-
-# Copy only the built output
-COPY --from=builder /app/.output ./
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
@@ -25,4 +19,5 @@ ENV PORT=3001
 
 EXPOSE 3001
 
-CMD ["node", "server/index.mjs"]
+# Démarrage du serveur Nuxt SSR
+CMD ["node", ".output/server/index.mjs"]

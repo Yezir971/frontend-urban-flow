@@ -57,6 +57,14 @@
               <Footprints class="w-5 h-5" />
             </div>
 
+            <!-- Badge Voiture (Gris ardoise) -->
+            <div
+              v-else-if="proposal.type === 'CAR'"
+              class="w-11 h-11 rounded-full bg-[#f1f5f9] text-[#334155] flex items-center justify-center shrink-0 shadow-sm"
+            >
+              <Car class="w-5 h-5" />
+            </div>
+
             <!-- Badge Vélo / Trottinette (Vert clair) -->
             <div
               v-else
@@ -83,7 +91,7 @@
             </span>
 
             <!-- Indicateur Temps Réel pour les Transports -->
-            <div v-if="proposal.leavesInMinutes" class="flex items-center gap-1 text-[11px] font-medium">
+            <div v-if="proposal.leavesInMinutes && proposal.type === 'TRANSIT'" class="flex items-center gap-1 text-[11px] font-medium">
               <span
                 class="w-1.5 h-1.5 rounded-full shrink-0"
                 :class="proposal.departureStatus === 'DELAYED' ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500 animate-pulse'"
@@ -114,7 +122,7 @@
           <div class="flex items-center gap-1.5 text-[#104e35] font-semibold text-[11px]">
             <Leaf class="w-3.5 h-3.5 fill-[#104e35] shrink-0" />
             <span>
-              {{ proposal.type === 'WALK' ? '0.0 kg CO2' : `${proposal.co2SavedKg} kg CO2 saved` }}
+              {{ proposal.type === 'WALK' || proposal.type === 'CAR' ? (proposal.type === 'CAR' ? 'Référence voiture' : '0.0 kg CO2') : `${proposal.co2SavedKg} kg CO2 économisé` }}
             </span>
           </div>
 
@@ -136,17 +144,17 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { ArrowLeft, Footprints, Bike, Leaf, ChevronRight } from 'lucide-vue-next'
+import { ArrowLeft, Footprints, Bike, Car, Leaf, ChevronRight } from 'lucide-vue-next'
 import type { ItineraryProposal } from '~/types/itinerary'
 
-const { proposals } = defineProps({
+defineProps({
   proposals: {
     type: Array as PropType<ItineraryProposal[]>,
     required: true,
     default: () => []
   }
 })
-console.log('proposals', proposals)
+
 const emit = defineEmits<{
   (e: 'select', proposal: ItineraryProposal): void
   (e: 'back'): void

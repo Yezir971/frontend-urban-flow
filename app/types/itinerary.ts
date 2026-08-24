@@ -19,7 +19,7 @@ export interface ItineraryLeg {
 
 export interface ItineraryProposal {
   id: string;
-  type: 'TRANSIT' | 'WALK' | 'BICYCLE' | 'SCOOTER';
+  type: 'TRANSIT' | 'WALK' | 'BICYCLE' | 'SCOOTER' | 'CAR';
   title: string;
   subtitle: string;
   badge: string;

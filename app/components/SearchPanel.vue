@@ -83,11 +83,13 @@ import {
   Clock,
   Train,
   Bus,
+  Car,
   Bike,
   Home,
   Briefcase,
   History,
-  ChevronRight
+  ChevronRight,
+  Footprints
 } from 'lucide-vue-next'
 import DestinationSelector from './DestinationSelector.vue'
 
@@ -114,7 +116,9 @@ const selectedFilter = ref<string>('Trains & RER')
 const quickFilters = [
   { name: 'Trains & RER', icon: Train },
   { name: 'Bus', icon: Bus },
-  { name: 'Vélos', icon: Bike }
+  { name: 'Vélos', icon: Bike },
+  { name: 'Marche', icon: Footprints },
+  { name: 'Voiture', icon: Car }
 ]
 
 const favorites = [

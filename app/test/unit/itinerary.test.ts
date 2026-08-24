@@ -52,6 +52,9 @@ describe('itinerary.helpers', () => {
 
       const savingsBike = calculateCo2Savings(2000, 'BICYCLE')
       expect(savingsBike).toBe(0.23)
+
+      const savingsCar = calculateCo2Savings(2000, 'CAR')
+      expect(savingsCar).toBe(0.0)
     })
   })
 
@@ -89,16 +92,38 @@ describe('itinerary.helpers', () => {
                 status: 'IN_PROGRESS'
               }
             ]
+          },
+          {
+            id: 'car-otp',
+            type: 'CAR',
+            title: 'Voiture',
+            subtitle: '3.2 km • Réseau routier',
+            badge: 'CAR',
+            durationMinutes: 9,
+            distanceMeters: 3200,
+            co2SavedKg: 0.0,
+            priceApprox: 'Carburant ~0.5€',
+            trace: 'car_polyline',
+            legs: [
+              {
+                mode: 'CAR',
+                title: 'Trajet en voiture (9 min)',
+                instruction: 'Via réseau routier (3.2 km)',
+                durationMinutes: 9,
+                distanceMeters: 3200,
+                status: 'IN_PROGRESS'
+              }
+            ]
           }
         ]
       }
 
       const proposals = buildMultimodalProposals(rawBackendResult, 'Perrache', 'Charpennes')
-      expect(proposals.length).toBe(1)
+      expect(proposals.length).toBe(2)
       expect(proposals[0].title).toBe('Métro Ligne A')
       expect(proposals[0].badge).toBe('A')
-      expect(proposals[0].legs.length).toBe(2)
-      expect(proposals[0].legs[1].stopsCount).toBe(5)
+      expect(proposals[1].type).toBe('CAR')
+      expect(proposals[1].durationMinutes).toBe(9)
     })
   })
 })

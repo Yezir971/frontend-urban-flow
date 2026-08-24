@@ -50,8 +50,10 @@ export function calculateCo2Savings(distanceMeters: number, mode: string): numbe
     case 'TRAM':
     case 'BUS':
       return parseFloat((carEmissionKg * 0.75).toFixed(2))
+    case 'CAR':
+      return 0.0
     default:
-      return 0
+      return 0.0
   }
 }
 
@@ -77,19 +79,27 @@ export function buildMultimodalProposals(
 
         const isWalk = leg.mode?.toUpperCase() === 'WALK'
         const isBike = leg.mode?.toUpperCase() === 'BICYCLE'
+        const isCar = leg.mode?.toUpperCase() === 'CAR'
 
         let defaultTitle = `Étape ${idx + 1}`
         if (isWalk) {
           defaultTitle = `Marche (${legDurMins} min)`
         } else if (isBike) {
           defaultTitle = `Trajet Vélo (${legDurMins} min)`
+        } else if (isCar) {
+          defaultTitle = `Trajet Voiture (${legDurMins} min)`
         } else if (leg.line) {
           defaultTitle = `${leg.mode} ${leg.line}`
         }
 
+        let singleTitle = `Trajet direct (${proposalDurationMins} min)`
+        if (isWalk) singleTitle = `Marche (${proposalDurationMins} min)`
+        else if (isBike) singleTitle = `Trajet Vélo (${proposalDurationMins} min)`
+        else if (isCar) singleTitle = `Trajet Voiture (${proposalDurationMins} min)`
+
         return {
           mode: leg.mode || 'WALK',
-          title: isSingleLeg ? (isWalk ? `Marche (${proposalDurationMins} min)` : `Trajet Vélo (${proposalDurationMins} min)`) : (leg.title || defaultTitle),
+          title: isSingleLeg ? singleTitle : (leg.title || defaultTitle),
           instruction: leg.instruction || (idx === 0 ? `Depuis ${startName}` : `Vers ${endName}`),
           durationMinutes: legDurMins,
           distanceMeters: isSingleLeg ? proposalDistanceMeters : (leg.distanceMeters || Math.round(leg.distance || 400)),
@@ -122,10 +132,10 @@ export function buildMultimodalProposals(
     type: 'TRANSIT',
     title: 'Itinéraire direct',
     subtitle: `${formatDistance(baseDistance)} • ${startName} → ${endName}`,
-    badge: '1',
+    badge: 'DIRECT',
     durationMinutes: baseMinutes,
     distanceMeters: baseDistance,
-    co2SavedKg: calculateCo2Savings(baseDistance, 'WALK'),
+    co2SavedKg: calculateCo2Savings(baseDistance, 'TRANSIT'),
     arrivalTime: calculateArrivalTime(baseMinutes),
     trace: baseTrace,
     legs: [

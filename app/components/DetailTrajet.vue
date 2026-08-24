@@ -14,6 +14,10 @@
         <h1 class="text-xl font-bold text-gray-900">
           Recherche
         </h1>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EAF5F1] text-[#104e35]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse"></span>
+          Direct
+        </span>
       </div>
     </div>
 
@@ -41,8 +45,8 @@
         </div>
         <div class="flex flex-col min-w-0">
           <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Arrivée</span>
-          <span class="text-xs font-bold text-gray-900">
-            {{ itinerary.durationMinutes }} min - {{ itinerary.arrivalTime }}
+          <span class="text-xs font-bold text-gray-900 truncate">
+            {{ itinerary.durationMinutes }} min • {{ itinerary.arrivalTime }}
           </span>
         </div>
       </div>
@@ -55,7 +59,7 @@
         <div class="flex flex-col min-w-0">
           <span class="text-[10px] uppercase font-bold text-[#104e35]/80 tracking-wider">Économie</span>
           <span class="text-xs font-black text-[#104e35] truncate">
-            {{ itinerary.co2SavedKg }} kg CO2
+            {{ itinerary.type === 'CAR' ? '0.0 kg (Voiture)' : `${itinerary.co2SavedKg} kg CO2` }}
           </span>
         </div>
       </div>
@@ -67,7 +71,7 @@
         <h2 class="text-xs font-bold text-gray-400 tracking-wider uppercase">
           Détails du trajet
         </h2>
-        <span v-if="itinerary.realTime" class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700">
+        <span v-if="itinerary.realTime && itinerary.type === 'TRANSIT'" class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
           Temps réel
         </span>
@@ -102,6 +106,14 @@
               class="w-8 h-8 rounded-full bg-[#EAF5F1] text-[#104e35] flex items-center justify-center border border-[#c5eadd] shadow-sm"
             >
               <Footprints class="w-4 h-4" />
+            </div>
+
+            <!-- Mode Voiture -->
+            <div
+              v-else-if="leg.mode === 'CAR'"
+              class="w-8 h-8 rounded-full bg-[#334155] text-white flex items-center justify-center shadow-sm"
+            >
+              <Car class="w-4 h-4" />
             </div>
 
             <!-- Mode Transit / Métro / Tram / Bus avec pastille de ligne -->
@@ -219,6 +231,7 @@ import {
   Clock,
   Leaf,
   Bike,
+  Car,
   Footprints,
   Train,
   Flag,

@@ -87,10 +87,10 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
-      urlPhoton: process.env.NUXT_PUBLIC_URL_PHOTON || 'https://photon.komoot.io/api/?bbox=4.7,45.6,5.0,45.9',
-      urlBaseOtp: process.env.NUXT_PUBLIC_URL_BASE_OTP || 'http://localhost:8080',
-      urlOtp: process.env.NUXT_PUBLIC_URL_OTP || '/otp-api/otp/routers/default/index/graphql',
-      urlBack: process.env.NUXT_PUBLIC_URL_BACK || 'https://api.urban-flow-lyon.fr'
+      urlPhoton: "empty URL_PHOTON",
+      urlBaseOtp: "empty urlBaseOtp",
+      urlOtp: "empty urlOtp",
+      urlBack: "empty urlBack"
     }
   },
   pwa: {

@@ -3,15 +3,18 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import type { LocationData } from '~/components/SearchPanel.vue'
 import type { ItineraryProposal } from '~/types/itinerary'
 import { useGeoStore } from '~/stores/geo'
+import { useNavigationStore } from '~/stores/navigation'
 import SearchPanel from '~/components/SearchPanel.vue'
 import TrajetsRecommandes from '~/components/TrajetsRecommandes.vue'
 import DetailTrajet from '~/components/DetailTrajet.vue'
+import NavigationBanner from '~/components/NavigationBanner.vue'
 import MapLeafet from '~/components/mapLeafet.vue'
 import UiSpinner from '~/components/ui/spinner.vue'
 import { validateRouteInputs } from '~/utils/validation'
 import { buildMultimodalProposals, filterProposalsByPreferences } from '~/utils/itinerary.helpers'
 import { planTrip } from '~/utils/otp.service'
 import { useUserPreferences } from '~/composables/useUserPreferences'
+import { useUserProfile } from '~/composables/useUserProfile'
 
 definePageMeta({
   middleware: 'auth',
@@ -19,6 +22,8 @@ definePageMeta({
 })
 
 const { preferences, speedCoefficient, loadPreferences } = useUserPreferences()
+const { loadProfile } = useUserProfile()
+const navStore = useNavigationStore()
 const sheetRef = ref<any>(null)
 const geo = useGeoStore()
 const toast = useToast()
@@ -94,6 +99,13 @@ const onSearch = async (searchData?: { mode: string }) => {
     if (proposals.value.length > 0) {
       selectedProposal.value = proposals.value[0]
       activeMapData.value = selectedProposal.value
+    } else {
+      toast.add({
+        title: 'Aucun itinéraire disponible',
+        description: 'Vos préférences de transport ont masqué tous les itinéraires calculés.',
+        color: 'warning',
+        icon: 'i-lucide-alert-triangle'
+      })
     }
 
     currentView.value = 'proposals'
@@ -114,26 +126,99 @@ const onSearch = async (searchData?: { mode: string }) => {
   }
 }
 
-// 2. Sélection d'une proposition : passage à la vue 'details' (Détails du trajet)
+// 2. Sélection d'une proposition : passage à la vue 'details'
 const handleSelectProposal = (proposal: ItineraryProposal) => {
   selectedProposal.value = proposal
-  activeMapData.value = proposal // Met à jour le tracé Leaflet en violet (#6366f1)
+  activeMapData.value = proposal
   currentView.value = 'details'
 }
 
-// 3. Bouton retour depuis les propositions vers la recherche
+// 3. Démarrage du guidage en direct (avec ou sans simulation démo)
+const handleStartNavigation = (options: { simulate: boolean }) => {
+  if (!selectedProposal.value) return
+
+  navStore.startNavigation(selectedProposal.value, {
+    simulate: options.simulate,
+    onReroute: handleDeviationReroute,
+    onFinish: () => {
+      toast.add({
+        title: 'Arrivé à destination !',
+        description: 'Félicitations pour ce trajet éco-responsable avec Urban Flow !',
+        color: 'success',
+        icon: 'i-lucide-award'
+      })
+    }
+  })
+
+  // Sur mobile, ferme ou réduit le sheet pour libérer la vue de la carte
+  if (isMobile.value) {
+    sheetRef.value?.close()
+  }
+
+  toast.add({
+    title: options.simulate ? 'Guidage démo démarré' : 'Guidage GPS en direct',
+    description: 'Suivez le déplacement et les instructions sur la carte.',
+    color: 'success',
+    icon: 'i-lucide-navigation'
+  })
+}
+
+// 4. Recalcul automatique en temps réel en cas de déviation (> 75m)
+const handleDeviationReroute = async (deviatedCoords: [number, number]) => {
+  try {
+    const modes: string[] = ['TRANSIT', 'WALK']
+    const result = await planTrip(
+      { lon: deviatedCoords[1], lat: deviatedCoords[0] },
+      { lon: endCoordinates.value[0], lat: endCoordinates.value[1] },
+      modes as any
+    )
+
+    const rawProposals = buildMultimodalProposals(
+      result,
+      'Position actuelle',
+      endName.value,
+      speedCoefficient.value
+    )
+
+    const filtered = filterProposalsByPreferences(rawProposals, preferences.value)
+    if (filtered.length > 0) {
+      selectedProposal.value = filtered[0]
+      activeMapData.value = selectedProposal.value
+      navStore.updateRoute(selectedProposal.value)
+      toast.add({
+        title: 'Itinéraire recalculé',
+        description: 'Le nouveau parcours a été recalculé et appliqué en direct.',
+        color: 'success',
+        icon: 'i-lucide-check-circle'
+      })
+    }
+  } catch (err) {
+    console.error('Erreur recalcul déviation:', err)
+  }
+}
+
+// 5. Arrêt du guidage
+const handleStopNavigation = () => {
+  if (isMobile.value) {
+    sheetRef.value?.open()
+  }
+}
+
+// 6. Boutons retour
 const handleBackToSearch = () => {
+  navStore.stopNavigation()
   currentView.value = 'search'
   activeMapData.value = null
 }
 
-// 4. Bouton retour depuis les détails vers les propositions
 const handleBackToProposals = () => {
+  navStore.stopNavigation()
   currentView.value = 'proposals'
 }
 
-// 5. Terminer le trajet : retour au formulaire de recherche
+// 7. Terminer le trajet
 const handleFinishTrip = () => {
+  navStore.stopNavigation()
   toast.add({
     title: 'Trajet terminé',
     description: 'Bravo pour ce trajet éco-responsable !',
@@ -144,7 +229,7 @@ const handleFinishTrip = () => {
   activeMapData.value = null
 }
 
-// 6. Signaler un problème
+// 8. Signaler un problème
 const handleReportIssue = () => {
   toast.add({
     title: 'Signalement envoyé',
@@ -171,6 +256,8 @@ const handleResize = () => {
 
 onMounted(() => {
   loadPreferences()
+  loadProfile()
+  geo.initGeolocation()
   isMobile.value = window.innerWidth < 768
   if (isMobile.value) {
     setTimeout(() => {
@@ -181,6 +268,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  navStore.stopNavigation()
   window.removeEventListener('resize', handleResize)
 })
 </script>
@@ -221,11 +309,18 @@ onBeforeUnmount(() => {
         @back="handleBackToProposals"
         @finish="handleFinishTrip"
         @report="handleReportIssue"
+        @start-navigation="handleStartNavigation"
       />
     </div>
 
-    <!-- Conteneur Carte Leaflet -->
+    <!-- Bandeau flottant de guidage Turn-by-Turn -->
+    <NavigationBanner
+      @stop="handleStopNavigation"
+      @deviate="handleDeviationReroute"
+    />
+    <!-- Conteneur Carte Leaflet avec NavigationBanner flottant -->
     <div class="grow h-full w-full relative z-0">
+
       <ClientOnly>
         <MapLeafet :otpData="activeMapData ?? undefined" />
         <template #fallback>
@@ -281,6 +376,7 @@ onBeforeUnmount(() => {
               @back="handleBackToProposals"
               @finish="handleFinishTrip"
               @report="handleReportIssue"
+              @start-navigation="handleStartNavigation"
             />
           </div>
         </template>
@@ -289,9 +385,3 @@ onBeforeUnmount(() => {
 
   </div>
 </template>
-
-<style scoped>
-.h-full {
-  height: 100%;
-}
-</style>

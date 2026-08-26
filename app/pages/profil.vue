@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto pt-6 sm:pt-10 pb-20 px-4 flex flex-col items-center">
+  <div class=" mx-auto pt-6 sm:pt-10 pb-20 px-4 flex flex-col items-center">
     <!-- Header Profil (Avatar + Nom + Macaron Niveau + Pop-up Édition) -->
     <HeaderProfil
       :profile="profile"
@@ -108,22 +108,49 @@
             </div>
           </div>
 
-          <!-- PWA Installer -->
+          <!-- PWA Installer (Grise et non cliquable si déjà installée) -->
           <button
             type="button"
-            @click="installPwa"
-            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
+            :disabled="isInstalled"
+            @click="installApp"
+            class="flex items-center justify-between p-3.5 rounded-2xl transition-all text-left w-full group"
+            :class="[
+              isInstalled
+                ? 'opacity-60 cursor-not-allowed bg-transparent'
+                : 'hover:bg-white cursor-pointer'
+            ]"
           >
             <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] text-[#0F5238] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                <Download class="w-5 h-5" />
+              <div
+                class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-transform"
+                :class="[
+                  isInstalled
+                    ? 'bg-gray-100 text-gray-500'
+                    : 'bg-[#E1F6EB] text-[#0F5238] group-hover:scale-105'
+                ]"
+              >
+                <Check v-if="isInstalled" class="w-5 h-5 text-emerald-600" />
+                <Download v-else class="w-5 h-5" />
               </div>
               <div>
-                <p class="text-sm font-semibold text-gray-900">PWA</p>
-                <p class="text-xs text-gray-500">Installer l'application sur l'appareil</p>
+                <div class="flex items-center gap-2">
+                  <p class="text-sm font-semibold text-gray-900">PWA</p>
+                  <span
+                    v-if="isInstalled"
+                    class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-wider"
+                  >
+                    Installée
+                  </span>
+                </div>
+                <p class="text-xs text-gray-500">
+                  {{ isInstalled ? 'Application déjà installée sur cet appareil' : "Installer l'application sur l'appareil" }}
+                </p>
               </div>
             </div>
-            <ExternalLink class="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors shrink-0" />
+            <div class="shrink-0">
+              <Check v-if="isInstalled" class="w-5 h-5 text-emerald-600" />
+              <ExternalLink v-else class="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+            </div>
           </button>
         </div>
       </div>
@@ -204,12 +231,14 @@ import {
   HelpCircle,
   ChevronRight,
   LogOut,
+  Check,
 } from 'lucide-vue-next';
 import HeaderProfil from '~/components/header/HeaderProfil.vue';
 import TransportPreferencesPopup from '~/components/TransportPreferencesPopup.vue';
 import type { UserProfile } from '~/utils/profile.service';
 import { fetchUserProfile } from '~/utils/profile.service';
 import { useUserPreferences } from '~/composables/useUserPreferences';
+import { usePwaInstall } from '~/composables/usePwaInstall';
 
 definePageMeta({
   middleware: 'auth',
@@ -219,6 +248,7 @@ const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 const toast = useToast();
 const { loadPreferences } = useUserPreferences();
+const { isInstalled, installApp, checkInstallStatus } = usePwaInstall();
 
 const profile = ref<UserProfile | null>(null);
 const isLoading = ref(true);
@@ -266,15 +296,6 @@ function openHelp() {
   });
 }
 
-function installPwa() {
-  toast.add({
-    title: 'Installation PWA',
-    description: 'Urban Flow est prêt à être installé depuis les options de votre navigateur.',
-    color: 'success',
-    icon: 'i-lucide-download',
-  });
-}
-
 async function handleLogout() {
   try {
     await supabase.auth.signOut();
@@ -304,5 +325,6 @@ watch(
 onMounted(() => {
   loadProfile();
   loadPreferences();
+  checkInstallStatus();
 });
 </script>

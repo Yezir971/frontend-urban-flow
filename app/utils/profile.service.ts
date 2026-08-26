@@ -1,4 +1,4 @@
-import { useSupabaseSession, useRuntimeConfig } from '#imports';
+import { useSupabaseClient, useSupabaseSession, useRuntimeConfig } from '#imports';
 
 export interface UserProfile {
   id: string;
@@ -28,15 +28,22 @@ function getBackendUrl(): string {
   return 'http://localhost:3002';
 }
 
-function getAuthToken(): string {
-  const session = useSupabaseSession();
-  const token = session.value?.access_token;
+async function getAuthToken(): Promise<string> {
+  const supabase = useSupabaseClient();
+  const { data, error } = await supabase.auth.getSession();
+  const token = data?.session?.access_token;
 
-  if (!token) {
-    throw new Error('Authentification requise : Jeton de session manquant.');
+  if (token) {
+    return token;
   }
 
-  return token;
+  // Secours via le state de session Nuxt
+  const session = useSupabaseSession();
+  if (session.value?.access_token) {
+    return session.value.access_token;
+  }
+
+  throw new Error('Authentification requise : Jeton de session manquant.');
 }
 
 /**
@@ -44,7 +51,7 @@ function getAuthToken(): string {
  */
 export async function fetchUserProfile(): Promise<UserProfile> {
   const gatewayUrl = getBackendUrl();
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   const res = await fetch(`${gatewayUrl}/api/profile/me`, {
     method: 'GET',
@@ -67,7 +74,7 @@ export async function fetchUserProfile(): Promise<UserProfile> {
  */
 export async function updateUserProfile(username: string): Promise<UserProfile> {
   const gatewayUrl = getBackendUrl();
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   const res = await fetch(`${gatewayUrl}/api/profile/me`, {
     method: 'PUT',
@@ -102,7 +109,7 @@ export async function uploadUserAvatar(file: File): Promise<UserProfile> {
   }
 
   const gatewayUrl = getBackendUrl();
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   const formData = new FormData();
   formData.append('file', file);

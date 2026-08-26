@@ -191,6 +191,7 @@ function openEditModal() {
   if (props.profile) {
     console.log('Props reçues dans HeaderProfil:', props.profile);
 
+
     editUsername.value = props.profile.username || '';
     previewAvatarUrl.value = props.profile.avatar_url || null;
   }

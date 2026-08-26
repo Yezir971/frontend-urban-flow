@@ -14,6 +14,7 @@ import { validateRouteInputs } from '~/utils/validation'
 import { buildMultimodalProposals, filterProposalsByPreferences } from '~/utils/itinerary.helpers'
 import { planTrip } from '~/utils/otp.service'
 import { useUserPreferences } from '~/composables/useUserPreferences'
+import { useUserProfile } from '~/composables/useUserProfile'
 
 definePageMeta({
   middleware: 'auth',
@@ -21,6 +22,7 @@ definePageMeta({
 })
 
 const { preferences, speedCoefficient, loadPreferences } = useUserPreferences()
+const { loadProfile } = useUserProfile()
 const navStore = useNavigationStore()
 const sheetRef = ref<any>(null)
 const geo = useGeoStore()
@@ -254,6 +256,7 @@ const handleResize = () => {
 
 onMounted(() => {
   loadPreferences()
+  loadProfile()
   geo.initGeolocation()
   isMobile.value = window.innerWidth < 768
   if (isMobile.value) {

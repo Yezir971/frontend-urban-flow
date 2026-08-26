@@ -197,17 +197,25 @@
       </div>
     </div>
 
-    <!-- Options Démo Oral & Boutons d'action -->
+    <!-- Options Démo Oral (Réservées aux ADMIN) & Boutons d'action -->
     <div class="flex flex-col gap-3 mt-1">
-      <!-- Option Switch Démo Oral -->
-      <div class="flex items-center justify-between p-3 rounded-2xl bg-white border border-gray-100 shadow-xs">
+      <!-- Option Switch Démo Oral / Mode Test (Visible uniquement si ADMIN) -->
+      <div
+        v-if="isAdmin"
+        class="flex items-center justify-between p-3 rounded-2xl bg-amber-50/70 border border-amber-200/80 shadow-xs"
+      >
         <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-[#EAF5F1] text-[#104e35] flex items-center justify-center shrink-0">
+          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
             <Sparkles class="w-4 h-4" />
           </div>
           <div>
-            <p class="text-xs font-bold text-gray-900 leading-tight">Simulation Démo</p>
-            <p class="text-[11px] text-gray-500 leading-tight">Déplacement automatique pour les tests</p>
+            <div class="flex items-center gap-1.5">
+              <p class="text-xs font-bold text-gray-900 leading-tight">Simulation Démo</p>
+              <span class="text-[9px] font-black bg-amber-600 text-white px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                ADMIN
+              </span>
+            </div>
+            <p class="text-[11px] text-gray-500 leading-tight">Déplacement automatique pour tests/oral</p>
           </div>
         </div>
         <div
@@ -264,6 +272,7 @@ import {
 } from 'lucide-vue-next'
 import type { ItineraryProposal } from '~/types/itinerary'
 import { useNavigationStore } from '~/stores/navigation'
+import { useUserProfile } from '~/composables/useUserProfile'
 
 const props = defineProps({
   itinerary: {
@@ -287,9 +296,12 @@ const emit = defineEmits<{
 }>()
 
 const navStore = useNavigationStore()
-const isSimulationMode = ref(true) // Activé par défaut pour la démo fluide à l'oral
+const { isAdmin } = useUserProfile()
+const isSimulationMode = ref(true)
 
 function handleStartGuidance() {
-  emit('start-navigation', { simulate: isSimulationMode.value })
+  // Si admin, respecte le choix du switch ; sinon guidage réel sans simulation
+  const shouldSimulate = isAdmin.value ? isSimulationMode.value : false
+  emit('start-navigation', { simulate: shouldSimulate })
 }
 </script>

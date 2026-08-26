@@ -71,7 +71,7 @@
           ></div>
         </div>
 
-        <!-- KPI Durée & Distance restantes + Contrôles Démo -->
+        <!-- KPI Durée & Distance restantes + Contrôles Démo Test (ADMIN) -->
         <div class="flex items-center justify-between text-xs pt-1 border-t border-gray-100">
           <div class="flex items-center gap-2">
             <span class="font-extrabold text-[#0F5238] text-sm">
@@ -83,8 +83,8 @@
             </span>
           </div>
 
-          <!-- Outils Démo Oral : Pause, Vitesse, Test Déviation -->
-          <div v-if="navStore.isSimulating" class="flex items-center gap-1 bg-[#F3F5F4] p-1 rounded-xl">
+          <!-- Outils Démo / Test : Pause, Vitesse, Test Déviation (Réservés au rôle ADMIN) -->
+          <div v-if="isAdmin && navStore.isSimulating" class="flex items-center gap-1 bg-amber-50/80 border border-amber-200/60 p-1 rounded-xl">
             <button
               type="button"
               @click="navStore.togglePause"
@@ -104,7 +104,7 @@
               {{ navStore.simulationSpeed }}x
             </button>
 
-            <!-- Bouton spécial Démo : Simuler une déviation pour montrer le recalcul en direct au jury ! -->
+            <!-- Bouton spécial Test : Simuler une déviation pour tester le recalcul automatique -->
             <button
               type="button"
               @click="simulateDeviation"
@@ -133,9 +133,11 @@ import {
   RefreshCw,
 } from 'lucide-vue-next'
 import { useNavigationStore } from '~/stores/navigation'
+import { useUserProfile } from '~/composables/useUserProfile'
 import { formatDistance } from '~/utils/itinerary.helpers'
 
 const navStore = useNavigationStore()
+const { isAdmin } = useUserProfile()
 const toast = useToast()
 
 const emit = defineEmits<{

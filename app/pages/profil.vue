@@ -1,5 +1,5 @@
 <template>
-  <div class=" mx-auto pt-6 sm:pt-10 pb-20 px-4 flex flex-col items-center">
+  <div class="max-w-md mx-auto pt-6 sm:pt-10 pb-20 px-4 flex flex-col items-center">
     <!-- Header Profil (Avatar + Nom + Macaron Niveau + Pop-up Édition) -->
     <HeaderProfil
       :profile="profile"
@@ -85,25 +85,42 @@
             </div>
           </div>
 
-          <!-- Géolocalisation -->
+          <!-- Géolocalisation avec demande de permission native et confirmation -->
           <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white/40">
             <div class="flex items-center gap-3.5 mr-3">
-              <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] text-[#0F5238] flex items-center justify-center shrink-0">
+              <div
+                class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors"
+                :class="[
+                  geoStore.isEnabled
+                    ? 'bg-[#E1F6EB] text-[#0F5238]'
+                    : 'bg-gray-100 text-gray-400'
+                ]"
+              >
                 <MapPin class="w-5 h-5" />
               </div>
               <div>
-                <p class="text-sm font-semibold text-gray-900">Géolocalisation</p>
-                <p class="text-xs text-gray-500">Activez pour trouver les stations et véhicules à proximité de votre position actuelle.</p>
+                <div class="flex items-center gap-2">
+                  <p class="text-sm font-semibold text-gray-900">Géolocalisation</p>
+                  <span
+                    v-if="geoStore.isEnabled && geoStore.lat && geoStore.lng"
+                    class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-wider"
+                  >
+                    Active
+                  </span>
+                </div>
+                <p class="text-xs text-gray-500">
+                  Activez pour trouver les stations et véhicules à proximité de votre position actuelle.
+                </p>
               </div>
             </div>
             <div
-              @click="isGeolocationEnabled = !isGeolocationEnabled"
+              @click="toggleGeolocation"
               class="w-12 h-7 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer shrink-0"
-              :class="isGeolocationEnabled ? 'bg-[#0F5238]' : 'bg-gray-300'"
+              :class="geoStore.isEnabled ? 'bg-[#0F5238]' : 'bg-gray-300'"
             >
               <div
                 class="w-6 h-6 rounded-full bg-white shadow-md transform transition-transform"
-                :class="isGeolocationEnabled ? 'translate-x-5' : 'translate-x-0'"
+                :class="geoStore.isEnabled ? 'translate-x-5' : 'translate-x-0'"
               />
             </div>
           </div>
@@ -239,6 +256,7 @@ import type { UserProfile } from '~/utils/profile.service';
 import { fetchUserProfile } from '~/utils/profile.service';
 import { useUserPreferences } from '~/composables/useUserPreferences';
 import { usePwaInstall } from '~/composables/usePwaInstall';
+import { useGeoStore } from '~/stores/geo';
 
 definePageMeta({
   middleware: 'auth',
@@ -249,13 +267,13 @@ const user = useSupabaseUser();
 const toast = useToast();
 const { loadPreferences } = useUserPreferences();
 const { isInstalled, installApp, checkInstallStatus } = usePwaInstall();
+const geoStore = useGeoStore();
 
 const profile = ref<UserProfile | null>(null);
 const isLoading = ref(true);
 const isPreferencesPopupOpen = ref(false);
 
 const isDarkMode = ref(false);
-const isGeolocationEnabled = ref(true);
 
 async function loadProfile() {
   isLoading.value = true;
@@ -276,6 +294,35 @@ async function loadProfile() {
 
 function onProfileUpdated(updatedProfile: UserProfile) {
   profile.value = updatedProfile;
+}
+
+async function toggleGeolocation() {
+  if (geoStore.isEnabled) {
+    geoStore.disableGeolocation();
+    toast.add({
+      title: 'Géolocalisation désactivée',
+      description: 'Votre position actuelle ne sera plus demandée automatiquement.',
+      color: 'info',
+      icon: 'i-lucide-map-pin-off',
+    });
+  } else {
+    const res = await geoStore.enableGeolocation();
+    if (res.success && res.coords) {
+      toast.add({
+        title: 'Position récupérée',
+        description: `Position GPS verrouillée (${res.coords.lat.toFixed(4)}, ${res.coords.lng.toFixed(4)}).`,
+        color: 'success',
+        icon: 'i-lucide-map-pin-check',
+      });
+    } else {
+      toast.add({
+        title: 'Géolocalisation indisponible',
+        description: res.error || 'Permission refusée ou GPS désactivé.',
+        color: 'error',
+        icon: 'i-lucide-triangle-alert',
+      });
+    }
+  }
 }
 
 function openPmrInfo() {
@@ -326,5 +373,6 @@ onMounted(() => {
   loadProfile();
   loadPreferences();
   checkInstallStatus();
+  geoStore.initGeolocation();
 });
 </script>

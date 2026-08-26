@@ -59,3 +59,36 @@ export function mapGeometryToLeafletPoints(data: any): LeafletPoint[] {
 
   return []
 }
+
+/**
+ * Calcule la distance en mètres entre deux coordonnées géographiques [lat, lon] (formule de Haversine)
+ */
+export function getDistanceMeters(p1: [number, number], p2: [number, number]): number {
+  const R = 6371e3 // Rayon moyen de la Terre en mètres
+  const phi1 = (p1[0] * Math.PI) / 180
+  const phi2 = (p2[0] * Math.PI) / 180
+  const deltaPhi = ((p2[0] - p1[0]) * Math.PI) / 180
+  const deltaLambda = ((p2[1] - p1[1]) * Math.PI) / 180
+
+  const a =
+    Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
+    Math.cos(phi1) * Math.cos(phi2) * Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+  return R * c
+}
+
+/**
+ * Calcule la distance minimale en mètres entre un point [lat, lon] et une ligne d'itinéraire
+ */
+export function getMinDistanceToPolyline(point: [number, number], polylinePoints: [number, number][]): number {
+  if (!polylinePoints || polylinePoints.length === 0) return 0
+  let minDistance = Infinity
+  for (const p of polylinePoints) {
+    const dist = getDistanceMeters(point, p)
+    if (dist < minDistance) {
+      minDistance = dist
+    }
+  }
+  return minDistance
+}

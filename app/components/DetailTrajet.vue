@@ -197,32 +197,57 @@
       </div>
     </div>
 
-    <!-- Boutons d'action en bas -->
-    <div class="flex flex-col gap-2.5 mt-2">
-      <!-- Bouton principal : Commencer / Terminer le trajet -->
+    <!-- Options Démo Oral & Boutons d'action -->
+    <div class="flex flex-col gap-3 mt-1">
+      <!-- Option Switch Démo Oral -->
+      <div class="flex items-center justify-between p-3 rounded-2xl bg-white border border-gray-100 shadow-xs">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-[#EAF5F1] text-[#104e35] flex items-center justify-center shrink-0">
+            <Sparkles class="w-4 h-4" />
+          </div>
+          <div>
+            <p class="text-xs font-bold text-gray-900 leading-tight">Simulation Démo</p>
+            <p class="text-[11px] text-gray-500 leading-tight">Déplacement automatique pour les tests</p>
+          </div>
+        </div>
+        <div
+          @click="isSimulationMode = !isSimulationMode"
+          class="w-11 h-6 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer shrink-0"
+          :class="isSimulationMode ? 'bg-[#0F5238]' : 'bg-gray-300'"
+        >
+          <div
+            class="w-5 h-5 rounded-full bg-white shadow-md transform transition-transform"
+            :class="isSimulationMode ? 'translate-x-5' : 'translate-x-0'"
+          />
+        </div>
+      </div>
+
+      <!-- Bouton Démarrer / Arrêter le Guidage -->
       <button
+        v-if="!navStore.isActive"
         type="button"
-        @click="emit('finish')"
-        class="w-full bg-[#104e35] hover:bg-[#0c3a28] text-white font-bold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#104e35]/15 active:scale-[0.98] transition-all cursor-pointer text-sm"
+        @click="handleStartGuidance"
+        class="w-full bg-[#0F5238] hover:bg-[#0b3d2a] text-white font-bold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#0F5238]/15 active:scale-[0.98] transition-all cursor-pointer text-sm"
       >
-        <Flag class="w-4 h-4" />
-        <span>Terminer le trajet</span>
+        <Navigation class="w-4 h-4 fill-white" />
+        <span>Démarrer le guidage</span>
       </button>
 
-      <!-- Bouton secondaire : Signaler un problème -->
       <button
+        v-else
         type="button"
-        @click="emit('report')"
-        class="w-full bg-[#F3F4F6] hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-full flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer text-xs"
+        @click="navStore.stopNavigation"
+        class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-red-600/15 active:scale-[0.98] transition-all cursor-pointer text-sm"
       >
-        <AlertCircle class="w-4 h-4 text-gray-500" />
-        <span>Signaler un problème</span>
+        <Square class="w-4 h-4 fill-white" />
+        <span>Arrêter le guidage</span>
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { PropType } from 'vue'
 import {
   ArrowLeft,
@@ -234,29 +259,37 @@ import {
   Car,
   Footprints,
   Train,
-  Flag,
-  AlertCircle
+  Square,
+  Sparkles,
 } from 'lucide-vue-next'
 import type { ItineraryProposal } from '~/types/itinerary'
+import { useNavigationStore } from '~/stores/navigation'
 
-defineProps({
+const props = defineProps({
   itinerary: {
     type: Object as PropType<ItineraryProposal>,
-    required: true
+    required: true,
   },
   startName: {
     type: String,
-    default: 'Ma position actuelle'
+    default: 'Ma position actuelle',
   },
   endName: {
     type: String,
-    default: 'Destination sélectionnée'
-  }
+    default: 'Destination sélectionnée',
+  },
 })
 
 const emit = defineEmits<{
   (e: 'back'): void
   (e: 'finish'): void
-  (e: 'report'): void
+  (e: 'start-navigation', options: { simulate: boolean }): void
 }>()
+
+const navStore = useNavigationStore()
+const isSimulationMode = ref(true) // Activé par défaut pour la démo fluide à l'oral
+
+function handleStartGuidance() {
+  emit('start-navigation', { simulate: isSimulationMode.value })
+}
 </script>

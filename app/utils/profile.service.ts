@@ -15,17 +15,8 @@ export interface UserProfile {
 
 function getBackendUrl(): string {
   const config = useRuntimeConfig();
-  const rawUrl = config.public?.urlBack as string | undefined;
-
-  if (rawUrl && !rawUrl.includes('empty')) {
-    return rawUrl.replace(/\/$/, '');
-  }
-
-  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-    return 'https://api.urban-flow-lyon.fr';
-  }
-
-  return 'http://localhost:3002';
+  const rawUrl = (config.public?.urlBack as string | undefined) || '';
+  return rawUrl.replace(/\/$/, '');
 }
 
 async function getAuthToken(): Promise<string> {

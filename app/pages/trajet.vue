@@ -9,14 +9,16 @@ import DetailTrajet from '~/components/DetailTrajet.vue'
 import MapLeafet from '~/components/mapLeafet.vue'
 import UiSpinner from '~/components/ui/spinner.vue'
 import { validateRouteInputs } from '~/utils/validation'
-import { buildMultimodalProposals } from '~/utils/itinerary.helpers'
+import { buildMultimodalProposals, filterProposalsByPreferences } from '~/utils/itinerary.helpers'
 import { planTrip } from '~/utils/otp.service'
+import { useUserPreferences } from '~/composables/useUserPreferences'
 
 definePageMeta({
   middleware: 'auth',
   layout: 'map'
 })
 
+const { preferences, speedCoefficient, loadPreferences } = useUserPreferences()
 const sheetRef = ref<any>(null)
 const geo = useGeoStore()
 const toast = useToast()
@@ -77,8 +79,16 @@ const onSearch = async (searchData?: { mode: string }) => {
       modes as any
     )
 
-    // Construction des 3 propositions multimodales réelles (Transit TCL, Marche, Vélo)
-    proposals.value = buildMultimodalProposals(result, startName.value, endName.value)
+    // Construction des propositions multimodales en appliquant le coefficient de vitesse
+    const rawProposals = buildMultimodalProposals(
+      result,
+      startName.value,
+      endName.value,
+      speedCoefficient.value,
+    )
+
+    // Filtrage strict : les modes désélectionnés dans les préférences ne figurent pas dans les recommandations
+    proposals.value = filterProposalsByPreferences(rawProposals, preferences.value)
     
     // Sélection par défaut du 1er trajet et affichage du tracé sur Leaflet
     if (proposals.value.length > 0) {
@@ -160,6 +170,7 @@ const handleResize = () => {
 }
 
 onMounted(() => {
+  loadPreferences()
   isMobile.value = window.innerWidth < 768
   if (isMobile.value) {
     setTimeout(() => {

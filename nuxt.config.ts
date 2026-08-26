@@ -37,10 +37,10 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
-      urlPhoton: "empty URL_PHOTON",
-      urlBaseOtp: "empty urlBaseOtp",
-      urlOtp: "empty urlOtp",
-      urlBack: "empty urlBack"
+      urlPhoton: process.env.URL_PHOTON || "https://photon.komoot.io",
+      urlBaseOtp: process.env.URL_BASE_OTP || "http://localhost:8080",
+      urlOtp: process.env.URL_OTP || "http://localhost:8080/otp/routers/default/plan",
+      urlBack: process.env.NUXT_PUBLIC_URL_BACK || process.env.URL_BACK || "http://localhost:3002"
     }
   },
   pwa: {
@@ -49,6 +49,7 @@ export default defineNuxtConfig({
     devOptions: {
       enabled: true,
       type: 'module',
+      suppressWarnings: true,
     },
     manifest: {
       name: 'Urban Flow',

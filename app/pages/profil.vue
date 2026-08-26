@@ -1,13 +1,68 @@
+<template>
+  <div class="max-w-md mx-auto pt-6 sm:pt-10 pb-16 px-4 flex flex-col items-center">
+    <!-- Header Profil (Avatar + Nom + Macaron Niveau + Pop-up Édition) -->
+    <HeaderProfil
+      :profile="profile"
+      class="mb-8 w-full"
+      @profile-updated="onProfileUpdated"
+    />
+
+    <!-- Spinner de chargement initial si profil non encore chargé -->
+    <div v-if="isLoading && !profile" class="flex flex-col items-center justify-center py-12 gap-3">
+      <UIcon name="i-lucide-loader-2" class="w-8 h-8 text-[#0F5238] animate-spin" />
+      <p class="text-sm font-medium text-gray-500">Chargement de votre profil depuis la base de données...</p>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
+import { ref, onMounted, watch } from 'vue';
+import HeaderProfil from '~/components/header/HeaderProfil.vue';
+import type { UserProfile } from '~/utils/profile.service';
+import { fetchUserProfile } from '~/utils/profile.service';
+
 definePageMeta({
   middleware: 'auth',
 });
-</script>
 
-<template>
-    <div>
-        <h1>Profil</h1>
-        <p>Bienvenue sur la page de profil !</p>
-        <UButton color="primary" >Voir le trajet</UButton>
-    </div>
-</template>
+const user = useSupabaseUser();
+const toast = useToast();
+const profile = ref<UserProfile | null>(null);
+const isLoading = ref(true);
+
+async function loadProfile() {
+  isLoading.value = true;
+  try {
+    // Récupération stricte depuis la table "profiles" (colonne avatar_url, username, level, etc.)
+    profile.value = await fetchUserProfile();
+  } catch (err: any) {
+    console.error('Erreur chargement profil base de données:', err);
+    toast.add({
+      title: 'Erreur',
+      description: err?.message || 'Impossible de charger votre profil depuis la base de données.',
+      color: 'error',
+      icon: 'i-lucide-triangle-alert',
+    });
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+function onProfileUpdated(updatedProfile: UserProfile) {
+  profile.value = updatedProfile;
+}
+
+watch(
+  user,
+  (newUser) => {
+    if (newUser) {
+      loadProfile();
+    }
+  },
+  { immediate: true },
+);
+
+onMounted(() => {
+  loadProfile();
+});
+</script>

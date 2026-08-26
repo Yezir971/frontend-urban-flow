@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-// Ici, j'importe des icônes factices depuis lucide-vue-next
+
 import { Home, Search, User } from 'lucide-vue-next'
 
 // Configuration de tes liens (plus besoin de isActive manuel !)

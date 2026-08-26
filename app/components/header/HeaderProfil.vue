@@ -40,7 +40,7 @@
     <Teleport to="body">
       <div
         v-if="isModalOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-fade-in"
+        class="fixed inset-0 z-99 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-fade-in"
         @click.self="closeModal"
       >
         <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-gray-100 relative animate-scale-up">

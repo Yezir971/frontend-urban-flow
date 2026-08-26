@@ -4,13 +4,8 @@ import { useSupabaseSession } from '#imports'
 export async function planTrip(from: Location, to: Location, modes: ItineraryMode[]) {
   const config = useRuntimeConfig()
   
-  // Résolution robuste de l'URL de l'API Gateway NestJS
-  const rawUrl = config.public?.urlBack as string | undefined
-  const gatewayUrl = (rawUrl && !rawUrl.includes('empty'))
-    ? rawUrl.replace(/\/$/, '')
-    : (typeof window !== 'undefined' && window.location.hostname !== 'localhost'
-        ? 'https://api.urban-flow-lyon.fr'
-        : 'http://localhost:3002')
+  const rawUrl = (config.public?.urlBack as string | undefined) || ''
+  const gatewayUrl = rawUrl.replace(/\/$/, '')
 
   console.log(`Appel de l'API Gateway à l'URL: ${gatewayUrl}/api/route`)
 

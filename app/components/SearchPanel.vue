@@ -25,8 +25,8 @@
       </button>
     </form>
 
-    <!-- Filtres rapides -->
-    <div>
+    <!-- Filtres rapides (Dynamiques selon les préférences utilisateur) -->
+    <div v-if="quickFilters.length > 0">
       <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Filtres rapides</h2>
       <div class="flex gap-2 flex-wrap">
         <button
@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import {
   Clock,
   Train,
@@ -92,6 +92,7 @@ import {
   Footprints
 } from 'lucide-vue-next'
 import DestinationSelector from './DestinationSelector.vue'
+import { useUserPreferences } from '~/composables/useUserPreferences'
 
 export interface LocationData {
   name: string;
@@ -106,20 +107,37 @@ const emit = defineEmits([
   'location-selected-end'
 ])
 
+const { preferences, loadPreferences } = useUserPreferences()
+
 const destinationSelectorRef = ref<any>(null)
 const startLocation = ref<LocationData | null>(null)
 const endLocation = ref<LocationData | null>(null)
 
-// Filtre rapide sélectionné (mode)
+// Filtres selon les préférences de l'utilisateur
+const allFilters = [
+  { name: 'Trains & RER', key: 'pref_metro' as const, icon: Train },
+  { name: 'Bus', key: 'pref_bus' as const, icon: Bus },
+  { name: 'Vélos', key: 'pref_bike' as const, icon: Bike },
+  { name: 'Marche', key: 'pref_walk' as const, icon: Footprints },
+  { name: 'Voiture', key: 'pref_car' as const, icon: Car }
+]
+
+const quickFilters = computed(() => {
+  return allFilters.filter(f => preferences.value[f.key])
+})
+
 const selectedFilter = ref<string>('Trains & RER')
 
-const quickFilters = [
-  { name: 'Trains & RER', icon: Train },
-  { name: 'Bus', icon: Bus },
-  { name: 'Vélos', icon: Bike },
-  { name: 'Marche', icon: Footprints },
-  { name: 'Voiture', icon: Car }
-]
+// Ajuste automatiquement la sélection si un mode a été désactivé dans les préférences
+watch(quickFilters, (filters) => {
+  if (filters.length > 0 && !filters.some(f => f.name === selectedFilter.value)) {
+    selectedFilter.value = filters[0].name
+  }
+}, { immediate: true })
+
+onMounted(() => {
+  loadPreferences()
+})
 
 const favorites = [
   {
@@ -170,7 +188,6 @@ function selectFavorite(fav: typeof favorites[0]) {
     otpValue: [fav.lon, fav.lat]
   }
 
-  // Force la valeur de destination dans le sélecteur modulaire
   destinationSelectorRef.value?.setDestination(data)
 }
 

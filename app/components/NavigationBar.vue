@@ -1,6 +1,6 @@
 <template>
   <!-- Conteneur principal : Barre en bas sur mobile, Sidebar à gauche sur desktop -->
-  <nav class="fixed z-99 transition-all duration-300
+  <nav class="fixed z-98 transition-all duration-300
               bottom-6 left-1/2 -translate-x-1/2 w-[90%] flex flex-row justify-around items-center bg-[#FFFFFF] shadow-amber-50  p-2 rounded-full
               md:translate-x-0 md:bottom-auto md:left-0 md:top-0 md:h-screen md:w-64 md:flex-col md:justify-start  md:bg-[#F3F5F4] md:p-6 md:rounded-none md:border-r md:border-gray-200">
 

@@ -92,3 +92,6 @@ export function getMinDistanceToPolyline(point: [number, number], polylinePoints
   }
   return minDistance
 }
+
+export const normalizeGeometry = mapGeometryToLeafletPoints
+

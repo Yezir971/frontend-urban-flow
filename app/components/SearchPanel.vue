@@ -72,8 +72,8 @@
           <ChevronRight class="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
         </button>
       </div>
-      <div v-else class="p-4 rounded-2xl bg-gray-50/70 border border-gray-100 text-center text-xs text-gray-500">
-        Aucun favori enregistré. Ajoutez-en depuis l'accueil !
+      <div v-else class="p-4 rounded-2xl bg-[#F8FAF9] border border-gray-100/80 text-center text-xs font-medium text-gray-500 flex items-center justify-center gap-2">
+        <span>Aucun favori enregistré</span>
       </div>
     </div>
   </div>
@@ -174,33 +174,8 @@ const displayFavorites = computed(() => {
     }));
   }
 
-  // Si pas de favoris utilisateur, exemples par défaut
-  return [
-    {
-      id: 'default-1',
-      title: 'Domicile',
-      address: 'Place Bellecour, Lyon',
-      lat: 45.7578,
-      lon: 4.8322,
-      startAddress: null,
-      startLat: undefined,
-      startLon: undefined,
-      iconComponent: Home,
-      iconColor: 'green',
-    },
-    {
-      id: 'default-2',
-      title: 'Travail',
-      address: 'Gare Part-Dieu, Lyon',
-      lat: 45.7602,
-      lon: 4.8596,
-      startAddress: null,
-      startLat: undefined,
-      startLon: undefined,
-      iconComponent: Briefcase,
-      iconColor: 'green',
-    },
-  ];
+  // Aucun favori par défaut si l'utilisateur n'en a pas enregistré
+  return [];
 });
 
 // Ajuste automatiquement la sélection si un mode a été désactivé dans les préférences

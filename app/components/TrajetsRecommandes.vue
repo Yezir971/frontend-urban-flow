@@ -118,11 +118,11 @@
 
         <!-- Ligne inférieure : Économie CO2 & Badges & Chevron -->
         <div class="flex items-center justify-between pt-1 border-t border-gray-50/80 text-xs">
-          <!-- CO2 économisé dynamique -->
+          <!-- CO2 économisé dynamique (en g ou kg) -->
           <div class="flex items-center gap-1.5 text-[#104e35] font-semibold text-[11px]">
             <Leaf class="w-3.5 h-3.5 fill-[#104e35] shrink-0" />
             <span>
-              {{ proposal.type === 'WALK' || proposal.type === 'CAR' ? (proposal.type === 'CAR' ? 'Référence voiture' : '0.0 kg CO2') : `${proposal.co2SavedKg} kg CO2 économisé` }}
+              {{ formatCo2SavingsBadge(proposal) }}
             </span>
           </div>
 
@@ -146,6 +146,7 @@
 import type { PropType } from 'vue'
 import { ArrowLeft, Footprints, Bike, Car, Leaf, ChevronRight } from 'lucide-vue-next'
 import type { ItineraryProposal } from '~/types/itinerary'
+import { formatCo2SavingsBadge } from '~/utils/itinerary.helpers'
 
 defineProps({
   proposals: {

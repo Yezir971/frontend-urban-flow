@@ -59,7 +59,7 @@
         <div class="flex flex-col min-w-0">
           <span class="text-[10px] uppercase font-bold text-[#104e35]/80 tracking-wider">Économie</span>
           <span class="text-xs font-black text-[#104e35] truncate">
-            {{ itinerary.type === 'CAR' ? '0.0 kg (Voiture)' : `${itinerary.co2SavedKg} kg CO2` }}
+            {{ itinerary.type === 'CAR' ? '0 g (Voiture)' : `${formatCo2(itinerary.co2SavedKg)} CO₂` }}
           </span>
         </div>
       </div>
@@ -273,6 +273,7 @@ import {
 import type { ItineraryProposal } from '~/types/itinerary'
 import { useNavigationStore } from '~/stores/navigation'
 import { useUserProfile } from '~/composables/useUserProfile'
+import { formatCo2 } from '~/utils/itinerary.helpers'
 
 const props = defineProps({
   itinerary: {

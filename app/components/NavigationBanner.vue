@@ -52,15 +52,30 @@
             </div>
           </div>
 
-          <!-- Bouton Arrêter le guidage -->
-          <button
-            type="button"
-            @click="handleStop"
-            class="p-2.5 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 active:scale-95 transition-all cursor-pointer shrink-0"
-            title="Arrêter le guidage"
-          >
-            <X class="w-5 h-5" />
-          </button>
+          <!-- Actions de fin ou d'arrêt -->
+          <div class="flex items-center gap-1.5 shrink-0">
+            <!-- Bouton Arrivé / Terminer -->
+            <button
+              v-if="navStore.remainingPercent >= 80"
+              type="button"
+              @click="handleFinish"
+              class="px-2.5 py-1.5 rounded-2xl bg-emerald-50 text-[#0F5238] hover:bg-emerald-100 active:scale-95 transition-all cursor-pointer font-bold text-xs flex items-center gap-1 shadow-xs"
+              title="Terminer le trajet et enregistrer"
+            >
+              <Check class="w-4 h-4 text-emerald-700" />
+              <span>Arrivé</span>
+            </button>
+
+            <!-- Bouton Arrêter le guidage -->
+            <button
+              type="button"
+              @click="handleStop"
+              class="p-2.5 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 active:scale-95 transition-all cursor-pointer shrink-0"
+              title="Arrêter le guidage"
+            >
+              <X class="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         <!-- Barre de progression -->
@@ -131,6 +146,7 @@ import {
   Play,
   Pause,
   RefreshCw,
+  Check,
 } from 'lucide-vue-next'
 import { useNavigationStore } from '~/stores/navigation'
 import { useUserProfile } from '~/composables/useUserProfile'
@@ -144,6 +160,12 @@ const emit = defineEmits<{
   (e: 'stop'): void
   (e: 'deviate', coords: [number, number]): void
 }>()
+
+function handleFinish() {
+  navStore.completeNavigation()
+  navStore.stopNavigation()
+  emit('stop')
+}
 
 function handleStop() {
   navStore.stopNavigation()

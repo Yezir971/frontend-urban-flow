@@ -13,6 +13,7 @@ import UiSpinner from '~/components/ui/spinner.vue'
 import { validateRouteInputs } from '~/utils/validation'
 import { buildMultimodalProposals, filterProposalsByPreferences } from '~/utils/itinerary.helpers'
 import { planTrip } from '~/utils/otp.service'
+import { recordCompletedTrip } from '~/utils/trips.service'
 import { useUserPreferences } from '~/composables/useUserPreferences'
 import { useUserProfile } from '~/composables/useUserProfile'
 
@@ -140,14 +141,64 @@ const handleStartNavigation = (options: { simulate: boolean }) => {
   navStore.startNavigation(selectedProposal.value, {
     simulate: options.simulate,
     onReroute: handleDeviationReroute,
-    onFinish: () => {
-      toast.add({
-        title: 'Arrivé à destination !',
-        description: 'Félicitations pour ce trajet éco-responsable avec Urban Flow !',
-        color: 'success',
-        icon: 'i-lucide-award'
-      })
-    }
+    onFinish: async () => {
+      const prop = selectedProposal.value
+      if (prop) {
+        try {
+          const rawMode = ((prop as any).mode || prop.type || 'TRANSIT').toUpperCase()
+          const validMode = [
+            'TRANSIT',
+            'SUBWAY',
+            'TRAM',
+            'BUS',
+            'BICYCLE',
+            'SCOOTER',
+            'WALK',
+            'CAR',
+          ].includes(rawMode)
+            ? rawMode
+            : 'TRANSIT'
+
+          const duration = Math.max(1, Math.round(prop.durationMinutes || 1))
+          const distance = Math.max(10, Math.round(prop.distanceMeters || 100))
+          const co2 = Math.max(0, Number((prop.co2SavedKg || 0).toFixed(2)))
+
+          await recordCompletedTrip({
+            start_name: startName.value || 'Départ',
+            end_name: endName.value || 'Destination',
+            start_lat: Number(startCoordinates.value[1]) || 45.7640,
+            start_lon: Number(startCoordinates.value[0]) || 4.8357,
+            end_lat: Number(endCoordinates.value[1]) || 45.7640,
+            end_lon: Number(endCoordinates.value[0]) || 4.8357,
+            mode: validMode as any,
+            line_name: prop.badge || (prop as any).lineBadge || null,
+            duration_minutes: duration,
+            distance_meters: distance,
+            co2_saved_kg: co2,
+            points_earned: 10,
+            trace: prop.trace || (prop as any).rawTrace || null,
+          })
+
+          // Recharge instantanément le profil pour mettre à jour les compteurs globaux
+          await loadProfile(true)
+
+          toast.add({
+            title: 'Arrivé à destination ! 🎉',
+            description: `Trajet enregistré ! +10 éco-points & ${(prop.co2SavedKg || 0).toFixed(1)} kg CO2 économisés 🌱`,
+            color: 'success',
+            icon: 'i-lucide-award',
+          })
+        } catch (err: any) {
+          console.warn('Erreur enregistrement trajet:', err)
+          toast.add({
+            title: 'Arrivé à destination !',
+            description: 'Félicitations pour ce trajet éco-responsable avec Urban Flow !',
+            color: 'success',
+            icon: 'i-lucide-award',
+          })
+        }
+      }
+    },
   })
 
   // Sur mobile, ferme ou réduit le sheet pour libérer la vue de la carte

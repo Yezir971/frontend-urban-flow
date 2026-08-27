@@ -43,6 +43,15 @@ export interface UserTrip {
   completed_at: string;
 }
 
+export interface UserCo2Stats {
+  total_co2_saved_kg: number;
+  weekly_co2_saved_kg: number;
+  percentage_vs_last_week: number;
+  percentage_label: string;
+  equivalent_trees: number;
+  trees_label: string;
+}
+
 export async function recordCompletedTrip(
   payload: CompletedTripPayload,
 ): Promise<UserTrip> {
@@ -99,6 +108,40 @@ export async function fetchRecentTrips(limit = 5): Promise<UserTrip[]> {
 
   if (!res.ok) {
     throw new Error(`Erreur récupération trajets récents (${res.status})`);
+  }
+
+  return await res.json();
+}
+
+export async function fetchUserCo2Stats(): Promise<UserCo2Stats> {
+  const config = useRuntimeConfig();
+  const rawUrl = (config.public?.urlBack as string | undefined) || '';
+  const gatewayUrl = rawUrl.replace(/\/$/, '');
+
+  const session = useSupabaseSession();
+  const token = session.value?.access_token;
+
+  if (!token) {
+    return {
+      total_co2_saved_kg: 0,
+      weekly_co2_saved_kg: 0,
+      percentage_vs_last_week: 0,
+      percentage_label: '0% vs semaine dernière',
+      equivalent_trees: 0,
+      trees_label: 'Équivalent de ce que 0 arbre absorbe en une année.',
+    };
+  }
+
+  const res = await fetch(`${gatewayUrl}/api/user/co2-stats`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Erreur récupération stats CO2 (${res.status})`);
   }
 
   return await res.json();

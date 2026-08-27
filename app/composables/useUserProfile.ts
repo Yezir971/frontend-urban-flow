@@ -18,6 +18,10 @@ export function useUserProfile() {
     return profile.value;
   }
 
+  function setProfile(newProfile: UserProfile) {
+    profile.value = newProfile;
+  }
+
   const isAdmin = computed(() => {
     return profile.value?.role?.toUpperCase() === 'ADMIN';
   });
@@ -27,5 +31,6 @@ export function useUserProfile() {
     isLoading,
     isAdmin,
     loadProfile,
+    setProfile,
   };
 }

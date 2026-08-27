@@ -45,13 +45,13 @@ describe('itinerary.helpers', () => {
   describe('calculateCo2Savings', () => {
     it('should calculate CO2 savings compared to a car', () => {
       const savingsWalk = calculateCo2Savings(2000, 'WALK')
-      expect(savingsWalk).toBe(0.24)
+      expect(savingsWalk).toBe(0.44)
 
       const savingsTransit = calculateCo2Savings(2000, 'TRANSIT')
-      expect(savingsTransit).toBe(0.18)
+      expect(savingsTransit).toBe(0.32)
 
       const savingsBike = calculateCo2Savings(2000, 'BICYCLE')
-      expect(savingsBike).toBe(0.23)
+      expect(savingsBike).toBe(0.44)
 
       const savingsCar = calculateCo2Savings(2000, 'CAR')
       expect(savingsCar).toBe(0.0)

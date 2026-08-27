@@ -316,6 +316,35 @@ onMounted(() => {
     }, 300)
   }
   window.addEventListener('resize', handleResize)
+
+  // Si on arrive depuis un favori avec des coordonnées dans l'URL
+  if (route.query.lat && route.query.lon) {
+    const destLat = parseFloat(route.query.lat as string)
+    const destLon = parseFloat(route.query.lon as string)
+    if (!isNaN(destLat) && !isNaN(destLon)) {
+      endCoordinates.value = [destLon, destLat]
+      endName.value = (route.query.name as string) || (route.query.destination as string) || 'Destination'
+
+      if (route.query.start_lat && route.query.start_lon) {
+        const sLat = parseFloat(route.query.start_lat as string)
+        const sLon = parseFloat(route.query.start_lon as string)
+        if (!isNaN(sLat) && !isNaN(sLon)) {
+          startCoordinates.value = [sLon, sLat]
+          startName.value = (route.query.start as string) || 'Départ'
+        }
+      } else {
+        const startLon = geo.lng || 4.8590
+        const startLat = geo.lat || 45.7606
+        startCoordinates.value = [startLon, startLat]
+        startName.value = 'Ma position actuelle'
+      }
+
+      // Déclenche immédiatement la recherche
+      setTimeout(() => {
+        handleSearch({ mode: 'Transport' })
+      }, 200)
+    }
+  }
 })
 
 onBeforeUnmount(() => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-6xl mx-auto flex flex-col gap-6 sm:gap-8">
+  <div class="max-w-6xl mx-auto flex flex-col gap-6 sm:gap-8 pb-10">
     <!-- Header Home : Bonjour, <nom> + Avatar dynamique -->
     <HeaderHome :profile="profile" :is-loading="isLoading" />
 
@@ -10,6 +10,9 @@
         <Co2StatsCard />
       </div>
     </div>
+
+    <!-- Section Favoris : Prêt à partir ? -->
+    <FavoritesSection />
   </div>
 </template>
 
@@ -17,6 +20,7 @@
 import { onMounted } from 'vue';
 import HeaderHome from '~/components/header/HeaderHome.vue';
 import Co2StatsCard from '~/components/home/Co2StatsCard.vue';
+import FavoritesSection from '~/components/home/FavoritesSection.vue';
 import { useUserProfile } from '~/composables/useUserProfile';
 
 definePageMeta({

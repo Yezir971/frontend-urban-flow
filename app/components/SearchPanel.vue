@@ -50,28 +50,30 @@
     <!-- Favoris & Récents -->
     <div>
       <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Favoris & Récents</h2>
-      <div class="flex flex-col gap-2">
+      <div v-if="displayFavorites.length > 0" class="flex flex-col gap-2">
         <button
-          v-for="fav in favorites"
-          :key="fav.title"
+          v-for="fav in displayFavorites"
+          :key="fav.id || fav.title"
           type="button"
           @click="selectFavorite(fav)"
-          class="flex items-center justify-between p-3 rounded-2xl bg-white border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-md transition-all active:scale-[0.99] text-left w-full cursor-pointer"
+          class="flex items-center justify-between p-3 rounded-2xl bg-white border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-md transition-all active:scale-[0.99] text-left w-full cursor-pointer group"
         >
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 min-w-0">
             <div
-              class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-              :class="[fav.iconColor === 'green' ? 'bg-[#EAF5F1] text-[#104e35]' : 'bg-[#F3F5F4] text-gray-500']"
+              class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-[#EAF5F1] text-[#104e35] group-hover:scale-105 transition-transform"
             >
-              <component :is="fav.icon" class="w-5 h-5" />
+              <component :is="fav.iconComponent" class="w-5 h-5" />
             </div>
-            <div>
-              <p class="font-medium text-gray-900 text-sm">{{ fav.title }}</p>
-              <p class="text-xs text-gray-500 line-clamp-1">{{ fav.address }}</p>
+            <div class="min-w-0">
+              <p class="font-bold text-gray-900 text-sm truncate">{{ fav.title }}</p>
+              <p class="text-xs text-gray-500 truncate">{{ fav.address }}</p>
             </div>
           </div>
-          <ChevronRight class="w-4 h-4 text-gray-400 shrink-0" />
+          <ChevronRight class="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
         </button>
+      </div>
+      <div v-else class="p-4 rounded-2xl bg-gray-50/70 border border-gray-100 text-center text-xs text-gray-500">
+        Aucun favori enregistré. Ajoutez-en depuis l'accueil !
       </div>
     </div>
   </div>
@@ -87,31 +89,39 @@ import {
   Bike,
   Home,
   Briefcase,
+  Star,
+  User,
+  Heart,
+  Dumbbell,
   History,
   ChevronRight,
   Footprints
 } from 'lucide-vue-next'
 import DestinationSelector from './DestinationSelector.vue'
 import { useUserPreferences } from '~/composables/useUserPreferences'
+import { useFavorites } from '~/composables/useFavorites'
+import type { UserFavorite } from '~/types/favorite'
 
 export interface LocationData {
   name: string;
   lat: number;
   lon: number;
-  otpValue: [number, number];
+  otpValue?: [number, number];
 }
 
 const emit = defineEmits([
-  'search',
   'location-selected-start',
-  'location-selected-end'
+  'location-selected-end',
+  'search'
 ])
 
 const { preferences, loadPreferences } = useUserPreferences()
+const { favorites: userFavorites, fetchFavorites } = useFavorites()
 
-const destinationSelectorRef = ref<any>(null)
 const startLocation = ref<LocationData | null>(null)
 const endLocation = ref<LocationData | null>(null)
+const selectedFilter = ref('Transport')
+const destinationSelectorRef = ref<InstanceType<typeof DestinationSelector> | null>(null)
 
 // Filtres selon les préférences de l'utilisateur
 const allFilters = [
@@ -126,7 +136,72 @@ const quickFilters = computed(() => {
   return allFilters.filter(f => preferences.value[f.key])
 })
 
-const selectedFilter = ref<string>('Trains & RER')
+// Helper pour associer un composant d'icône
+function getIconForFav(iconName?: string) {
+  switch (iconName?.toLowerCase()) {
+    case 'work':
+    case 'briefcase':
+      return Briefcase;
+    case 'star':
+      return Star;
+    case 'user':
+      return User;
+    case 'heart':
+      return Heart;
+    case 'gym':
+    case 'dumbbell':
+      return Dumbbell;
+    case 'home':
+    default:
+      return Home;
+  }
+}
+
+// Favoris formatés pour l'affichage
+const displayFavorites = computed(() => {
+  if (userFavorites.value && userFavorites.value.length > 0) {
+    return userFavorites.value.map((f) => ({
+      id: f.id,
+      title: f.name,
+      address: f.address,
+      lat: f.coordinates.lat,
+      lon: f.coordinates.lng,
+      startAddress: f.start_address,
+      startLat: f.start_coordinates?.lat,
+      startLon: f.start_coordinates?.lng,
+      iconComponent: getIconForFav(f.icon),
+      iconColor: 'green',
+    }));
+  }
+
+  // Si pas de favoris utilisateur, exemples par défaut
+  return [
+    {
+      id: 'default-1',
+      title: 'Domicile',
+      address: 'Place Bellecour, Lyon',
+      lat: 45.7578,
+      lon: 4.8322,
+      startAddress: null,
+      startLat: undefined,
+      startLon: undefined,
+      iconComponent: Home,
+      iconColor: 'green',
+    },
+    {
+      id: 'default-2',
+      title: 'Travail',
+      address: 'Gare Part-Dieu, Lyon',
+      lat: 45.7602,
+      lon: 4.8596,
+      startAddress: null,
+      startLat: undefined,
+      startLon: undefined,
+      iconComponent: Briefcase,
+      iconColor: 'green',
+    },
+  ];
+});
 
 // Ajuste automatiquement la sélection si un mode a été désactivé dans les préférences
 watch(quickFilters, (filters) => {
@@ -136,35 +211,9 @@ watch(quickFilters, (filters) => {
 }, { immediate: true })
 
 onMounted(() => {
-  loadPreferences()
-})
-
-const favorites = [
-  {
-    title: 'Domicile',
-    address: 'Place Bellecour, Lyon',
-    lat: 45.7578,
-    lon: 4.8322,
-    icon: Home,
-    iconColor: 'green'
-  },
-  {
-    title: 'Travail',
-    address: 'Gare Part-Dieu, Lyon',
-    lat: 45.7602,
-    lon: 4.8596,
-    icon: Briefcase,
-    iconColor: 'green'
-  },
-  {
-    title: 'Gare Perrache',
-    address: 'Place Carnot, Lyon',
-    lat: 45.7485,
-    lon: 4.8258,
-    icon: History,
-    iconColor: 'gray'
-  }
-]
+  loadPreferences();
+  fetchFavorites();
+});
 
 function handleStartSelected(data: LocationData) {
   startLocation.value = data
@@ -180,15 +229,39 @@ function toggleFilter(filterName: string) {
   selectedFilter.value = filterName
 }
 
-function selectFavorite(fav: typeof favorites[0]) {
-  const data: LocationData = {
+function selectFavorite(fav: {
+  title: string;
+  address: string;
+  lat: number;
+  lon: number;
+  startAddress?: string | null;
+  startLat?: number;
+  startLon?: number;
+}) {
+  // 1. Renseigner la destination
+  const endData: LocationData = {
     name: fav.address,
     lat: fav.lat,
     lon: fav.lon,
-    otpValue: [fav.lon, fav.lat]
-  }
+    otpValue: [fav.lon, fav.lat],
+  };
 
-  destinationSelectorRef.value?.setDestination(data)
+  destinationSelectorRef.value?.setDestination(endData);
+  endLocation.value = endData;
+  emit('location-selected-end', endData);
+
+  // 2. Renseigner le départ si présent dans le favori
+  if (fav.startAddress && fav.startLat != null && fav.startLon != null) {
+    const startData: LocationData = {
+      name: fav.startAddress,
+      lat: fav.startLat,
+      lon: fav.startLon,
+      otpValue: [fav.startLon, fav.startLat],
+    };
+    destinationSelectorRef.value?.setStart(startData);
+    startLocation.value = startData;
+    emit('location-selected-start', startData);
+  }
 }
 
 function handleSearch() {

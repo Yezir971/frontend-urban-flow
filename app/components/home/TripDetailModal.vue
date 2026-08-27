@@ -17,9 +17,16 @@
         class="relative w-full max-w-lg bg-white rounded-[32px] shadow-2xl overflow-hidden transform transition-all flex flex-col z-10 my-auto border border-gray-100 max-h-[90vh]"
       >
         <!-- En-tête avec Carte du tracé -->
-        <div class="relative w-full h-48 sm:h-56 bg-slate-100 overflow-hidden">
+        <div class="relative w-full h-52 sm:h-60 bg-[#E8ECE9] overflow-hidden">
           <!-- Mini carte Leaflet -->
-          <div ref="mapContainer" class="w-full h-full z-0" />
+          <ClientOnly>
+            <div ref="mapContainer" class="w-full h-full absolute inset-0 z-0" />
+            <template #fallback>
+              <div class="w-full h-full flex items-center justify-center bg-[#E8ECE9] text-xs text-gray-400">
+                Chargement de la carte...
+              </div>
+            </template>
+          </ClientOnly>
 
           <!-- Bouton de fermeture en haut à droite -->
           <button
@@ -149,7 +156,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue';
+import { ref, computed, watch, onBeforeUnmount, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   X,
@@ -164,7 +171,7 @@ import {
   Car,
 } from 'lucide-vue-next';
 import type { UserTrip } from '~/types/trip';
-import { normalizeGeometry } from '~/utils/geometry';
+import { mapGeometryToLeafletPoints } from '~/utils/geometry';
 import { formatCo2 } from '~/utils/itinerary.helpers';
 
 const props = defineProps<{
@@ -180,9 +187,22 @@ const router = useRouter();
 const mapContainer = ref<HTMLElement | null>(null);
 let mapInstance: any = null;
 let polylineLayer: any = null;
+let startMarker: any = null;
+let endMarker: any = null;
 
 function closeModal() {
+  destroyMap();
   emit('close');
+}
+
+function destroyMap() {
+  if (mapInstance) {
+    mapInstance.remove();
+    mapInstance = null;
+    polylineLayer = null;
+    startMarker = null;
+    endMarker = null;
+  }
 }
 
 function formatCo2Value(kg?: number | null) {
@@ -268,93 +288,126 @@ function redoTrip() {
   });
 }
 
-// Initialisation de la mini carte
+// Initialisation robuste de la mini carte Leaflet
 async function initMiniMap() {
   if (typeof window === 'undefined' || !props.isOpen || !props.trip) return;
 
   await nextTick();
-  const L = (await import('leaflet')).default;
 
   if (!mapContainer.value) return;
 
-  if (!mapInstance) {
-    mapInstance = L.map(mapContainer.value, {
-      zoomControl: false,
-      attributionControl: false,
-      dragging: false,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-    });
+  const L = (await import('leaflet')).default;
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
-    }).addTo(mapInstance);
-  }
+  // Nettoyage préalable de l'ancienne instance de carte
+  destroyMap();
 
-  if (polylineLayer) {
-    mapInstance.removeLayer(polylineLayer);
-  }
+  if (!mapContainer.value) return;
 
-  const startCoord: [number, number] = [props.trip.start_lat, props.trip.start_lon];
-  const endCoord: [number, number] = [props.trip.end_lat, props.trip.end_lon];
+  mapInstance = L.map(mapContainer.value, {
+    zoomControl: false,
+    attributionControl: false,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    touchZoom: false,
+  });
+
+  // Fond de carte OpenStreetMap (100% libre et sans clé API)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap',
+  }).addTo(mapInstance);
+
+  const startLat = Number(props.trip.start_lat);
+  const startLon = Number(props.trip.start_lon);
+  const endLat = Number(props.trip.end_lat);
+  const endLon = Number(props.trip.end_lon);
+
+  const startCoord: [number, number] = [
+    !isNaN(startLat) && startLat !== 0 ? startLat : 45.7606,
+    !isNaN(startLon) && startLon !== 0 ? startLon : 4.859,
+  ];
+  const endCoord: [number, number] = [
+    !isNaN(endLat) && endLat !== 0 ? endLat : 45.7578,
+    !isNaN(endLon) && endLon !== 0 ? endLon : 4.8322,
+  ];
 
   let points: [number, number][] = [];
 
   if (props.trip.trace) {
     try {
-      points = normalizeGeometry(props.trip.trace);
+      points = mapGeometryToLeafletPoints(props.trip.trace);
     } catch {
       points = [startCoord, endCoord];
     }
-  } else {
+  }
+
+  if (!points || points.length < 2) {
     points = [startCoord, endCoord];
   }
 
-  // Ligne de tracé verte en pointillés
+  // Tracé vert forêt en pointillés
   polylineLayer = L.polyline(points, {
     color: '#104E35',
-    weight: 4,
+    weight: 5,
     dashArray: '6, 8',
-    opacity: 0.9,
+    opacity: 0.95,
   }).addTo(mapInstance);
 
   // Marqueurs de départ et arrivée
   const startIcon = L.divIcon({
-    className: 'custom-map-marker',
-    html: '<div style="background-color: #10B981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
-    iconSize: [12, 12],
-    iconAnchor: [6, 6],
-  });
-
-  const endIcon = L.divIcon({
-    className: 'custom-map-marker',
-    html: '<div style="background-color: #104E35; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.4);"></div>',
+    className: 'custom-map-marker-start',
+    html: '<div style="background-color: #10B981; width: 14px; height: 14px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.35);"></div>',
     iconSize: [14, 14],
     iconAnchor: [7, 7],
   });
 
-  L.marker(startCoord, { icon: startIcon }).addTo(mapInstance);
-  L.marker(endCoord, { icon: endIcon }).addTo(mapInstance);
-
-  mapInstance.fitBounds(polylineLayer.getBounds(), {
-    padding: [30, 30],
+  const endIcon = L.divIcon({
+    className: 'custom-map-marker-end',
+    html: '<div style="background-color: #104E35; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.45);"></div>',
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
   });
+
+  startMarker = L.marker(points[0] || startCoord, { icon: startIcon }).addTo(mapInstance);
+  endMarker = L.marker(points[points.length - 1] || endCoord, { icon: endIcon }).addTo(mapInstance);
+
+  const bounds = polylineLayer.getBounds();
+  if (bounds.isValid()) {
+    mapInstance.fitBounds(bounds, {
+      padding: [40, 40],
+      maxZoom: 16,
+    });
+  } else {
+    mapInstance.setView(startCoord, 13);
+  }
+
+  // Redimensionnement dynamique garanti
+  setTimeout(() => {
+    mapInstance?.invalidateSize();
+  }, 150);
 }
 
 watch(
   () => [props.isOpen, props.trip],
-  ([newOpen]) => {
-    if (newOpen) {
-      setTimeout(initMiniMap, 150);
+  ([newOpen, newTrip]) => {
+    if (newOpen && newTrip) {
+      setTimeout(initMiniMap, 100);
+    } else {
+      destroyMap();
     }
   },
 );
+
+onBeforeUnmount(() => {
+  destroyMap();
+});
 </script>
 
 <style scoped>
-/* Assure le bon affichage de Leaflet */
 :deep(.leaflet-container) {
   width: 100%;
   height: 100%;
+  background: #e8ece9;
 }
 </style>

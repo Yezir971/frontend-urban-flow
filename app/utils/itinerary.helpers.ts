@@ -34,28 +34,74 @@ export function calculateArrivalTime(durationMinutes: number, fromDate: Date = n
 }
 
 /**
- * Calcule l'économie de CO2 en kg par rapport à un trajet en voiture standard (120g CO2/km)
+ * Facteurs d'émissions officiels (Base Carbone ADEME & Impact CO2 : https://impactco2.fr/doc/api)
+ * Exprimés en g CO2e / passager.km
  */
-export function calculateCo2Savings(distanceMeters: number, mode: string): number {
-  const distanceKm = distanceMeters / 1000
-  const carEmissionKg = distanceKm * 0.12
+export const EMISSION_FACTORS_G_PER_KM = {
+  CAR: 218, // Voiture thermique moyenne solo
+  BUS: 110, // Bus urbain thermique/hybride
+  TRAM: 3.0, // Tramway électrique
+  SUBWAY: 2.5, // Métro électrique
+  METRO: 2.5,
+  RAIL: 4.5, // Train / RER
+  TRANSIT: 60, // Moyenne globale transport en commun
+  BICYCLE: 0, // Vélo musculaire
+  SCOOTER: 0, // Trottinette
+  WALK: 0, // Marche à pied
+} as const;
 
-  switch (mode.toUpperCase()) {
-    case 'WALK':
-      return parseFloat(carEmissionKg.toFixed(2))
-    case 'BICYCLE':
-    case 'SCOOTER':
-      return parseFloat((carEmissionKg * 0.95).toFixed(2))
-    case 'TRANSIT':
-    case 'SUBWAY':
-    case 'TRAM':
-    case 'BUS':
-      return parseFloat((carEmissionKg * 0.75).toFixed(2))
-    case 'CAR':
-      return 0.0
-    default:
-      return 0.0
+/**
+ * Calcule l'économie de CO2 en kg par rapport à un trajet en voiture standard (218g CO2/km)
+ * CO2 économisé = CO2 voiture référence - CO2 mode choisi
+ */
+export function calculateCo2Savings(
+  distanceMeters: number,
+  mode: string,
+  carReferenceDistanceMeters?: number,
+): number {
+  const totalKm = distanceMeters / 1000;
+  const refKm = (carReferenceDistanceMeters && carReferenceDistanceMeters > 0 ? carReferenceDistanceMeters : distanceMeters) / 1000;
+  const carEmissionG = refKm * EMISSION_FACTORS_G_PER_KM.CAR;
+
+  const upperMode = (mode || 'WALK').toUpperCase();
+  const factor = (EMISSION_FACTORS_G_PER_KM as any)[upperMode] ?? 0;
+  const modeEmissionG = totalKm * factor;
+
+  const savedG = Math.max(0, carEmissionG - modeEmissionG);
+  return parseFloat((savedG / 1000).toFixed(2));
+}
+
+/**
+ * Formate une valeur de CO2 (exprimée en kg) de manière optimale :
+ * En grammes (g) pour les valeurs < 1 kg (ex: "650 g"), et en kilogrammes (kg) au-delà (ex: "1.4 kg")
+ */
+export function formatCo2(co2Kg?: number | null): string {
+  if (co2Kg == null || isNaN(co2Kg) || co2Kg <= 0) {
+    return '0 g';
   }
+  if (co2Kg < 1.0) {
+    return `${Math.round(co2Kg * 1000)} g`;
+  }
+  return `${co2Kg.toFixed(1)} kg`;
+}
+
+/**
+ * Retourne le texte lisible d'économie de CO2 pour une carte de trajet
+ */
+export function formatCo2SavingsBadge(proposal: { type?: string; co2SavedKg?: number }): string {
+  if (proposal.type === 'CAR') {
+    return '0 g (Trajet de référence)';
+  }
+  const formatted = formatCo2(proposal.co2SavedKg);
+  return `${formatted} CO₂ évités`;
+}
+
+/**
+ * Calcule l'équivalent concret du quotidien en kilomètres de voiture thermique évités
+ */
+export function calculateCarEquivalentKm(co2Kg: number): number {
+  if (!co2Kg || co2Kg <= 0) return 0;
+  return Math.round((co2Kg * 1000) / EMISSION_FACTORS_G_PER_KM.CAR);
 }
 
 /**

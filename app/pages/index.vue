@@ -6,7 +6,7 @@
     <!-- Section Statistiques & Défis -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Encart Vert : Stats CO2 évité -->
-      <div class="lg:col-span-2">
+      <div class="lg:col-span-3">
         <Co2StatsCard />
       </div>
     </div>

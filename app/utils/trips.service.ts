@@ -45,10 +45,14 @@ export interface UserTrip {
 
 export interface UserCo2Stats {
   total_co2_saved_kg: number;
+  total_co2_saved_g?: number;
+  formatted_co2?: string;
   weekly_co2_saved_kg: number;
   percentage_vs_last_week: number;
   percentage_label: string;
-  equivalent_trees: number;
+  equivalent_trees?: number;
+  equivalent_car_km?: number;
+  equivalent_label?: string;
   trees_label: string;
 }
 

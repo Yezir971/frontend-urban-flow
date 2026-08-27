@@ -179,26 +179,31 @@
         </h3>
         <div class="bg-[#F8FAF9] rounded-3xl p-1.5 flex flex-col gap-1 border border-gray-100/80 shadow-xs">
           <!-- Politique de confidentialité -->
-          <a
-            href="https://urban-flow-lyon.fr"
-            target="_blank"
-            rel="noopener noreferrer"
+          <NuxtLink
+            to="/confidentialite"
             class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
           >
             <span class="text-sm font-medium text-gray-800">Politique de confidentialité</span>
-            <ExternalLink class="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors shrink-0" />
-          </a>
+            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors shrink-0" />
+          </NuxtLink>
+
+          <!-- Conditions Générales d'Utilisation -->
+          <NuxtLink
+            to="/cgu"
+            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
+          >
+            <span class="text-sm font-medium text-gray-800">Conditions Générales d'Utilisation</span>
+            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors shrink-0" />
+          </NuxtLink>
 
           <!-- Mentions légales -->
-          <a
-            href="https://urban-flow-lyon.fr"
-            target="_blank"
-            rel="noopener noreferrer"
+          <NuxtLink
+            to="/mentions-legales"
             class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
           >
             <span class="text-sm font-medium text-gray-800">Mentions légales</span>
-            <ExternalLink class="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors shrink-0" />
-          </a>
+            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors shrink-0" />
+          </NuxtLink>
 
           <!-- Aide -->
           <button

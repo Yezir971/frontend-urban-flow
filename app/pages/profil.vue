@@ -260,6 +260,7 @@ import TransportPreferencesPopup from '~/components/TransportPreferencesPopup.vu
 import type { UserProfile } from '~/utils/profile.service';
 import { fetchUserProfile } from '~/utils/profile.service';
 import { useUserPreferences } from '~/composables/useUserPreferences';
+import { useUserProfile } from '~/composables/useUserProfile';
 import { usePwaInstall } from '~/composables/usePwaInstall';
 import { useGeoStore } from '~/stores/geo';
 
@@ -274,31 +275,17 @@ const { loadPreferences } = useUserPreferences();
 const { isInstalled, installApp, checkInstallStatus } = usePwaInstall();
 const geoStore = useGeoStore();
 
-const profile = ref<UserProfile | null>(null);
-const isLoading = ref(true);
+const { profile, isLoading, loadProfile: loadUserProfile, setProfile } = useUserProfile();
 const isPreferencesPopupOpen = ref(false);
 
 const isDarkMode = ref(false);
 
 async function loadProfile() {
-  isLoading.value = true;
-  try {
-    profile.value = await fetchUserProfile();
-  } catch (err: any) {
-    console.error('Erreur chargement profil base de données:', err);
-    toast.add({
-      title: 'Erreur',
-      description: err?.message || 'Impossible de charger votre profil.',
-      color: 'error',
-      icon: 'i-lucide-triangle-alert',
-    });
-  } finally {
-    isLoading.value = false;
-  }
+  await loadUserProfile(true);
 }
 
 function onProfileUpdated(updatedProfile: UserProfile) {
-  profile.value = updatedProfile;
+  setProfile(updatedProfile);
 }
 
 async function toggleGeolocation() {

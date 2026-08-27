@@ -183,7 +183,7 @@ const handleStartNavigation = (options: { simulate: boolean }) => {
           await loadProfile(true)
 
           toast.add({
-            title: 'Arrivé à destination ! 🎉',
+            title: 'Arrivé à destination !',
             description: `Trajet enregistré ! +10 éco-points & ${(prop.co2SavedKg || 0).toFixed(1)} kg CO2 économisés 🌱`,
             color: 'success',
             icon: 'i-lucide-award',

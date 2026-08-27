@@ -10,9 +10,14 @@
         <Co2StatsCard />
       </div>
     </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Section Favoris : Prêt à partir ? -->
+      <FavoritesSection class="lg:col-span-2" />
+  
+      <!-- Section Trajets récents -->
+      <RecentTripsSection class="lg:col-span-1" />
 
-    <!-- Section Favoris : Prêt à partir ? -->
-    <FavoritesSection />
+    </div>
   </div>
 </template>
 
@@ -21,6 +26,7 @@ import { onMounted } from 'vue';
 import HeaderHome from '~/components/header/HeaderHome.vue';
 import Co2StatsCard from '~/components/home/Co2StatsCard.vue';
 import FavoritesSection from '~/components/home/FavoritesSection.vue';
+import RecentTripsSection from '~/components/home/RecentTripsSection.vue';
 import { useUserProfile } from '~/composables/useUserProfile';
 
 definePageMeta({

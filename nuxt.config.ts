@@ -22,6 +22,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/test-utils/module',
     '@nuxt/ui',
+    'nuxt-charts',
     '@nuxtjs/leaflet',
     '@balalarast/vue-bottom-sheet/nuxt',
     '@pinia/nuxt',

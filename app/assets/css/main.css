@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Colors */
   --color-surface: #f8faf9;
@@ -173,3 +175,59 @@
     border-radius: 9999px !important;
   }
 }
+
+/* ==========================================================================
+   Leaflet Maps & Component Dark Mode Themes
+   ========================================================================== */
+
+.dark {
+  color-scheme: dark;
+}
+
+/* Leaflet Tile Inversion & Emerald Tinting in Dark Mode */
+.dark .leaflet-tile-pane {
+  filter: brightness(0.68) invert(1) contrast(2.8) hue-rotate(200deg) saturate(0.35) !important;
+}
+
+.dark .leaflet-container {
+  background-color: #0f1a16 !important;
+}
+
+.dark .leaflet-bar {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark .leaflet-bar a {
+  background-color: #1a2924 !important;
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid #283e36 !important;
+}
+
+.dark .leaflet-bar a:hover {
+  background-color: #243a32 !important;
+}
+
+.dark .leaflet-control-attribution {
+  background: rgba(15, 26, 22, 0.85) !important;
+  color: #94a3b8 !important;
+}
+
+.dark .leaflet-control-attribution a {
+  color: #34d399 !important;
+}
+
+/* Scrollbar dark mode support */
+.dark ::-webkit-scrollbar-track {
+  background: #111e19;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #233c32;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #2f5043;
+}
+

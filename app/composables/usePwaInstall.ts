@@ -67,7 +67,6 @@ export function usePwaInstall() {
           "Appuyez sur le bouton Partager ⎋ puis sélectionnez 'Sur l'écran d'accueil' ➕.",
         color: 'info',
         icon: 'i-lucide-share',
-        timeout: 8000,
       })
       return false
     }
@@ -79,7 +78,6 @@ export function usePwaInstall() {
         "Utilisez le menu de votre navigateur (trois points en haut à droite) et cliquez sur 'Installer l'application'.",
       color: 'info',
       icon: 'i-lucide-download',
-      timeout: 6000,
     })
     return false
   }

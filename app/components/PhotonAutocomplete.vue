@@ -175,27 +175,27 @@ const selectLocation = async (feature: ResponseFeaturePhoton, isCurrentPosition:
         type="text"
         :placeholder="placeholder"
         autocomplete="off"
-        class="w-full bg-transparent py-1.5 text-sm text-gray-900 placeholder-gray-400 border-none outline-none focus:outline-none pr-6"
+        class="w-full bg-transparent py-1.5 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border-none outline-none focus:outline-none pr-6"
       />
       <Loader2
         v-if="isLoading"
-        class="w-4 h-4 text-emerald-600 animate-spin absolute right-1 shrink-0"
+        class="w-4 h-4 text-emerald-600 dark:text-emerald-400 animate-spin absolute right-1 shrink-0"
       />
     </div>
 
     <!-- Menu déroulant des suggestions Photon (100% Lyon & Métropole) -->
     <ul
       v-if="isFocused && (results.length > 0 || (activateCurrentPosition && query.length >= 2))"
-      class="absolute left-0 right-0 z-[9999] mt-2 bg-white border border-gray-200 rounded-2xl shadow-2xl overflow-hidden py-1.5 max-h-60 overflow-y-auto"
+      class="absolute left-0 right-0 z-[9999] mt-2 bg-white dark:bg-[#15221E] border border-gray-200 dark:border-emerald-900/40 rounded-2xl shadow-2xl overflow-hidden py-1.5 max-h-60 overflow-y-auto"
     >
       <!-- Option : Ma position actuelle -->
       <li
         v-if="activateCurrentPosition && query.length >= 2"
         @mousedown.prevent="selectLocation(defaultPosition, true)"
-        class="px-4 py-2.5 cursor-pointer hover:bg-emerald-50/70 flex items-center gap-2.5 transition-colors border-b border-gray-100"
+        class="px-4 py-2.5 cursor-pointer hover:bg-emerald-50/70 dark:hover:bg-[#1B382C] flex items-center gap-2.5 transition-colors border-b border-gray-100 dark:border-emerald-950/40"
       >
-        <Navigation class="w-4 h-4 text-emerald-600 shrink-0" />
-        <span class="text-sm font-semibold text-emerald-800">{{ defaultPosition.properties.name }}</span>
+        <Navigation class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+        <span class="text-sm font-semibold text-emerald-800 dark:text-emerald-300">{{ defaultPosition.properties.name }}</span>
       </li>
 
       <!-- Suggestions d'adresses retournées (Lyon & Métropole) -->
@@ -203,16 +203,16 @@ const selectLocation = async (feature: ResponseFeaturePhoton, isCurrentPosition:
         v-for="result in results"
         :key="result.properties.osm_id"
         @mousedown.prevent="selectLocation(result)"
-        class="px-4 py-2.5 cursor-pointer hover:bg-emerald-50/60 flex items-start gap-2.5 transition-colors border-b border-gray-50 last:border-none"
+        class="px-4 py-2.5 cursor-pointer hover:bg-emerald-50/60 dark:hover:bg-[#1B382C] flex items-start gap-2.5 transition-colors border-b border-gray-50 dark:border-emerald-950/40 last:border-none"
       >
-        <MapPin class="w-4 h-4 text-[#104e35] shrink-0 mt-0.5" />
+        <MapPin class="w-4 h-4 text-[#104e35] dark:text-[#34D399] shrink-0 mt-0.5" />
         <div class="flex flex-col min-w-0">
           <!-- Nom principal (ex: Place Bellecour, Rue de la République) -->
-          <span class="text-sm font-bold text-gray-900 truncate">
+          <span class="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">
             {{ result.properties.name || result.properties.street }}
           </span>
           <!-- Détails (code postal, ville) -->
-          <span class="text-xs text-gray-500 truncate">
+          <span class="text-xs text-gray-500 dark:text-gray-400 truncate">
             {{ formatDetails(result.properties) }}
           </span>
         </div>

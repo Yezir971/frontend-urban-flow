@@ -3,7 +3,7 @@
     <Transition name="slide-down">
       <div
         v-if="navStore.isActive"
-        class="fixed top-4 left-4 right-4 md:left-auto md:right-6 md:w-96 bg-white/95 backdrop-blur-md rounded-3xl p-4 shadow-2xl border border-gray-100 flex flex-col gap-3"
+        class="fixed top-4 left-4 right-4 md:left-auto md:right-6 md:w-96 bg-white/95 dark:bg-[#15221E]/95 backdrop-blur-md rounded-3xl p-4 shadow-2xl border border-gray-100 dark:border-emerald-900/40 flex flex-col gap-3 transition-colors duration-200"
         style="z-index: 99999;"
       >
         <!-- Alerte de recalcul d'itinéraire en cas de déviation -->
@@ -25,10 +25,10 @@
                 navStore.currentLeg?.mode === 'SUBWAY' || navStore.currentLeg?.mode === 'TRANSIT' || navStore.currentLeg?.mode === 'TRAM' || navStore.currentLeg?.mode === 'BUS'
                   ? 'bg-[#155dfc]'
                   : navStore.currentLeg?.mode === 'BICYCLE'
-                    ? 'bg-[#104e35]'
+                    ? 'bg-[#104e35] dark:bg-[#1D6045]'
                     : navStore.currentLeg?.mode === 'CAR'
                       ? 'bg-[#334155]'
-                      : 'bg-[#104e35]'
+                      : 'bg-[#104e35] dark:bg-[#1D6045]'
               ]"
             >
               <Train v-if="navStore.currentLeg?.mode === 'SUBWAY' || navStore.currentLeg?.mode === 'TRAM' || navStore.currentLeg?.mode === 'TRANSIT'" class="w-5 h-5" />
@@ -39,14 +39,14 @@
             </div>
 
             <div class="flex flex-col min-w-0">
-              <span class="text-[11px] font-bold uppercase tracking-wider text-[#0F5238] flex items-center gap-1">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-[#0F5238] dark:text-[#34D399] flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
                 Guidage en direct
               </span>
-              <h3 class="text-sm font-bold text-gray-900 leading-snug truncate">
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white leading-snug truncate">
                 {{ navStore.currentLeg?.title || 'En route...' }}
               </h3>
-              <p class="text-xs text-gray-500 truncate mt-0.5">
+              <p class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
                 {{ navStore.currentLeg?.instruction }}
               </p>
             </div>
@@ -59,10 +59,10 @@
               v-if="navStore.remainingPercent >= 80"
               type="button"
               @click="handleFinish"
-              class="px-2.5 py-1.5 rounded-2xl bg-emerald-50 text-[#0F5238] hover:bg-emerald-100 active:scale-95 transition-all cursor-pointer font-bold text-xs flex items-center gap-1 shadow-xs"
+              class="px-2.5 py-1.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-[#0F5238] dark:text-[#34D399] hover:bg-emerald-100 dark:hover:bg-emerald-900/60 active:scale-95 transition-all cursor-pointer font-bold text-xs flex items-center gap-1 shadow-xs"
               title="Terminer le trajet et enregistrer"
             >
-              <Check class="w-4 h-4 text-emerald-700" />
+              <Check class="w-4 h-4 text-emerald-700 dark:text-[#34D399]" />
               <span>Arrivé</span>
             </button>
 
@@ -70,7 +70,7 @@
             <button
               type="button"
               @click="handleStop"
-              class="p-2.5 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 active:scale-95 transition-all cursor-pointer shrink-0"
+              class="p-2.5 rounded-2xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 active:scale-95 transition-all cursor-pointer shrink-0"
               title="Arrêter le guidage"
             >
               <X class="w-5 h-5" />
@@ -79,41 +79,41 @@
         </div>
 
         <!-- Barre de progression -->
-        <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+        <div class="w-full bg-gray-100 dark:bg-gray-800 h-1.5 rounded-full overflow-hidden">
           <div
-            class="bg-[#0F5238] h-full rounded-full transition-all duration-300"
+            class="bg-[#0F5238] dark:bg-[#34D399] h-full rounded-full transition-all duration-300"
             :style="{ width: `${navStore.remainingPercent}%` }"
           ></div>
         </div>
 
         <!-- KPI Durée & Distance restantes + Contrôles Démo Test (ADMIN) -->
-        <div class="flex items-center justify-between text-xs pt-1 border-t border-gray-100">
+        <div class="flex items-center justify-between text-xs pt-1 border-t border-gray-100 dark:border-emerald-950/40">
           <div class="flex items-center gap-2">
-            <span class="font-extrabold text-[#0F5238] text-sm">
+            <span class="font-extrabold text-[#0F5238] dark:text-[#34D399] text-sm">
               {{ navStore.remainingDurationMins }} min
             </span>
-            <span class="text-gray-400">•</span>
-            <span class="text-gray-600 font-medium">
+            <span class="text-gray-400 dark:text-gray-600">•</span>
+            <span class="text-gray-600 dark:text-gray-300 font-medium">
               {{ formatDistance(navStore.remainingDistanceMeters) }}
             </span>
           </div>
 
           <!-- Outils Démo / Test : Pause, Vitesse, Test Déviation (Réservés au rôle ADMIN) -->
-          <div v-if="isAdmin && navStore.isSimulating" class="flex items-center gap-1 bg-amber-50/80 border border-amber-200/60 p-1 rounded-xl">
+          <div v-if="isAdmin && navStore.isSimulating" class="flex items-center gap-1 bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-800/40 p-1 rounded-xl">
             <button
               type="button"
               @click="navStore.togglePause"
-              class="p-1 rounded-lg hover:bg-white text-gray-700 transition-colors cursor-pointer"
+              class="p-1 rounded-lg hover:bg-white dark:hover:bg-[#1A2D25] text-gray-700 dark:text-gray-200 transition-colors cursor-pointer"
               :title="navStore.isPaused ? 'Reprendre' : 'Pause'"
             >
-              <Play v-if="navStore.isPaused" class="w-3.5 h-3.5 text-emerald-600 fill-emerald-600" />
+              <Play v-if="navStore.isPaused" class="w-3.5 h-3.5 text-emerald-600 dark:text-[#34D399] fill-emerald-600 dark:fill-[#34D399]" />
               <Pause v-else class="w-3.5 h-3.5" />
             </button>
 
             <button
               type="button"
               @click="cycleSpeed"
-              class="px-1.5 py-0.5 rounded-lg text-[10px] font-bold text-gray-700 hover:bg-white transition-colors cursor-pointer"
+              class="px-1.5 py-0.5 rounded-lg text-[10px] font-bold text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-[#1A2D25] transition-colors cursor-pointer"
               title="Vitesse de simulation"
             >
               {{ navStore.simulationSpeed }}x
@@ -123,7 +123,7 @@
             <button
               type="button"
               @click="simulateDeviation"
-              class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-[#0F5238] text-white hover:bg-[#0b3d2a] transition-all cursor-pointer"
+              class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-[#0F5238] dark:bg-[#1D6045] text-white hover:bg-[#0b3d2a] dark:hover:bg-[#154D36] transition-all cursor-pointer"
               title="Dévier du tracé pour tester le recalcul automatique"
             >
               Tester Déviation
@@ -162,7 +162,6 @@ const emit = defineEmits<{
 }>()
 
 function handleFinish() {
-  navStore.completeNavigation()
   navStore.stopNavigation()
   emit('stop')
 }

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { PropType } from "vue"
+
 defineProps({
     text : {
         type: String,
@@ -9,7 +11,7 @@ defineProps({
         default : () => {}
     },
     type : {
-        type: String,
+        type : String as PropType<"button" | "reset" | "submit">,
         default : "button"
     }
 })
@@ -20,7 +22,4 @@ defineProps({
     <button :type="type" class="bg-primary-500 text-on-primary p-4 font-semibold rounded-lg w-full" @click="callback()">
         {{ text }}
     </button>
-
- 
-
 </template>

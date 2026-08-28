@@ -16,6 +16,7 @@ import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { mapGeometryToLeafletPoints } from '~/utils/geometry'
 import { useNavigationStore } from '~/stores/navigation'
 import { useGeoStore } from '~/stores/geo'
+import { useTheme } from '~/composables/useTheme'
 
 const props = defineProps({
   otpData: {
@@ -28,6 +29,7 @@ const props = defineProps({
 const mapElement = ref<HTMLElement | null>(null)
 const navStore = useNavigationStore()
 const geoStore = useGeoStore()
+const { isDark } = useTheme()
 
 let map: any = null
 let routeLayerGroup: any = null
@@ -80,11 +82,11 @@ const drawLine = (L: any, geometryData: any) => {
   const points = mapGeometryToLeafletPoints(geometryData)
   if (!points || points.length === 0) return
 
-  // Tracé polyline
+  // Tracé polyline (adapté au mode clair ou sombre)
   const polylineLayer = L.polyline(points, {
-    color: '#0F5238',
+    color: isDark.value ? '#34D399' : '#0F5238',
     weight: 6,
-    opacity: 0.9,
+    opacity: 0.95,
     lineCap: 'round',
     lineJoin: 'round',
   }).addTo(routeLayerGroup)
@@ -198,6 +200,16 @@ onMounted(async () => {
         }
       }
     },
+  )
+
+  // Écoute du changement de thème Jour / Nuit
+  watch(
+    () => isDark.value,
+    () => {
+      if (props.otpData) {
+        drawLine(L, props.otpData)
+      }
+    }
   )
 })
 

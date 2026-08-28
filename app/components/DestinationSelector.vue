@@ -1,8 +1,8 @@
 <template>
   <div class="relative rounded-2xl p-4 flex flex-col gap-3">
     <!-- Input de départ -->
-    <div class="flex items-center gap-3 bg-white rounded-xl px-3 py-2.5 border border-gray-100/50 shadow-sm focus-within:ring-2 focus-within:ring-[#104e35]/30 focus-within:border-[#104e35]/80 transition-all duration-200">
-      <Navigation class="w-5 h-5 text-[#104e35] shrink-0 animate-pulse" />
+    <div class="flex items-center gap-3 bg-white dark:bg-[#15221E] rounded-xl px-3 py-2.5 border border-gray-100/50 dark:border-emerald-900/40 shadow-sm focus-within:ring-2 focus-within:ring-[#104e35]/30 dark:focus-within:ring-emerald-500/30 focus-within:border-[#104e35]/80 dark:focus-within:border-emerald-500/80 transition-all duration-200">
+      <Navigation class="w-5 h-5 text-[#104e35] dark:text-[#34D399] shrink-0 animate-pulse" />
       <PhotonAutocomplete
         v-model="startQuery"
         :activateCurrentPosition="true"
@@ -12,8 +12,8 @@
     </div>
 
     <!-- Input de destination -->
-    <div class="flex items-center gap-3 bg-white rounded-xl px-3 py-2.5 border border-gray-100/50 shadow-sm focus-within:ring-2 focus-within:ring-[#104e35]/30 focus-within:border-[#104e35]/80 transition-all duration-200">
-      <MapPin class="w-5 h-5 text-gray-400 shrink-0" />
+    <div class="flex items-center gap-3 bg-white dark:bg-[#15221E] rounded-xl px-3 py-2.5 border border-gray-100/50 dark:border-emerald-900/40 shadow-sm focus-within:ring-2 focus-within:ring-[#104e35]/30 dark:focus-within:ring-emerald-500/30 focus-within:border-[#104e35]/80 dark:focus-within:border-emerald-500/80 transition-all duration-200">
+      <MapPin class="w-5 h-5 text-gray-400 dark:text-gray-400 shrink-0" />
       <PhotonAutocomplete
         v-model="endQuery"
         @location-selected="handleEndSelected"
@@ -25,7 +25,7 @@
     <button
       type="button"
       @click="swapLocations"
-      class="absolute right-8 top-1/2 -translate-y-1/2 bg-white text-gray-700 hover:text-[#104e35] border border-gray-200 rounded-full p-2.5 shadow-md hover:shadow-lg transition-all active:scale-90 cursor-pointer z-10"
+      class="absolute right-8 top-1/2 -translate-y-1/2 bg-white dark:bg-[#1C2F28] text-gray-700 dark:text-gray-200 hover:text-[#104e35] dark:hover:text-[#34D399] border border-gray-200 dark:border-emerald-900/60 rounded-full p-2.5 shadow-md hover:shadow-lg transition-all active:scale-90 cursor-pointer z-10"
       aria-label="Inverser les adresses de départ et de destination"
     >
       <ArrowUpDown class="w-4 h-4" />

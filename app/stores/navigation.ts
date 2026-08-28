@@ -78,7 +78,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     isSimulating.value = shouldSimulate
 
     if (routePoints.value.length > 0) {
-      currentPosition.value = routePoints.value[0]
+      currentPosition.value = routePoints.value[0] ?? null
     }
 
     if (shouldSimulate) {
@@ -101,7 +101,7 @@ export const useNavigationStore = defineStore('navigation', () => {
 
     if (currentPointIndex.value < routePoints.value.length - 1) {
       currentPointIndex.value++
-      currentPosition.value = routePoints.value[currentPointIndex.value]
+      currentPosition.value = routePoints.value[currentPointIndex.value] ?? null
 
       // Avancement des étapes (legs) en fonction de la progression
       if (currentProposal.value?.legs && currentProposal.value.legs.length > 1) {
@@ -177,7 +177,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     currentPointIndex.value = 0
     currentLegIndex.value = 0
     if (routePoints.value.length > 0) {
-      currentPosition.value = routePoints.value[0]
+      currentPosition.value = routePoints.value[0] ?? null
     }
   }
 

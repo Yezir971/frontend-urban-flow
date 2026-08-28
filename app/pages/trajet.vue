@@ -44,12 +44,12 @@ const activeMapData = ref<any>(null)
 const isLoading = ref(false)
 
 const setStartLocation = (locationDataStart: LocationData) => {
-  startCoordinates.value = locationDataStart.otpValue
+  startCoordinates.value = locationDataStart.otpValue ?? [0, 0]
   startName.value = locationDataStart.name
 }
 
 const setEndLocation = (locationDataEnd: LocationData) => {
-  endCoordinates.value = locationDataEnd.otpValue
+  endCoordinates.value = locationDataEnd.otpValue ?? [0, 0]
   endName.value = locationDataEnd.name
 }
 
@@ -99,7 +99,7 @@ const onSearch = async (searchData?: { mode: string }) => {
     
     // Sélection par défaut du 1er trajet et affichage du tracé sur Leaflet
     if (proposals.value.length > 0) {
-      selectedProposal.value = proposals.value[0]
+      selectedProposal.value = proposals.value[0]!
       activeMapData.value = selectedProposal.value
     } else {
       toast.add({
@@ -355,14 +355,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row h-full w-full relative overflow-hidden bg-[#F7F9F8]">
+  <div class="flex flex-col md:flex-row h-full w-full relative overflow-hidden bg-[#F7F9F8] dark:bg-[#0B1311] transition-colors duration-200">
     
     <!-- Panneau latéral Desktop (visible sur md+) -->
-    <div class="hidden md:flex flex-col w-96 h-full bg-white border-r border-gray-200 p-6 overflow-y-auto shrink-0 z-10 shadow-lg relative">
+    <div class="hidden md:flex flex-col w-96 h-full bg-white dark:bg-[#15221E] border-r border-gray-200 dark:border-emerald-950/60 p-6 overflow-y-auto shrink-0 z-10 shadow-lg relative transition-colors duration-200">
       <!-- Overlay de chargement avec Spinner -->
-      <div v-if="isLoading" class="absolute inset-0 bg-white/90 z-30 flex flex-col items-center justify-center gap-3">
-        <UiSpinner size="lg" color="text-[#104e35]" />
-        <p class="text-sm font-semibold text-[#104e35]">Calcul des itinéraires recommandés...</p>
+      <div v-if="isLoading" class="absolute inset-0 bg-white/90 dark:bg-[#15221E]/90 z-30 flex flex-col items-center justify-center gap-3">
+        <UiSpinner size="lg" color="text-[#104e35] dark:text-[#34D399]" />
+        <p class="text-sm font-semibold text-[#104e35] dark:text-[#34D399]">Calcul des itinéraires recommandés...</p>
       </div>
 
       <!-- Vue 1 : Recherche -->
@@ -405,7 +405,7 @@ onBeforeUnmount(() => {
       <ClientOnly>
         <MapLeafet :otpData="activeMapData ?? undefined" />
         <template #fallback>
-          <div class="flex items-center justify-center h-full w-full bg-[#f3f5f4] text-gray-500">
+          <div class="flex items-center justify-center h-full w-full bg-[#f3f5f4] dark:bg-[#0f1a16] text-gray-500 dark:text-gray-400">
             Chargement de la carte...
           </div>
         </template>
@@ -423,14 +423,14 @@ onBeforeUnmount(() => {
         :initialSnapPoint="1"
       >
         <template #header>
-          <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-2"></div>
+          <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-2"></div>
         </template>
         <template #default>
-          <div class="px-4 pb-14 pt-2 max-h-[75vh] overflow-y-auto relative">
+          <div class="px-4 pb-14 pt-2 max-h-[75vh] overflow-y-auto relative bg-white dark:bg-[#15221E] text-gray-900 dark:text-gray-100">
             <!-- Overlay de chargement Mobile -->
-            <div v-if="isLoading" class="absolute inset-0 bg-white/90 z-30 flex flex-col items-center justify-center gap-3">
-              <UiSpinner size="md" color="text-[#104e35]" />
-              <p class="text-sm font-semibold text-[#104e35]">Calcul des itinéraires recommandés...</p>
+            <div v-if="isLoading" class="absolute inset-0 bg-white/90 dark:bg-[#15221E]/90 z-30 flex flex-col items-center justify-center gap-3">
+              <UiSpinner size="md" color="text-[#104e35] dark:text-[#34D399]" />
+              <p class="text-sm font-semibold text-[#104e35] dark:text-[#34D399]">Calcul des itinéraires recommandés...</p>
             </div>
 
             <!-- Vue 1 : Recherche -->

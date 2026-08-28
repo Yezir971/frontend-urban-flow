@@ -3,7 +3,7 @@ import NavigationBar from '~/components/NavigationBar.vue';
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#F7F9F8] text-gray-800 md:gap-8">
+  <div class="min-h-screen bg-[#F7F9F8] dark:bg-[#0B1311] text-gray-800 dark:text-gray-100 transition-colors duration-200 md:gap-8">
     <NavigationBar />
 
     <!-- Zone principale pour le contenu de la page -->

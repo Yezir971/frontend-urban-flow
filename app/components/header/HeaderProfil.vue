@@ -2,14 +2,14 @@
   <div class="flex flex-col items-center">
     <!-- Photo de profil avec bouton appareil photo -->
     <div class="relative group cursor-pointer" @click="openEditModal">
-      <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2 border-white shadow-md bg-[#E1F6EB] flex items-center justify-center transition-transform duration-200 group-hover:scale-102">
+      <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2 border-white dark:border-[#1F332C] shadow-md bg-[#E1F6EB] dark:bg-[#162D24] flex items-center justify-center transition-transform duration-200 group-hover:scale-102">
         <img
           v-if="profile?.avatar_url"
           :src="profile.avatar_url"
           :alt="profile.username"
           class="w-full h-full object-cover"
         />
-        <div v-else class="flex items-center justify-center w-full h-full text-[#0F5238] font-bold text-3xl">
+        <div v-else class="flex items-center justify-center w-full h-full text-[#0F5238] dark:text-[#34D399] font-bold text-3xl">
           {{ initialLetter }}
         </div>
       </div>
@@ -17,7 +17,7 @@
       <!-- Bouton Badge Caméra en bas à droite -->
       <button
         type="button"
-        class="absolute bottom-0 right-0 p-1.5 sm:p-2 bg-white rounded-full shadow-md border border-gray-100 flex items-center justify-center hover:bg-gray-50 active:scale-95 transition-all text-gray-700 hover:text-[#0F5238]"
+        class="absolute bottom-0 right-0 p-1.5 sm:p-2 bg-white dark:bg-[#1A2D25] rounded-full shadow-md border border-gray-100 dark:border-emerald-900/40 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-[#253E33] active:scale-95 transition-all text-gray-700 dark:text-gray-200 hover:text-[#0F5238] dark:hover:text-[#34D399]"
         title="Modifier la photo ou le profil"
         @click.stop="openEditModal"
       >
@@ -26,13 +26,13 @@
     </div>
 
     <!-- Nom de l'utilisateur -->
-    <h1 class="text-2xl font-bold text-gray-900 mt-4 tracking-tight text-center">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mt-4 tracking-tight text-center">
       {{ profile?.username || 'Chargement...' }}
     </h1>
 
     <!-- Macaron Niveau / Badge Écologique -->
-    <div class="bg-[#B1F0CE] text-[#0F5238] font-semibold text-xs px-3.5 py-1.5 rounded-full inline-flex items-center gap-1.5 mt-2.5 shadow-sm">
-      <UIcon name="i-lucide-leaf" class="w-3.5 h-3.5 text-[#0F5238]" />
+    <div class="bg-[#B1F0CE] dark:bg-[#1C4D38] text-[#0F5238] dark:text-[#A7F3D0] font-semibold text-xs px-3.5 py-1.5 rounded-full inline-flex items-center gap-1.5 mt-2.5 shadow-sm">
+      <UIcon name="i-lucide-leaf" class="w-3.5 h-3.5 text-[#0F5238] dark:text-[#34D399]" />
       <span>{{ profile?.level_label || 'Voyageur Écolo' }}</span>
     </div>
 
@@ -40,16 +40,16 @@
     <Teleport to="body">
       <div
         v-if="isModalOpen"
-        class="fixed inset-0 z-99 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-fade-in"
+        class="fixed inset-0 z-99 flex items-center justify-center bg-black/40 dark:bg-black/70 backdrop-blur-xs p-4 animate-fade-in"
         @click.self="closeModal"
       >
-        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-gray-100 relative animate-scale-up">
+        <div class="bg-white dark:bg-[#15221E] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-gray-100 dark:border-emerald-900/30 relative animate-scale-up">
           <!-- Header de la modale -->
-          <div class="flex items-center justify-between pb-4 border-b border-gray-100">
-            <h2 class="text-lg font-bold text-gray-900">Modifier mon profil</h2>
+          <div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-emerald-950/40">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white">Modifier mon profil</h2>
             <button
               type="button"
-              class="p-1 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+              class="p-1 rounded-full text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#1A2D25] transition-colors"
               @click="closeModal"
             >
               <UIcon name="i-lucide-x" class="w-5 h-5" />
@@ -60,10 +60,10 @@
           <div class="py-6 flex flex-col gap-6">
             <!-- Zone photo avec preview et sélecteur de fichier -->
             <div class="flex flex-col items-center gap-3">
-              <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Photo de profil</label>
+              <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Photo de profil</label>
               
               <div
-                class="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200 cursor-pointer group bg-[#E1F6EB] flex items-center justify-center shadow-inner"
+                class="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200 dark:border-emerald-900/60 cursor-pointer group bg-[#E1F6EB] dark:bg-[#162D24] flex items-center justify-center shadow-inner"
                 @click="triggerFileInput"
               >
                 <img
@@ -72,7 +72,7 @@
                   alt="Aperçu avatar"
                   class="w-full h-full object-cover"
                 />
-                <div v-else class="flex items-center justify-center w-full h-full text-[#0F5238] font-bold text-2xl">
+                <div v-else class="flex items-center justify-center w-full h-full text-[#0F5238] dark:text-[#34D399] font-bold text-2xl">
                   {{ initialLetter }}
                 </div>
 
@@ -94,21 +94,21 @@
 
               <button
                 type="button"
-                class="text-xs font-semibold text-[#0F5238] hover:underline flex items-center gap-1 cursor-pointer"
+                class="text-xs font-semibold text-[#0F5238] dark:text-[#34D399] hover:underline flex items-center gap-1 cursor-pointer"
                 @click="triggerFileInput"
               >
                 <UIcon name="i-lucide-image" class="w-3.5 h-3.5" />
                 Choisir une image
               </button>
 
-              <p class="text-[11px] text-gray-400 text-center">
+              <p class="text-[11px] text-gray-400 dark:text-gray-500 text-center">
                 Formats acceptés : PNG, JPEG, WebP (max 5 Mo)
               </p>
             </div>
 
             <!-- Champ Nom Complet -->
             <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-semibold text-gray-600">Nom complet</label>
+              <label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Nom complet</label>
               <div class="relative flex items-center">
                 <UIcon name="i-lucide-user" class="absolute left-3.5 w-4 h-4 text-gray-400" />
                 <input
@@ -116,17 +116,17 @@
                   type="text"
                   placeholder="Ex: Alexandre Dupont"
                   maxlength="50"
-                  class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-800 focus:bg-white focus:border-[#0F5238] focus:ring-2 focus:ring-[#0F5238]/20 focus:outline-none transition-all"
+                  class="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-[#111C18] border border-gray-200 dark:border-emerald-900/40 rounded-xl text-sm font-medium text-gray-800 dark:text-gray-100 focus:bg-white dark:focus:bg-[#162922] focus:border-[#0F5238] dark:focus:border-emerald-500 focus:ring-2 focus:ring-[#0F5238]/20 focus:outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
               </div>
             </div>
           </div>
 
           <!-- Actions Footer -->
-          <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+          <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 dark:border-emerald-950/40">
             <button
               type="button"
-              class="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+              class="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#1A2D25] rounded-full transition-colors cursor-pointer"
               :disabled="isSaving"
               @click="closeModal"
             >
@@ -134,7 +134,7 @@
             </button>
             <button
               type="button"
-              class="px-6 py-2 bg-[#0F5238] hover:bg-[#0c422d] text-white text-sm font-semibold rounded-full shadow-sm hover:shadow transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+              class="px-6 py-2 bg-[#0F5238] dark:bg-[#1D6045] hover:bg-[#0c422d] dark:hover:bg-[#154D36] text-white text-sm font-semibold rounded-full shadow-sm hover:shadow transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
               :disabled="isSaving"
               @click="handleSave"
             >
@@ -189,9 +189,6 @@ watch(
 
 function openEditModal() {
   if (props.profile) {
-    console.log('Props reçues dans HeaderProfil:', props.profile);
-
-
     editUsername.value = props.profile.username || '';
     previewAvatarUrl.value = props.profile.avatar_url || null;
   }

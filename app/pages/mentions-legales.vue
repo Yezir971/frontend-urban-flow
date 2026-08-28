@@ -1,124 +1,124 @@
 <template>
-  <div class="min-h-screen bg-[#F7F9F8] text-gray-800 pb-16">
+  <div class="min-h-screen bg-[#F7F9F8] dark:bg-[#0B1311] text-gray-800 dark:text-gray-100 pb-16 transition-colors duration-200">
     <!-- En-tête avec bouton retour -->
-    <header class="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 py-3.5 flex items-center justify-between shadow-xs">
+    <header class="sticky top-0 z-20 bg-white/90 dark:bg-[#15221E]/90 backdrop-blur-md border-b border-gray-100 dark:border-emerald-950/40 px-4 py-3.5 flex items-center justify-between shadow-xs">
       <div class="flex items-center gap-3 max-w-4xl mx-auto w-full">
         <button
           type="button"
           @click="router.back()"
-          class="w-9 h-9 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-100 active:scale-95 transition-all cursor-pointer shadow-xs shrink-0"
+          class="w-9 h-9 rounded-full bg-gray-50 dark:bg-[#1C2F28] border border-gray-200 dark:border-emerald-900/60 flex items-center justify-center text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#253E35] active:scale-95 transition-all cursor-pointer shadow-xs shrink-0"
           aria-label="Retour"
         >
           <ArrowLeft class="w-4 h-4" />
         </button>
         <div>
-          <h1 class="text-base font-bold text-gray-900 leading-tight">
+          <h1 class="text-base font-bold text-gray-900 dark:text-white leading-tight">
             Mentions Légales
           </h1>
-          <p class="text-xs text-gray-500">Urban Flow — Informations Réglementaires</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Urban Flow — Informations Réglementaires</p>
         </div>
       </div>
     </header>
 
     <!-- Contenu principal -->
     <main class="max-w-3xl mx-auto px-4 py-6">
-      <div class="bg-white rounded-3xl p-6 md:p-8 border border-gray-100 shadow-sm flex flex-col gap-6">
+      <div class="bg-white dark:bg-[#15221E] rounded-3xl p-6 md:p-8 border border-gray-100 dark:border-emerald-900/30 shadow-sm flex flex-col gap-6">
         
-        <div class="border-b border-gray-100 pb-4">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#E1F6EB] text-[#0F5238]">
+        <div class="border-b border-gray-100 dark:border-emerald-950/40 pb-4">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#E1F6EB] dark:bg-[#1B4D3E] text-[#0F5238] dark:text-[#34D399]">
             <Scale class="w-3.5 h-3.5" />
             Conforme Loi LCEN & Droit Français
           </span>
-          <h2 class="text-xl md:text-2xl font-black text-gray-900 mt-2">
+          <h2 class="text-xl md:text-2xl font-black text-gray-900 dark:text-white mt-2">
             Mentions Légales
           </h2>
-          <p class="text-xs text-gray-400 mt-1">Dernière mise à jour : 27 août 2026</p>
+          <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Dernière mise à jour : 28 août 2026</p>
         </div>
 
         <!-- 1. Présentation du site -->
         <section class="flex flex-col gap-3">
-          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#0F5238]"></span>
+          <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#0F5238] dark:bg-[#34D399]"></span>
             1. Présentation et Édition du Site
           </h3>
-          <p class="text-sm text-gray-600 leading-relaxed">
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
             En vertu de l'article 6 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), il est précisé aux utilisateurs du site et de l'application 
-            <a href="https://urban-flow-lyon.fr" target="_blank" rel="noopener" class="text-[#0F5238] font-bold underline ml-1">https://urban-flow-lyon.fr</a> l'identité des différents intervenants dans le cadre de sa réalisation et de son suivi :
+            <a href="https://urban-flow-lyon.fr" target="_blank" rel="noopener" class="text-[#0F5238] dark:text-[#34D399] font-bold underline ml-1">https://urban-flow-lyon.fr</a> l'identité des différents intervenants dans le cadre de sa réalisation et de son suivi :
           </p>
 
-          <div class="bg-[#F8FAF9] rounded-2xl p-4 border border-gray-100 flex flex-col gap-2.5 text-xs text-gray-700">
+          <div class="bg-[#F8FAF9] dark:bg-[#111C18] rounded-2xl p-4 border border-gray-100 dark:border-emerald-950/40 flex flex-col gap-2.5 text-xs text-gray-700 dark:text-gray-300">
             <div>
-              <strong class="font-semibold text-gray-900">Éditeur du site :</strong>
+              <strong class="font-semibold text-gray-900 dark:text-white">Éditeur du site :</strong>
               <span> Collectivité territoriale de Lyon — Projet Urban Flow</span>
             </div>
             <div>
-              <strong class="font-semibold text-gray-900">Adresse de contact :</strong>
+              <strong class="font-semibold text-gray-900 dark:text-white">Adresse de contact :</strong>
               <span> 6 rue du titre, 69001 Lyon, France</span>
             </div>
             <div>
-              <strong class="font-semibold text-gray-900">Responsable de publication :</strong>
-              <span> Hénette Claire — <a href="mailto:claire-henette@titre.fr" class="text-[#0F5238] font-medium underline">claire-henette@titre.fr</a></span>
+              <strong class="font-semibold text-gray-900 dark:text-white">Responsable de publication :</strong>
+              <span> Hénette Claire — <a href="mailto:claire-henette@titre.fr" class="text-[#0F5238] dark:text-[#34D399] font-medium underline">claire-henette@titre.fr</a></span>
             </div>
             <div>
-              <strong class="font-semibold text-gray-900">Conception & Développement Web :</strong>
-              <span> James Ahmedaly — <a href="mailto:contact@urban-flow-lyon.fr" class="text-[#0F5238] font-medium underline">contact@urban-flow-lyon.fr</a></span>
+              <strong class="font-semibold text-gray-900 dark:text-white">Conception & Développement Web :</strong>
+              <span> James Ahmedaly — <a href="mailto:contact@urban-flow-lyon.fr" class="text-[#0F5238] dark:text-[#34D399] font-medium underline">contact@urban-flow-lyon.fr</a></span>
             </div>
           </div>
         </section>
 
         <!-- 2. Hébergement -->
         <section class="flex flex-col gap-2">
-          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#0F5238]"></span>
+          <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#0F5238] dark:bg-[#34D399]"></span>
             2. Hébergement de l'Infrastructure
           </h3>
-          <div class="bg-[#E1F6EB]/50 border border-[#c5eadd] rounded-2xl p-4 text-xs text-gray-700 leading-relaxed flex flex-col gap-1">
-            <p><strong class="font-bold text-[#0F5238]">Hébergeur :</strong> OVHcloud France</p>
+          <div class="bg-[#E1F6EB]/50 dark:bg-[#1B4D3E]/30 border border-[#c5eadd] dark:border-emerald-800/40 rounded-2xl p-4 text-xs text-gray-700 dark:text-gray-300 leading-relaxed flex flex-col gap-1">
+            <p><strong class="font-bold text-[#0F5238] dark:text-[#34D399]">Hébergeur :</strong> OVHcloud France</p>
             <p><strong>Siège social :</strong> 2 rue Kellermann, 59100 Roubaix, France</p>
-            <p><strong>Site internet :</strong> <a href="https://www.ovhcloud.com" target="_blank" rel="noopener" class="underline text-[#0F5238]">www.ovhcloud.com</a></p>
+            <p><strong>Site internet :</strong> <a href="https://www.ovhcloud.com" target="_blank" rel="noopener" class="underline text-[#0F5238] dark:text-[#34D399]">www.ovhcloud.com</a></p>
           </div>
         </section>
 
         <!-- 3. Propriété intellectuelle -->
         <section class="flex flex-col gap-2">
-          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#0F5238]"></span>
+          <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#0F5238] dark:bg-[#34D399]"></span>
             3. Propriété Intellectuelle et Droits d'Auteur
           </h3>
-          <p class="text-sm text-gray-600 leading-relaxed">
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
             L'ensemble des éléments constituant l'application Urban Flow (structure générale, logiciels, textes, images animées ou non, graphismes, logos, icônes, sons et bases de données) est la propriété exclusive de ses créateurs ou fait l'objet d'une autorisation d'utilisation.
           </p>
-          <p class="text-sm text-gray-600 leading-relaxed">
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
             Toute reproduction, représentation, modification, publication ou adaptation totale ou partielle des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans autorisation écrite préalable, conformément aux articles L.335-2 et suivants du Code de la propriété intellectuelle.
           </p>
         </section>
 
         <!-- 4. Limitation de responsabilité -->
         <section class="flex flex-col gap-2">
-          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#0F5238]"></span>
+          <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#0F5238] dark:bg-[#34D399]"></span>
             4. Limitation de Responsabilité
           </h3>
-          <p class="text-sm text-gray-600 leading-relaxed">
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
             Les informations et calculs d'itinéraires diffusés sur Urban Flow sont fournis à titre indicatif à partir des réseaux de transport en commun et de flux Open Data métropolitains.
           </p>
-          <p class="text-sm text-gray-600 leading-relaxed">
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
             L'éditeur ne saurait être tenu responsable des dommages directs ou indirects résultant de l'utilisation du site, d'une inexactitude ponctuelle dans les horaires réels ou d'une interruption temporaire du service pour maintenance.
           </p>
         </section>
 
         <!-- 5. Données personnelles & RGPD -->
         <section class="flex flex-col gap-2">
-          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#0F5238]"></span>
+          <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#0F5238] dark:bg-[#34D399]"></span>
             5. Données Personnelles et Cookies
           </h3>
-          <p class="text-sm text-gray-600 leading-relaxed">
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
             Pour en savoir plus sur la collecte de vos données, l'utilisation de la géolocalisation et l'exercice de vos droits Informatique et Libertés (accès, rectification, suppression), veuillez consulter notre page dédiée :
           </p>
           <NuxtLink
             to="/confidentialite"
-            class="inline-flex items-center gap-2 text-xs font-bold text-[#0F5238] bg-[#E1F6EB] hover:bg-[#c5eadd] px-4 py-2.5 rounded-2xl w-fit transition-colors"
+            class="inline-flex items-center gap-2 text-xs font-bold text-[#0F5238] dark:text-[#34D399] bg-[#E1F6EB] dark:bg-[#1B4D3E] hover:bg-[#c5eadd] dark:hover:bg-[#256852] px-4 py-2.5 rounded-2xl w-fit transition-colors"
           >
             <span>Consulter la Politique de Confidentialité</span>
             <ArrowRight class="w-3.5 h-3.5" />
@@ -127,12 +127,12 @@
 
         <!-- 6. Droit applicable et attribution de juridiction -->
         <section class="flex flex-col gap-2">
-          <h3 class="text-base font-bold text-gray-900 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-[#0F5238]"></span>
+          <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#0F5238] dark:bg-[#34D399]"></span>
             6. Droit Applicable et Juridiction
           </h3>
-          <p class="text-sm text-gray-600 leading-relaxed">
-            Tout litige en relation avec l'utilisation du site <a href="https://urban-flow-lyon.fr" target="_blank" rel="noopener" class="text-[#0F5238] font-semibold underline">https://urban-flow-lyon.fr</a> est soumis au droit français. Il est fait attribution exclusive de juridiction aux tribunaux compétents de Lyon.
+          <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            Tout litige en relation avec l'utilisation du site <a href="https://urban-flow-lyon.fr" target="_blank" rel="noopener" class="text-[#0F5238] dark:text-[#34D399] font-semibold underline">https://urban-flow-lyon.fr</a> est soumis au droit français. Il est fait attribution exclusive de juridiction aux tribunaux compétents de Lyon.
           </p>
         </section>
 

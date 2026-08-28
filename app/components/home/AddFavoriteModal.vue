@@ -3,20 +3,20 @@
     <Transition name="fade">
       <div
         v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/40 backdrop-blur-sm"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/40 dark:bg-black/70 backdrop-blur-sm"
         @click.self="closeModal"
       >
         <!-- Boîte de dialogue de la modale -->
         <div
-          class="relative w-full max-w-lg bg-white rounded-[32px] p-6 sm:p-8 shadow-2xl border border-gray-100 transform transition-all flex flex-col gap-6"
+          class="relative w-full max-w-lg bg-white dark:bg-[#15221E] rounded-[32px] p-6 sm:p-8 shadow-2xl border border-gray-100 dark:border-emerald-900/30 transform transition-all flex flex-col gap-6"
         >
           <!-- En-tête -->
           <div class="flex items-start justify-between">
             <div class="flex flex-col gap-1 pr-6">
-              <h2 class="text-2xl font-black tracking-tight text-[#104E35]">
+              <h2 class="text-2xl font-black tracking-tight text-[#104E35] dark:text-[#34D399]">
                 Ajouter un favori
               </h2>
-              <p class="text-sm text-gray-500">
+              <p class="text-sm text-gray-500 dark:text-gray-400">
                 Enregistrez vos lieux fréquents pour y accéder rapidement.
               </p>
             </div>
@@ -25,7 +25,7 @@
             <button
               type="button"
               @click="closeModal"
-              class="p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer shrink-0"
+              class="p-2 rounded-full text-gray-400 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#1A2D25] transition-colors cursor-pointer shrink-0"
               aria-label="Fermer"
             >
               <X class="w-5 h-5" />
@@ -36,40 +36,40 @@
           <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
             <!-- 1. Adresse de départ (Optionnelle) -->
             <div class="flex flex-col gap-1.5 relative z-20">
-              <label class="text-xs font-bold text-gray-700">
+              <label class="text-xs font-bold text-gray-700 dark:text-gray-300">
                 Adresse de départ
               </label>
-              <div class="relative bg-[#F4F6F5] rounded-2xl px-4 py-3 border border-transparent focus-within:border-[#104E35]/40 focus-within:bg-white transition-all flex items-center gap-2.5">
+              <div class="relative bg-[#F4F6F5] dark:bg-[#111C18] rounded-2xl px-4 py-3 border border-transparent focus-within:border-[#104E35]/40 dark:focus-within:border-emerald-500/50 focus-within:bg-white dark:focus-within:bg-[#162922] transition-all flex items-center gap-2.5">
                 <Search class="w-4 h-4 text-gray-400 shrink-0" />
                 <PhotonAutocomplete
                   v-model="startQuery"
                   :activate-current-position="true"
                   @location-selected="handleStartSelected"
                   placeholder="Rechercher une adresse..."
-                  class="w-full bg-transparent text-sm focus:outline-none"
+                  class="w-full bg-transparent text-sm text-gray-800 dark:text-gray-100 focus:outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
               </div>
             </div>
 
             <!-- 2. Adresse de destination (Obligatoire) -->
             <div class="flex flex-col gap-1.5 relative z-10">
-              <label class="text-xs font-bold text-gray-700">
+              <label class="text-xs font-bold text-gray-700 dark:text-gray-300">
                 Adresse de destination <span class="text-red-500">*</span>
               </label>
-              <div class="relative bg-[#F4F6F5] rounded-2xl px-4 py-3 border border-transparent focus-within:border-[#104E35]/40 focus-within:bg-white transition-all flex items-center gap-2.5">
+              <div class="relative bg-[#F4F6F5] dark:bg-[#111C18] rounded-2xl px-4 py-3 border border-transparent focus-within:border-[#104E35]/40 dark:focus-within:border-emerald-500/50 focus-within:bg-white dark:focus-within:bg-[#162922] transition-all flex items-center gap-2.5">
                 <Search class="w-4 h-4 text-gray-400 shrink-0" />
                 <PhotonAutocomplete
                   v-model="endQuery"
                   @location-selected="handleEndSelected"
                   placeholder="Rechercher une adresse..."
-                  class="w-full bg-transparent text-sm focus:outline-none"
+                  class="w-full bg-transparent text-sm text-gray-800 dark:text-gray-100 focus:outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
               </div>
             </div>
 
             <!-- 3. Nom du favori -->
             <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-bold text-gray-700">
+              <label class="text-xs font-bold text-gray-700 dark:text-gray-300">
                 Nom du favori <span class="text-red-500">*</span>
               </label>
               <input
@@ -77,13 +77,13 @@
                 type="text"
                 required
                 placeholder="Ex: Mon bureau, Chez Maman..."
-                class="w-full bg-[#F4F6F5] rounded-2xl px-4 py-3 text-sm text-gray-800 border border-transparent focus:border-[#104E35]/40 focus:bg-white focus:outline-none transition-all placeholder:text-gray-400"
+                class="w-full bg-[#F4F6F5] dark:bg-[#111C18] rounded-2xl px-4 py-3 text-sm text-gray-800 dark:text-gray-100 border border-transparent focus:border-[#104E35]/40 dark:focus:border-emerald-500/50 focus:bg-white dark:focus:bg-[#162922] focus:outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
             </div>
 
             <!-- 4. Choisir une icône -->
             <div class="flex flex-col gap-2 pt-1">
-              <label class="text-xs font-bold text-gray-700">
+              <label class="text-xs font-bold text-gray-700 dark:text-gray-300">
                 Choisir une icône
               </label>
               <div class="flex items-center gap-3">
@@ -95,8 +95,8 @@
                   :class="[
                     'flex-1 py-3 px-2 rounded-2xl flex items-center justify-center transition-all cursor-pointer border',
                     selectedIcon === iconOption.id
-                      ? 'bg-[#c5eadd] text-[#104E35] border-[#a7d9c6] shadow-xs'
-                      : 'bg-[#F4F6F5] text-gray-600 border-transparent hover:bg-gray-200/80',
+                      ? 'bg-[#c5eadd] dark:bg-[#1B4D3E] text-[#104E35] dark:text-[#A7F3D0] border-[#a7d9c6] dark:border-emerald-700/60 shadow-xs'
+                      : 'bg-[#F4F6F5] dark:bg-[#111C18] text-gray-600 dark:text-gray-300 border-transparent hover:bg-gray-200/80 dark:hover:bg-[#1A2D25]',
                   ]"
                   :aria-label="iconOption.label"
                 >
@@ -115,7 +115,7 @@
               <button
                 type="submit"
                 :disabled="isSubmitting || !favoriteName.trim() || !destinationLocation"
-                class="w-full bg-[#104E35] hover:bg-[#0c3a28] text-white font-bold py-4 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#104E35]/15 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                class="w-full bg-[#104E35] dark:bg-[#1D6045] hover:bg-[#0c3a28] dark:hover:bg-[#154D36] text-white font-bold py-4 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#104E35]/15 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <span v-if="!isSubmitting">Enregistrer le favori</span>
                 <span v-else>Enregistrement...</span>

@@ -1,20 +1,20 @@
 <template>
-  <div class="min-h-screen bg-[#F4F5F6] flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8 font-sans">
+  <div class="min-h-screen bg-[#F4F5F6] dark:bg-[#0B1311] flex flex-col justify-between py-12 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-200">
     
     <!-- Header -->
     <AuthHeader />
 
     <!-- Main Card -->
-    <div class="w-full max-w-md bg-white rounded-[2.5rem] shadow-sm p-6 sm:p-8 mt-8 self-center border border-gray-100/50">
+    <div class="w-full max-w-md bg-white dark:bg-[#15221E] rounded-[2.5rem] shadow-sm p-6 sm:p-8 mt-8 self-center border border-gray-100/50 dark:border-emerald-900/30 transition-colors duration-200">
       
       <!-- Switch Tab Capsule -->
-      <div class="bg-[#F3F4F6] p-1.5 rounded-full flex mb-6">
+      <div class="bg-[#F3F4F6] dark:bg-[#111C18] p-1.5 rounded-full flex mb-6">
         <button 
           @click="isSignUp = false"
           type="button"
           :class="[
             'flex-1 py-2.5 text-center text-sm font-semibold rounded-full transition-all duration-200 focus:outline-none cursor-pointer',
-            !isSignUp ? 'bg-white text-[#0F5238] shadow-sm' : 'text-gray-500 hover:text-gray-700'
+            !isSignUp ? 'bg-white dark:bg-[#1C2F28] text-[#0F5238] dark:text-[#34D399] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
           ]"
         >
           Connexion
@@ -24,7 +24,7 @@
           type="button"
           :class="[
             'flex-1 py-2.5 text-center text-sm font-semibold rounded-full transition-all duration-200 focus:outline-none cursor-pointer',
-            isSignUp ? 'bg-white text-[#0F5238] shadow-sm' : 'text-gray-500 hover:text-gray-700'
+            isSignUp ? 'bg-white dark:bg-[#1C2F28] text-[#0F5238] dark:text-[#34D399] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
           ]"
         >
           Inscription
@@ -36,9 +36,9 @@
 
       <!-- Divider -->
       <div class="relative flex items-center mb-6">
-        <div class="grow border-t border-gray-200"></div>
-        <span class="shrink mx-4 text-[10px] font-bold tracking-wider text-gray-400 uppercase">Ou email</span>
-        <div class="grow border-t border-gray-200"></div>
+        <div class="grow border-t border-gray-200 dark:border-gray-800"></div>
+        <span class="shrink mx-4 text-[10px] font-bold tracking-wider text-gray-400 dark:text-gray-500 uppercase">Ou email</span>
+        <div class="grow border-t border-gray-200 dark:border-gray-800"></div>
       </div>
 
       <!-- Forms -->
@@ -85,14 +85,14 @@
         <Button 
           :type="'submit'"
           :text="isSignUp ? 'Créer un compte' : 'Connexion'"
-          class="bg-[#0F5238] text-white rounded-full hover:bg-[#0c422d] transition-all duration-200 mt-3 py-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0F5238] focus:ring-offset-2 cursor-pointer"
+          class="bg-[#0F5238] dark:bg-[#1D6045] text-white rounded-full hover:bg-[#0c422d] dark:hover:bg-[#154D36] transition-all duration-200 mt-3 py-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0F5238] focus:ring-offset-2 cursor-pointer"
         />
 
       </form>
 
       <!-- Forgotten password (Log In only) / Toggle to register -->
       <div v-if="!isSignUp" class="text-center mt-5">
-        <span class="text-xs font-semibold text-gray-500 hover:text-gray-700 hover:underline cursor-pointer transition-all duration-150">
+        <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:underline cursor-pointer transition-all duration-150">
           Mot de passe oublié ?
         </span>
       </div>

@@ -1,17 +1,17 @@
 <template>
-  <div class="w-full bg-white rounded-3xl p-5 sm:p-7 border border-gray-100 shadow-xs flex flex-col gap-6">
+  <div class="w-full bg-white dark:bg-[#15221E] rounded-3xl p-5 sm:p-7 border border-gray-100 dark:border-emerald-900/30 shadow-xs flex flex-col gap-6 transition-colors duration-200">
     <!-- En-tête du graphique -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div class="flex flex-col">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-emerald-50 text-[#104E35] flex items-center justify-center">
+          <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-[#104E35] dark:text-[#34D399] flex items-center justify-center">
             <BarChart3 class="w-4 h-4" />
           </div>
-          <h2 class="text-base sm:text-lg font-extrabold text-gray-900">
+          <h2 class="text-base sm:text-lg font-extrabold text-gray-900 dark:text-white">
             Consommation CO₂ de la semaine
           </h2>
         </div>
-        <p class="text-xs text-gray-500 mt-1">
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
           CO₂ réel émis (mobilité douce & transports) vs équivalent en voiture thermique
         </p>
       </div>
@@ -19,7 +19,7 @@
       <!-- Badge de réduction globale -->
       <div
         v-if="reductionPercentage > 0"
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#C6F0DB] text-xs font-bold text-[#104E35] self-start sm:self-auto"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#C6F0DB] dark:bg-[#1C4D38] text-xs font-bold text-[#104E35] dark:text-[#A7F3D0] self-start sm:self-auto"
       >
         <TrendingDown class="w-3.5 h-3.5" />
         <span>-{{ reductionPercentage }}% de CO₂ émis vs voiture</span>
@@ -29,38 +29,38 @@
     <!-- 3 Cartes de résumé rapide -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
       <!-- CO2 Émis réellement -->
-      <div class="bg-[#F8FAF9] rounded-2xl p-3.5 flex flex-col justify-between border border-gray-100/60">
+      <div class="bg-[#F8FAF9] dark:bg-[#111C18] rounded-2xl p-3.5 flex flex-col justify-between border border-gray-100/60 dark:border-emerald-950/50">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500">CO₂ ÉMIS</span>
-          <span class="w-2.5 h-2.5 rounded-full bg-[#104E35]" />
+          <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">CO₂ ÉMIS</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-[#104E35] dark:bg-[#34D399]" />
         </div>
-        <span class="text-lg font-black text-gray-900 mt-1.5">{{ totalActualCo2 }} kg</span>
-        <span class="text-[10px] text-gray-500 mt-0.5">Transports & mobilités actives</span>
+        <span class="text-lg font-black text-gray-900 dark:text-white mt-1.5">{{ totalActualCo2 }} kg</span>
+        <span class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Transports & mobilités actives</span>
       </div>
 
       <!-- CO2 Théorique voiture -->
-      <div class="bg-[#FEF2F2] rounded-2xl p-3.5 flex flex-col justify-between border border-red-100/60">
+      <div class="bg-[#FEF2F2] dark:bg-[#251414] rounded-2xl p-3.5 flex flex-col justify-between border border-red-100/60 dark:border-red-950/40">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-red-600">SI EN VOITURE</span>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400">SI EN VOITURE</span>
           <span class="w-2.5 h-2.5 rounded-full bg-[#EF4444]" />
         </div>
-        <span class="text-lg font-black text-red-600 mt-1.5">{{ totalCarCo2 }} kg</span>
-        <span class="text-[10px] text-red-400 mt-0.5">Thermique (218g/km)</span>
+        <span class="text-lg font-black text-red-600 dark:text-red-400 mt-1.5">{{ totalCarCo2 }} kg</span>
+        <span class="text-[10px] text-red-400/80 dark:text-red-400/60 mt-0.5">Thermique (218g/km)</span>
       </div>
 
       <!-- CO2 Économisé -->
-      <div class="bg-[#C6F0DB]/60 rounded-2xl p-3.5 flex flex-col justify-between border border-emerald-200/60">
+      <div class="bg-[#C6F0DB]/60 dark:bg-[#143B2B] rounded-2xl p-3.5 flex flex-col justify-between border border-emerald-200/60 dark:border-emerald-800/40">
         <div class="flex items-center justify-between">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-[#104E35]">CO₂ ÉCONOMISÉ</span>
-          <Leaf class="w-3.5 h-3.5 text-[#104E35]" />
+          <span class="text-[11px] font-bold uppercase tracking-wider text-[#104E35] dark:text-[#A7F3D0]">CO₂ ÉCONOMISÉ</span>
+          <Leaf class="w-3.5 h-3.5 text-[#104E35] dark:text-[#34D399]" />
         </div>
-        <span class="text-lg font-black text-[#104E35] mt-1.5">{{ totalSavedCo2 }} kg</span>
-        <span class="text-[10px] text-[#104E35]/80 mt-0.5">Grâce à vos choix écoresponsables</span>
+        <span class="text-lg font-black text-[#104E35] dark:text-[#34D399] mt-1.5">{{ totalSavedCo2 }} kg</span>
+        <span class="text-[10px] text-[#104E35]/80 dark:text-[#A7F3D0]/80 mt-0.5">Grâce à vos choix écoresponsables</span>
       </div>
     </div>
 
     <!-- Conteneur Graphique Nuxt Charts (Grouped Bar Chart) -->
-    <div class="w-full relative min-h-[280px]">
+    <div class="w-full relative min-h-70">
       <ClientOnly>
         <BarChart
           :data="weeklyData"
@@ -78,7 +78,7 @@
           :y-grid-line="true"
         />
         <template #fallback>
-          <div class="w-full h-[280px] flex items-center justify-center bg-[#F8FAF9] rounded-2xl text-xs text-gray-400">
+          <div class="w-full h-70 flex items-center justify-center bg-[#F8FAF9] dark:bg-[#111C18] rounded-2xl text-xs text-gray-400">
             Chargement du graphique...
           </div>
         </template>
@@ -91,6 +91,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { BarChart3, TrendingDown, Leaf } from 'lucide-vue-next';
 import { LegendPosition } from 'vue-chrts/enums';
+import { useTheme } from '~/composables/useTheme';
 
 type WeeklyCo2Item = {
   day: string;
@@ -103,6 +104,7 @@ const config = useRuntimeConfig();
 const rawUrl = (config.public?.urlBack as string | undefined) || '';
 const gatewayUrl = rawUrl.replace(/\/$/, '');
 const session = useSupabaseSession();
+const { isDark } = useTheme();
 
 // Données par défaut représentatives de la semaine (Lun à Dim)
 const defaultWeeklyData: WeeklyCo2Item[] = [
@@ -118,10 +120,10 @@ const defaultWeeklyData: WeeklyCo2Item[] = [
 const weeklyData = ref<WeeklyCo2Item[]>(defaultWeeklyData);
 const isLoading = ref(false);
 
-const chartCategories = {
-  actual_co2: { name: 'CO₂ réel émis', color: '#104E35' },
+const chartCategories = computed(() => ({
+  actual_co2: { name: 'CO₂ réel émis', color: isDark.value ? '#34D399' : '#104E35' },
   car_co2: { name: 'Si en voiture', color: '#EF4444' },
-};
+}));
 
 const xFormatter = (i: number): string => `${weeklyData.value[i]?.day || ''}`;
 const yFormatter = (tick: number): string => `${tick} kg`;
@@ -165,7 +167,6 @@ async function fetchWeeklyData() {
     });
 
     if (data?.days && data.days.length > 0) {
-      // Si l'utilisateur a au moins un trajet enregistré
       const hasTrips = data.days.some((d) => d.car_co2 > 0 || d.actual_co2 > 0);
       if (hasTrips) {
         weeklyData.value = data.days.map((d) => ({

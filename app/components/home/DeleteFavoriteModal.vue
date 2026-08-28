@@ -3,24 +3,24 @@
     <Transition name="fade">
       <div
         v-if="isOpen && favorite"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/40 backdrop-blur-sm"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/40 dark:bg-black/70 backdrop-blur-sm"
         @click.self="closeModal"
       >
         <div
-          class="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-gray-100 transform transition-all flex flex-col gap-5 text-center"
+          class="relative w-full max-w-md bg-white dark:bg-[#15221E] rounded-3xl p-6 sm:p-7 shadow-2xl border border-gray-100 dark:border-emerald-900/30 transform transition-all flex flex-col gap-5 text-center"
         >
           <!-- Icône Poubelle Alerte -->
-          <div class="mx-auto w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
+          <div class="mx-auto w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 flex items-center justify-center">
             <Trash2 class="w-6 h-6" />
           </div>
 
           <!-- Textes -->
           <div class="flex flex-col gap-1.5">
-            <h3 class="text-xl font-bold text-gray-900">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">
               Supprimer ce favori ?
             </h3>
-            <p class="text-sm text-gray-500">
-              Êtes-vous sûr de vouloir supprimer <strong class="text-gray-800">"{{ favorite.name }}"</strong> de vos favoris ?
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              Êtes-vous sûr de vouloir supprimer <strong class="text-gray-800 dark:text-gray-200">"{{ favorite.name }}"</strong> de vos favoris ?
             </p>
           </div>
 
@@ -34,7 +34,7 @@
             <button
               type="button"
               @click="closeModal"
-              class="flex-1 py-3 px-4 rounded-full border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 active:scale-95 transition-all cursor-pointer text-sm"
+              class="flex-1 py-3 px-4 rounded-full border border-gray-200 dark:border-emerald-900/50 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-[#1A2D25] active:scale-95 transition-all cursor-pointer text-sm"
             >
               Annuler
             </button>

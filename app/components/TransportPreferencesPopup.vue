@@ -2,28 +2,28 @@
   <Transition name="fade">
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-99 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-fade-in"
+      class="fixed inset-0 z-99 flex items-center justify-center bg-black/40 dark:bg-black/70 backdrop-blur-xs p-4 animate-fade-in"
       @click.self="close"
     >
       <div
-        class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative border border-gray-100 flex flex-col max-h-[90vh] overflow-y-auto"
+        class="bg-white dark:bg-[#15221E] rounded-3xl max-w-md w-full p-6 shadow-2xl relative border border-gray-100 dark:border-emerald-900/30 flex flex-col max-h-[90vh] overflow-y-auto"
       >
         <!-- En-tête -->
-        <div class="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
+        <div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-emerald-950/40 mb-5">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] text-[#0F5238] flex items-center justify-center">
+            <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] dark:bg-[#1B4D3E] text-[#0F5238] dark:text-[#34D399] flex items-center justify-center">
               <Sliders class="w-5 h-5" />
             </div>
             <div>
-              <h2 class="text-lg font-bold text-gray-900">Préférences de transport</h2>
-              <p class="text-xs text-gray-500">Personnalisez vos itinéraires</p>
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white">Préférences de transport</h2>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Personnalisez vos itinéraires</p>
             </div>
           </div>
 
           <button
             type="button"
             @click="close"
-            class="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+            class="p-2 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#1A2D25] rounded-full transition-colors cursor-pointer"
           >
             <X class="w-5 h-5" />
           </button>
@@ -32,16 +32,16 @@
         <!-- Section 1 : Vitesse de marche -->
         <div class="mb-6">
           <div class="flex items-center justify-between mb-2">
-            <label class="text-sm font-semibold text-gray-800">Vitesse de marche</label>
-            <span class="text-xs font-medium text-[#0F5238] bg-[#E1F6EB] px-2.5 py-0.5 rounded-full">
+            <label class="text-sm font-semibold text-gray-800 dark:text-gray-200">Vitesse de marche</label>
+            <span class="text-xs font-medium text-[#0F5238] dark:text-[#34D399] bg-[#E1F6EB] dark:bg-[#1B4D3E] px-2.5 py-0.5 rounded-full">
               {{ speedLabel }}
             </span>
           </div>
-          <p class="text-xs text-gray-500 mb-3">
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
             Ajuste les temps de parcours à pied sur vos trajets.
           </p>
 
-          <div class="grid grid-cols-3 gap-2 bg-[#F3F5F4] p-1.5 rounded-2xl">
+          <div class="grid grid-cols-3 gap-2 bg-[#F3F5F4] dark:bg-[#111C18] p-1.5 rounded-2xl">
             <button
               v-for="speed in speedOptions"
               :key="speed.value"
@@ -50,8 +50,8 @@
               class="flex flex-col items-center justify-center py-2.5 px-2 rounded-xl text-xs font-semibold transition-all cursor-pointer"
               :class="[
                 localPreferences.walking_speed === speed.value
-                  ? 'bg-[#0F5238] text-white shadow-md'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                  ? 'bg-[#0F5238] dark:bg-[#1D6045] text-white shadow-md'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-[#1A2D25]'
               ]"
             >
               <component :is="speed.icon" class="w-4 h-4 mb-1" />
@@ -63,10 +63,10 @@
 
         <!-- Section 2 : Modes de transport autorisés -->
         <div class="mb-6">
-          <label class="text-sm font-semibold text-gray-800 block mb-1">
+          <label class="text-sm font-semibold text-gray-800 dark:text-gray-200 block mb-1">
             Modes de transport autorisés
           </label>
-          <p class="text-xs text-gray-500 mb-3">
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">
             Décochez un mode pour le masquer de vos options de trajets.
           </p>
 
@@ -77,8 +77,8 @@
               class="flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer select-none"
               :class="[
                 localPreferences[mode.key]
-                  ? 'bg-white border-gray-200 hover:border-gray-300'
-                  : 'bg-gray-50/70 border-gray-100 opacity-60'
+                  ? 'bg-white dark:bg-[#15221E] border-gray-200 dark:border-emerald-900/40 hover:border-gray-300 dark:hover:border-emerald-700/60'
+                  : 'bg-gray-50/70 dark:bg-[#111C18]/60 border-gray-100 dark:border-gray-800 opacity-60'
               ]"
               @click="toggleMode(mode.key)"
             >
@@ -87,22 +87,22 @@
                   class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors"
                   :class="[
                     localPreferences[mode.key]
-                      ? 'bg-[#E1F6EB] text-[#0F5238]'
-                      : 'bg-gray-200 text-gray-400'
+                      ? 'bg-[#E1F6EB] dark:bg-[#1B4D3E] text-[#0F5238] dark:text-[#34D399]'
+                      : 'bg-gray-200 dark:bg-gray-800 text-gray-400 dark:text-gray-500'
                   ]"
                 >
                   <component :is="mode.icon" class="w-5 h-5" />
                 </div>
                 <div>
-                  <p class="text-sm font-medium text-gray-900 leading-snug">{{ mode.title }}</p>
-                  <p class="text-xs text-gray-500 leading-snug">{{ mode.subtitle }}</p>
+                  <p class="text-sm font-medium text-gray-900 dark:text-white leading-snug">{{ mode.title }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 leading-snug">{{ mode.subtitle }}</p>
                 </div>
               </div>
 
               <!-- Switch Toggle iOS style -->
               <div
                 class="w-12 h-7 rounded-full transition-colors relative flex items-center p-0.5 shrink-0"
-                :class="localPreferences[mode.key] ? 'bg-[#0F5238]' : 'bg-gray-300'"
+                :class="localPreferences[mode.key] ? 'bg-[#0F5238] dark:bg-[#34D399]' : 'bg-gray-300 dark:bg-gray-700'"
               >
                 <div
                   class="w-6 h-6 rounded-full bg-white shadow-md transform transition-transform"
@@ -114,12 +114,12 @@
         </div>
 
         <!-- Actions -->
-        <div class="mt-auto pt-4 border-t border-gray-100 flex flex-col gap-2">
+        <div class="mt-auto pt-4 border-t border-gray-100 dark:border-emerald-950/40 flex flex-col gap-2">
           <button
             type="button"
             :disabled="isSaving"
             @click="handleSave"
-            class="w-full bg-[#0F5238] hover:bg-[#0b3d2a] text-white font-semibold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#0F5238]/15 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full bg-[#0F5238] dark:bg-[#1D6045] hover:bg-[#0b3d2a] dark:hover:bg-[#154D36] text-white font-semibold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#0F5238]/15 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Loader2 v-if="isSaving" class="w-4 h-4 animate-spin" />
             <Check v-else class="w-4 h-4" />

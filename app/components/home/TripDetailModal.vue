@@ -2,27 +2,27 @@
   <Teleport to="body">
     <div
       v-if="isOpen && trip"
-      class="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+      class="fixed inset-0 z-9999 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
       aria-modal="true"
       role="dialog"
     >
       <!-- Backdrop sombre avec flou -->
       <div
-        class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        class="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm transition-opacity"
         @click="closeModal"
       />
 
       <!-- Conteneur Modal -->
       <div
-        class="relative w-full max-w-lg bg-white rounded-[32px] shadow-2xl overflow-hidden transform transition-all flex flex-col z-10 my-auto border border-gray-100 max-h-[90vh]"
+        class="relative w-full max-w-lg bg-white dark:bg-[#15221E] rounded-[32px] shadow-2xl overflow-hidden transform transition-all flex flex-col z-10 my-auto border border-gray-100 dark:border-emerald-900/30 max-h-[90vh]"
       >
         <!-- En-tête avec Carte du tracé -->
-        <div class="relative w-full h-52 sm:h-60 bg-[#E8ECE9] overflow-hidden">
+        <div class="relative w-full h-52 sm:h-60 bg-[#E8ECE9] dark:bg-[#0F1A16] overflow-hidden">
           <!-- Mini carte Leaflet -->
           <ClientOnly>
             <div ref="mapContainer" class="w-full h-full absolute inset-0 z-0" />
             <template #fallback>
-              <div class="w-full h-full flex items-center justify-center bg-[#E8ECE9] text-xs text-gray-400">
+              <div class="w-full h-full flex items-center justify-center bg-[#E8ECE9] dark:bg-[#0F1A16] text-xs text-gray-400">
                 Chargement de la carte...
               </div>
             </template>
@@ -32,7 +32,7 @@
           <button
             type="button"
             @click="closeModal"
-            class="absolute top-4 right-4 z-20 w-9 h-9 bg-white/90 hover:bg-white text-gray-700 hover:text-gray-900 rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer backdrop-blur-sm"
+            class="absolute top-4 right-4 z-20 w-9 h-9 bg-white/90 dark:bg-[#1A2D25]/90 hover:bg-white dark:hover:bg-[#253E33] text-gray-700 dark:text-gray-200 rounded-full flex items-center justify-center shadow-md transition-all active:scale-95 cursor-pointer backdrop-blur-sm"
             aria-label="Fermer la modal"
           >
             <X class="w-4 h-4" />
@@ -40,12 +40,12 @@
 
           <!-- Badges de départ / arrivée superposés sur le bas de la carte -->
           <div class="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap gap-2 pointer-events-none">
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-xs font-semibold text-gray-800 shadow-sm border border-gray-100 backdrop-blur-sm truncate max-w-[48%]">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 dark:bg-[#14231E]/95 text-xs font-semibold text-gray-800 dark:text-gray-100 shadow-sm border border-gray-100 dark:border-emerald-900/40 backdrop-blur-sm truncate max-w-[48%]">
               <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
               <span class="truncate">{{ trip.start_name || trip.start_point }}</span>
             </span>
-            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 text-xs font-semibold text-gray-800 shadow-sm border border-gray-100 backdrop-blur-sm truncate max-w-[48%]">
-              <span class="w-2 h-2 rounded-full bg-[#104E35] shrink-0" />
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 dark:bg-[#14231E]/95 text-xs font-semibold text-gray-800 dark:text-gray-100 shadow-sm border border-gray-100 dark:border-emerald-900/40 backdrop-blur-sm truncate max-w-[48%]">
+              <span class="w-2 h-2 rounded-full bg-[#104E35] dark:bg-[#34D399] shrink-0" />
               <span class="truncate">{{ trip.end_name || trip.end_point }}</span>
             </span>
           </div>
@@ -55,10 +55,10 @@
         <div class="p-6 sm:p-7 flex flex-col gap-6 overflow-y-auto">
           <!-- Titre & Date -->
           <div class="flex flex-col">
-            <h2 class="text-xl sm:text-2xl font-black text-gray-900 leading-tight">
+            <h2 class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white leading-tight">
               Trajet {{ trip.end_name || trip.end_point }}
             </h2>
-            <p class="text-xs sm:text-sm text-gray-500 font-medium mt-1">
+            <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium mt-1">
               {{ formattedTripDate }}
             </p>
           </div>
@@ -66,28 +66,28 @@
           <!-- 3 Badges Statistiques -->
           <div class="grid grid-cols-3 gap-2.5 sm:gap-3">
             <!-- TEMPS -->
-            <div class="bg-[#F4F6F5] rounded-2xl p-3 flex flex-col items-center justify-center text-center">
-              <Clock class="w-4 h-4 text-gray-500 mb-1" />
-              <span class="text-[10px] font-bold tracking-wider text-gray-500 uppercase">TEMPS</span>
-              <span class="text-sm sm:text-base font-extrabold text-gray-900 mt-0.5">
+            <div class="bg-[#F4F6F5] dark:bg-[#111C18] rounded-2xl p-3 flex flex-col items-center justify-center text-center">
+              <Clock class="w-4 h-4 text-gray-500 dark:text-gray-400 mb-1" />
+              <span class="text-[10px] font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase">TEMPS</span>
+              <span class="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white mt-0.5">
                 {{ trip.duration_minutes || 1 }} min
               </span>
             </div>
 
             <!-- DISTANCE -->
-            <div class="bg-[#F4F6F5] rounded-2xl p-3 flex flex-col items-center justify-center text-center">
-              <MapPin class="w-4 h-4 text-gray-500 mb-1" />
-              <span class="text-[10px] font-bold tracking-wider text-gray-500 uppercase">DISTANCE</span>
-              <span class="text-sm sm:text-base font-extrabold text-gray-900 mt-0.5">
+            <div class="bg-[#F4F6F5] dark:bg-[#111C18] rounded-2xl p-3 flex flex-col items-center justify-center text-center">
+              <MapPin class="w-4 h-4 text-gray-500 dark:text-gray-400 mb-1" />
+              <span class="text-[10px] font-bold tracking-wider text-gray-500 dark:text-gray-400 uppercase">DISTANCE</span>
+              <span class="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white mt-0.5">
                 {{ trip.distance_km || ((trip.distance_meters || 0) / 1000).toFixed(1) }} km
               </span>
             </div>
 
             <!-- CO2 ÉCONOMISÉ -->
-            <div class="bg-[#C6F0DB] rounded-2xl p-3 flex flex-col items-center justify-center text-center">
-              <Leaf class="w-4 h-4 text-[#104E35] mb-1" />
-              <span class="text-[10px] font-bold tracking-wider text-[#104E35] uppercase">CO₂ ÉCONOMISÉ</span>
-              <span class="text-sm sm:text-base font-extrabold text-[#104E35] mt-0.5">
+            <div class="bg-[#C6F0DB] dark:bg-[#153D2C] rounded-2xl p-3 flex flex-col items-center justify-center text-center">
+              <Leaf class="w-4 h-4 text-[#104E35] dark:text-[#34D399] mb-1" />
+              <span class="text-[10px] font-bold tracking-wider text-[#104E35] dark:text-[#A7F3D0] uppercase">CO₂ ÉCONOMISÉ</span>
+              <span class="text-sm sm:text-base font-extrabold text-[#104E35] dark:text-[#34D399] mt-0.5">
                 {{ formatCo2Value(trip.co2_saved_kg) }}
               </span>
             </div>
@@ -95,45 +95,45 @@
 
           <!-- DÉTAILS DE L'ITINÉRAIRE -->
           <div class="flex flex-col gap-3">
-            <span class="text-[11px] font-extrabold tracking-wider text-gray-500 uppercase">
+            <span class="text-[11px] font-extrabold tracking-wider text-gray-500 dark:text-gray-400 uppercase">
               DÉTAILS DE L'ITINÉRAIRE
             </span>
 
-            <div class="relative flex flex-col gap-4 pl-3 border-l-2 border-dashed border-emerald-300 ml-3">
+            <div class="relative flex flex-col gap-4 pl-3 border-l-2 border-dashed border-emerald-300 dark:border-emerald-700/60 ml-3">
               <!-- Point de départ -->
               <div class="relative flex items-start justify-between gap-3">
-                <span class="absolute -left-[19px] top-1.5 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-white" />
+                <span class="absolute -left-4.75 top-1.5 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-[#15221E]" />
                 <div class="flex flex-col min-w-0">
-                  <span class="text-xs font-bold text-gray-900 truncate">
+                  <span class="text-xs font-bold text-gray-900 dark:text-gray-100 truncate">
                     Départ : {{ trip.start_name || trip.start_point }}
                   </span>
-                  <span class="text-[11px] text-gray-500">Point d'origine</span>
+                  <span class="text-[11px] text-gray-500 dark:text-gray-400">Point d'origine</span>
                 </div>
-                <component :is="getModeIcon(trip.mode)" class="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
+                <component :is="getModeIcon(trip.mode)" class="w-4 h-4 text-gray-400 dark:text-gray-400 shrink-0 mt-0.5" />
               </div>
 
               <!-- Étape Mode de transport -->
               <div class="relative flex items-start justify-between gap-3">
-                <span class="absolute -left-[19px] top-1.5 w-3 h-3 rounded-full bg-[#104E35] ring-4 ring-white" />
+                <span class="absolute -left-4.75 top-1.5 w-3 h-3 rounded-full bg-[#104E35] dark:bg-[#34D399] ring-4 ring-white dark:ring-[#15221E]" />
                 <div class="flex flex-col min-w-0">
-                  <span class="text-xs font-bold text-gray-900 truncate">
+                  <span class="text-xs font-bold text-gray-900 dark:text-gray-100 truncate">
                     {{ getModeLabel(trip.mode, trip.line_name) }} • {{ trip.duration_minutes }} min
                   </span>
-                  <span class="text-[11px] text-gray-500 truncate">
+                  <span class="text-[11px] text-gray-500 dark:text-gray-400 truncate">
                     {{ trip.distance_km || ((trip.distance_meters || 0) / 1000).toFixed(1) }} km
                   </span>
                 </div>
-                <component :is="getModeIcon(trip.mode)" class="w-4 h-4 text-[#104E35] shrink-0 mt-0.5" />
+                <component :is="getModeIcon(trip.mode)" class="w-4 h-4 text-[#104E35] dark:text-[#34D399] shrink-0 mt-0.5" />
               </div>
 
               <!-- Point d'arrivée -->
               <div class="relative flex items-start justify-between gap-3">
-                <span class="absolute -left-[19px] top-1.5 w-3 h-3 rounded-full bg-[#104E35] ring-4 ring-white" />
+                <span class="absolute -left-4.75 top-1.5 w-3 h-3 rounded-full bg-[#104E35] dark:bg-[#34D399] ring-4 ring-white dark:ring-[#15221E]" />
                 <div class="flex flex-col min-w-0">
-                  <span class="text-xs font-bold text-gray-900 truncate">
+                  <span class="text-xs font-bold text-gray-900 dark:text-gray-100 truncate">
                     Arrivée : {{ trip.end_name || trip.end_point }}
                   </span>
-                  <span class="text-[11px] text-gray-500">Destination</span>
+                  <span class="text-[11px] text-gray-500 dark:text-gray-400">Destination</span>
                 </div>
                 <MapPin class="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
               </div>
@@ -144,7 +144,7 @@
           <button
             type="button"
             @click="redoTrip"
-            class="w-full mt-2 py-3.5 px-6 rounded-2xl bg-[#104E35] hover:bg-[#0D3E2A] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-[#104E35]/20 hover:shadow-xl transition-all duration-200 active:scale-[0.98] cursor-pointer"
+            class="w-full mt-2 py-3.5 px-6 rounded-2xl bg-[#104E35] dark:bg-[#1D6045] hover:bg-[#0D3E2A] dark:hover:bg-[#154D36] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-[#104E35]/20 hover:shadow-xl transition-all duration-200 active:scale-[0.98] cursor-pointer"
           >
             <RotateCcw class="w-4 h-4" />
             <span>Refaire ce trajet</span>
@@ -173,6 +173,7 @@ import {
 import type { UserTrip } from '~/types/trip';
 import { mapGeometryToLeafletPoints } from '~/utils/geometry';
 import { formatCo2 } from '~/utils/itinerary.helpers';
+import { useTheme } from '~/composables/useTheme';
 
 const props = defineProps<{
   isOpen: boolean;
@@ -184,6 +185,7 @@ const emit = defineEmits<{
 }>();
 
 const router = useRouter();
+const { isDark } = useTheme();
 const mapContainer = ref<HTMLElement | null>(null);
 let mapInstance: any = null;
 let polylineLayer: any = null;
@@ -346,9 +348,9 @@ async function initMiniMap() {
     points = [startCoord, endCoord];
   }
 
-  // Tracé vert forêt en pointillés
+  // Tracé polyline
   polylineLayer = L.polyline(points, {
-    color: '#104E35',
+    color: isDark.value ? '#34D399' : '#104E35',
     weight: 5,
     dashArray: '6, 8',
     opacity: 0.95,
@@ -364,7 +366,7 @@ async function initMiniMap() {
 
   const endIcon = L.divIcon({
     className: 'custom-map-marker-end',
-    html: '<div style="background-color: #104E35; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.45);"></div>',
+    html: `<div style="background-color: ${isDark.value ? '#34D399' : '#104E35'}; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.45);"></div>`,
     iconSize: [16, 16],
     iconAnchor: [8, 8],
   });

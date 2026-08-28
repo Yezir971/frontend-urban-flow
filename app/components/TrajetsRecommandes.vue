@@ -5,18 +5,18 @@
       <button
         type="button"
         @click="emit('back')"
-        class="w-9 h-9 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-95 transition-all cursor-pointer shadow-sm"
+        class="w-9 h-9 rounded-full bg-white dark:bg-[#1C2F28] border border-gray-200 dark:border-emerald-900/60 flex items-center justify-center text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#253E35] active:scale-95 transition-all cursor-pointer shadow-sm"
         aria-label="Retour à la recherche"
       >
         <ArrowLeft class="w-4 h-4" />
       </button>
       <div class="flex flex-col">
         <div class="flex items-center gap-2">
-          <h1 class="text-xl font-bold text-gray-900 leading-tight">
+          <h1 class="text-xl font-bold text-gray-900 dark:text-white leading-tight">
             Trajets disponibles
           </h1>
         </div>
-        <span class="text-xs text-gray-500">
+        <span class="text-xs text-gray-500 dark:text-gray-400">
           Sélectionnez un itinéraire pour voir le tracé
         </span>
       </div>
@@ -24,7 +24,7 @@
 
     <!-- Titre de section -->
     <div class="flex items-center justify-between mt-1">
-      <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider">
+      <h2 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
         Trajets recommandés
       </h2>
     </div>
@@ -35,7 +35,7 @@
         v-for="proposal in proposals"
         :key="proposal.id"
         @click="emit('select', proposal)"
-        class="bg-white border border-gray-100/80 rounded-3xl p-4.5 shadow-sm hover:shadow-md hover:border-gray-200 transition-all duration-200 cursor-pointer active:scale-[0.98] flex flex-col gap-3 group"
+        class="bg-white dark:bg-[#15221E] border border-gray-100/80 dark:border-emerald-900/40 rounded-3xl p-4.5 shadow-sm hover:shadow-md hover:border-gray-200 dark:hover:border-emerald-700/60 transition-all duration-200 cursor-pointer active:scale-[0.98] flex flex-col gap-3 group"
       >
         <!-- Ligne principale : Icône / Infos / Durée -->
         <div class="flex items-center justify-between gap-3">
@@ -52,7 +52,7 @@
             <!-- Badge Marche (Vert clair) -->
             <div
               v-else-if="proposal.type === 'WALK'"
-              class="w-11 h-11 rounded-full bg-[#dcfce7] text-[#104e35] flex items-center justify-center shrink-0 shadow-sm"
+              class="w-11 h-11 rounded-full bg-[#dcfce7] dark:bg-[#16382B] text-[#104e35] dark:text-[#34D399] flex items-center justify-center shrink-0 shadow-sm"
             >
               <Footprints class="w-5 h-5" />
             </div>
@@ -60,7 +60,7 @@
             <!-- Badge Voiture (Gris ardoise) -->
             <div
               v-else-if="proposal.type === 'CAR'"
-              class="w-11 h-11 rounded-full bg-[#f1f5f9] text-[#334155] flex items-center justify-center shrink-0 shadow-sm"
+              class="w-11 h-11 rounded-full bg-[#f1f5f9] dark:bg-[#25303B] text-[#334155] dark:text-gray-300 flex items-center justify-center shrink-0 shadow-sm"
             >
               <Car class="w-5 h-5" />
             </div>
@@ -68,17 +68,17 @@
             <!-- Badge Vélo / Trottinette (Vert clair) -->
             <div
               v-else
-              class="w-11 h-11 rounded-full bg-[#dcfce7] text-[#104e35] flex items-center justify-center shrink-0 shadow-sm"
+              class="w-11 h-11 rounded-full bg-[#dcfce7] dark:bg-[#16382B] text-[#104e35] dark:text-[#34D399] flex items-center justify-center shrink-0 shadow-sm"
             >
               <Bike class="w-5 h-5" />
             </div>
 
             <!-- Textes descriptifs réels issus d'OTP -->
             <div class="flex flex-col min-w-0">
-              <h3 class="font-bold text-gray-900 text-[15px] leading-tight truncate">
+              <h3 class="font-bold text-gray-900 dark:text-white text-[15px] leading-tight truncate">
                 {{ proposal.title }}
               </h3>
-              <p class="text-xs text-gray-500 mt-0.5 truncate">
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
                 {{ proposal.subtitle }}
               </p>
             </div>
@@ -86,7 +86,7 @@
 
           <!-- Côté Droit : Durée & Mention temps réel -->
           <div class="flex flex-col items-end shrink-0">
-            <span class="text-lg font-black text-[#104e35]">
+            <span class="text-lg font-black text-[#104e35] dark:text-[#34D399]">
               {{ proposal.durationMinutes }} min
             </span>
 
@@ -96,20 +96,20 @@
                 class="w-1.5 h-1.5 rounded-full shrink-0"
                 :class="proposal.departureStatus === 'DELAYED' ? 'bg-amber-500 animate-pulse' : 'bg-emerald-500 animate-pulse'"
               ></span>
-              <span :class="proposal.departureStatus === 'DELAYED' ? 'text-amber-600 font-semibold' : 'text-emerald-700 font-semibold'">
+              <span :class="proposal.departureStatus === 'DELAYED' ? 'text-amber-600 dark:text-amber-400 font-semibold' : 'text-emerald-700 dark:text-[#34D399] font-semibold'">
                 {{ proposal.departureStatus === 'DELAYED' ? `+${proposal.delayMinutes}m retard` : `Part dans ${proposal.leavesInMinutes}m` }}
               </span>
             </div>
 
             <span
               v-else-if="proposal.priceApprox"
-              class="text-[11px] text-gray-400 font-medium"
+              class="text-[11px] text-gray-400 dark:text-gray-500 font-medium"
             >
               {{ proposal.priceApprox }}
             </span>
             <span
               v-else-if="proposal.type === 'WALK'"
-              class="text-[11px] text-gray-400 font-medium"
+              class="text-[11px] text-gray-400 dark:text-gray-500 font-medium"
             >
               Gratuit
             </span>
@@ -117,10 +117,10 @@
         </div>
 
         <!-- Ligne inférieure : Économie CO2 & Badges & Chevron -->
-        <div class="flex items-center justify-between pt-1 border-t border-gray-50/80 text-xs">
+        <div class="flex items-center justify-between pt-1 border-t border-gray-50/80 dark:border-emerald-950/40 text-xs">
           <!-- CO2 économisé dynamique (en g ou kg) -->
-          <div class="flex items-center gap-1.5 text-[#104e35] font-semibold text-[11px]">
-            <Leaf class="w-3.5 h-3.5 fill-[#104e35] shrink-0" />
+          <div class="flex items-center gap-1.5 text-[#104e35] dark:text-[#34D399] font-semibold text-[11px]">
+            <Leaf class="w-3.5 h-3.5 fill-[#104e35] dark:fill-[#34D399] shrink-0" />
             <span>
               {{ formatCo2SavingsBadge(proposal) }}
             </span>
@@ -130,11 +130,11 @@
           <div class="flex items-center gap-2">
             <span
               v-if="proposal.tag"
-              class="bg-[#104e35] text-white text-[9px] font-black px-2 py-0.5 rounded-full tracking-wider uppercase"
+              class="bg-[#104e35] dark:bg-[#1B4D3E] text-white dark:text-[#A7F3D0] text-[9px] font-black px-2 py-0.5 rounded-full tracking-wider uppercase"
             >
               {{ proposal.tag }}
             </span>
-            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight class="w-4 h-4 text-gray-400 dark:text-gray-400 group-hover:translate-x-0.5 transition-transform" />
           </div>
         </div>
       </div>

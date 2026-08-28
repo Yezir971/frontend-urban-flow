@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md mx-auto pt-6 sm:pt-10 pb-20 px-4 flex flex-col items-center">
+  <div class="mx-auto pt-6 sm:pt-10 pb-20 px-4 flex flex-col items-center">
     <!-- Header Profil (Avatar + Nom + Macaron Niveau + Pop-up Édition) -->
     <HeaderProfil
       :profile="profile"
@@ -9,106 +9,106 @@
 
     <!-- Spinner de chargement initial si profil non encore chargé -->
     <div v-if="isLoading && !profile" class="flex flex-col items-center justify-center py-12 gap-3">
-      <UIcon name="i-lucide-loader-2" class="w-8 h-8 text-[#0F5238] animate-spin" />
-      <p class="text-sm font-medium text-gray-500">Chargement de votre profil...</p>
+      <UIcon name="i-lucide-loader-2" class="w-8 h-8 text-[#0F5238] dark:text-[#34D399] animate-spin" />
+      <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Chargement de votre profil...</p>
     </div>
 
-    <!-- Contenu des Paramètres du Profil (Fidèle à prrofil.png) -->
+    <!-- Contenu des Paramètres du Profil (Fidèle à profil.png) -->
     <div v-else class="w-full flex flex-col gap-6">
       <!-- Section 1 : MOBILITÉ -->
       <div>
-        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5 px-1">
+        <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2.5 px-1">
           Mobilité
         </h3>
-        <div class="bg-[#F8FAF9] rounded-3xl p-1.5 flex flex-col gap-1 border border-gray-100/80 shadow-xs">
+        <div class="bg-[#F8FAF9] dark:bg-[#15221E] rounded-3xl p-1.5 flex flex-col gap-1 border border-gray-100/80 dark:border-emerald-900/30 shadow-xs transition-colors duration-200">
           <!-- Préférences de transport -->
           <button
             type="button"
             @click="isPreferencesPopupOpen = true"
-            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
+            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white dark:hover:bg-[#1A2D25] transition-all text-left w-full cursor-pointer group"
           >
             <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] text-[#0F5238] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] dark:bg-[#1B4D3E] text-[#0F5238] dark:text-[#34D399] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                 <Sliders class="w-5 h-5" />
               </div>
               <div>
-                <p class="text-sm font-semibold text-gray-900">Préférences de transport</p>
-                <p class="text-xs text-gray-500">Modes actifs, vitesse de marche</p>
+                <p class="text-sm font-semibold text-gray-900 dark:text-white">Préférences de transport</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Modes actifs, vitesse de marche</p>
               </div>
             </div>
-            <ChevronRight class="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-0.5 transition-all shrink-0" />
+            <ChevronRight class="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-200 group-hover:translate-x-0.5 transition-all shrink-0" />
           </button>
 
           <!-- Accessibilité PMR -->
           <button
             type="button"
             @click="openPmrInfo"
-            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
+            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white dark:hover:bg-[#1A2D25] transition-all text-left w-full cursor-pointer group"
           >
             <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] text-[#0F5238] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] dark:bg-[#1B4D3E] text-[#0F5238] dark:text-[#34D399] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                 <Accessibility class="w-5 h-5" />
               </div>
               <div>
-                <p class="text-sm font-semibold text-gray-900">Accessibilité PMR</p>
-                <p class="text-xs text-gray-500">Trajets adaptés aux fauteuils et poussettes</p>
+                <p class="text-sm font-semibold text-gray-900 dark:text-white">Accessibilité PMR</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Trajets adaptés aux fauteuils et poussettes</p>
               </div>
             </div>
-            <ChevronRight class="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-0.5 transition-all shrink-0" />
+            <ChevronRight class="w-5 h-5 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-200 group-hover:translate-x-0.5 transition-all shrink-0" />
           </button>
         </div>
       </div>
 
       <!-- Section 2 : APPLICATION -->
       <div>
-        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5 px-1">
+        <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2.5 px-1">
           Application
         </h3>
-        <div class="bg-[#F8FAF9] rounded-3xl p-1.5 flex flex-col gap-1 border border-gray-100/80 shadow-xs">
+        <div class="bg-[#F8FAF9] dark:bg-[#15221E] rounded-3xl p-1.5 flex flex-col gap-1 border border-gray-100/80 dark:border-emerald-900/30 shadow-xs transition-colors duration-200">
           <!-- Mode sombre -->
-          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white/40">
+          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white/40 dark:bg-[#111C18]">
             <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] text-[#0F5238] flex items-center justify-center shrink-0">
+              <div class="w-10 h-10 rounded-2xl bg-[#E1F6EB] dark:bg-[#1B4D3E] text-[#0F5238] dark:text-[#34D399] flex items-center justify-center shrink-0">
                 <Moon class="w-5 h-5" />
               </div>
-              <span class="text-sm font-semibold text-gray-900">Mode sombre</span>
+              <span class="text-sm font-semibold text-gray-900 dark:text-white">Mode sombre</span>
             </div>
             <div
-              @click="isDarkMode = !isDarkMode"
+              @click="toggleTheme"
               class="w-12 h-7 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer shrink-0"
-              :class="isDarkMode ? 'bg-[#0F5238]' : 'bg-gray-300'"
+              :class="isDark ? 'bg-[#0F5238] dark:bg-[#34D399]' : 'bg-gray-300 dark:bg-gray-700'"
             >
               <div
                 class="w-6 h-6 rounded-full bg-white shadow-md transform transition-transform"
-                :class="isDarkMode ? 'translate-x-5' : 'translate-x-0'"
+                :class="isDark ? 'translate-x-5' : 'translate-x-0'"
               />
             </div>
           </div>
 
           <!-- Géolocalisation avec demande de permission native et confirmation -->
-          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white/40">
+          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white/40 dark:bg-[#111C18]">
             <div class="flex items-center gap-3.5 mr-3">
               <div
                 class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-colors"
                 :class="[
                   geoStore.isEnabled
-                    ? 'bg-[#E1F6EB] text-[#0F5238]'
-                    : 'bg-gray-100 text-gray-400'
+                    ? 'bg-[#E1F6EB] dark:bg-[#1B4D3E] text-[#0F5238] dark:text-[#34D399]'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500'
                 ]"
               >
                 <MapPin class="w-5 h-5" />
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <p class="text-sm font-semibold text-gray-900">Géolocalisation</p>
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">Géolocalisation</p>
                   <span
                     v-if="geoStore.isEnabled && geoStore.lat && geoStore.lng"
-                    class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-wider"
+                    class="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full uppercase tracking-wider"
                   >
                     Active
                   </span>
                 </div>
-                <p class="text-xs text-gray-500">
+                <p class="text-xs text-gray-500 dark:text-gray-400">
                   Activez pour trouver les stations et véhicules à proximité de votre position actuelle.
                 </p>
               </div>
@@ -116,7 +116,7 @@
             <div
               @click="toggleGeolocation"
               class="w-12 h-7 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer shrink-0"
-              :class="geoStore.isEnabled ? 'bg-[#0F5238]' : 'bg-gray-300'"
+              :class="geoStore.isEnabled ? 'bg-[#0F5238] dark:bg-[#34D399]' : 'bg-gray-300 dark:bg-gray-700'"
             >
               <div
                 class="w-6 h-6 rounded-full bg-white shadow-md transform transition-transform"
@@ -134,7 +134,7 @@
             :class="[
               isInstalled
                 ? 'opacity-60 cursor-not-allowed bg-transparent'
-                : 'hover:bg-white cursor-pointer'
+                : 'hover:bg-white dark:hover:bg-[#1A2D25] cursor-pointer'
             ]"
           >
             <div class="flex items-center gap-3.5">
@@ -142,31 +142,31 @@
                 class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-transform"
                 :class="[
                   isInstalled
-                    ? 'bg-gray-100 text-gray-500'
-                    : 'bg-[#E1F6EB] text-[#0F5238] group-hover:scale-105'
+                    ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                    : 'bg-[#E1F6EB] dark:bg-[#1B4D3E] text-[#0F5238] dark:text-[#34D399] group-hover:scale-105'
                 ]"
               >
-                <Check v-if="isInstalled" class="w-5 h-5 text-emerald-600" />
+                <Check v-if="isInstalled" class="w-5 h-5 text-emerald-600 dark:text-[#34D399]" />
                 <Download v-else class="w-5 h-5" />
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <p class="text-sm font-semibold text-gray-900">PWA</p>
+                  <p class="text-sm font-semibold text-gray-900 dark:text-white">PWA</p>
                   <span
                     v-if="isInstalled"
-                    class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full uppercase tracking-wider"
+                    class="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full uppercase tracking-wider"
                   >
                     Installée
                   </span>
                 </div>
-                <p class="text-xs text-gray-500">
+                <p class="text-xs text-gray-500 dark:text-gray-400">
                   {{ isInstalled ? 'Application déjà installée sur cet appareil' : "Installer l'application sur l'appareil" }}
                 </p>
               </div>
             </div>
             <div class="shrink-0">
-              <Check v-if="isInstalled" class="w-5 h-5 text-emerald-600" />
-              <ExternalLink v-else class="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+              <Check v-if="isInstalled" class="w-5 h-5 text-emerald-600 dark:text-[#34D399]" />
+              <ExternalLink v-else class="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-200 transition-colors" />
             </div>
           </button>
         </div>
@@ -174,45 +174,45 @@
 
       <!-- Section 3 : À PROPOS -->
       <div>
-        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5 px-1">
+        <h3 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2.5 px-1">
           À propos
         </h3>
-        <div class="bg-[#F8FAF9] rounded-3xl p-1.5 flex flex-col gap-1 border border-gray-100/80 shadow-xs">
+        <div class="bg-[#F8FAF9] dark:bg-[#15221E] rounded-3xl p-1.5 flex flex-col gap-1 border border-gray-100/80 dark:border-emerald-900/30 shadow-xs transition-colors duration-200">
           <!-- Politique de confidentialité -->
           <NuxtLink
             to="/confidentialite"
-            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
+            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white dark:hover:bg-[#1A2D25] transition-all text-left w-full cursor-pointer group"
           >
-            <span class="text-sm font-medium text-gray-800">Politique de confidentialité</span>
-            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors shrink-0" />
+            <span class="text-sm font-medium text-gray-800 dark:text-gray-200">Politique de confidentialité</span>
+            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors shrink-0" />
           </NuxtLink>
 
           <!-- Conditions Générales d'Utilisation -->
           <NuxtLink
             to="/cgu"
-            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
+            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white dark:hover:bg-[#1A2D25] transition-all text-left w-full cursor-pointer group"
           >
-            <span class="text-sm font-medium text-gray-800">Conditions Générales d'Utilisation</span>
-            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors shrink-0" />
+            <span class="text-sm font-medium text-gray-800 dark:text-gray-200">Conditions Générales d'Utilisation</span>
+            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors shrink-0" />
           </NuxtLink>
 
           <!-- Mentions légales -->
           <NuxtLink
             to="/mentions-legales"
-            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
+            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white dark:hover:bg-[#1A2D25] transition-all text-left w-full cursor-pointer group"
           >
-            <span class="text-sm font-medium text-gray-800">Mentions légales</span>
-            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors shrink-0" />
+            <span class="text-sm font-medium text-gray-800 dark:text-gray-200">Mentions légales</span>
+            <ChevronRight class="w-4 h-4 text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors shrink-0" />
           </NuxtLink>
 
           <!-- Aide -->
           <button
             type="button"
             @click="openHelp"
-            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white transition-all text-left w-full cursor-pointer group"
+            class="flex items-center justify-between p-3.5 rounded-2xl hover:bg-white dark:hover:bg-[#1A2D25] transition-all text-left w-full cursor-pointer group"
           >
-            <span class="text-sm font-medium text-gray-800">Aide</span>
-            <HelpCircle class="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors shrink-0" />
+            <span class="text-sm font-medium text-gray-800 dark:text-gray-200">Aide</span>
+            <HelpCircle class="w-4 h-4 text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors shrink-0" />
           </button>
         </div>
       </div>
@@ -221,14 +221,14 @@
       <button
         type="button"
         @click="handleLogout"
-        class="w-full bg-[#0F5238] hover:bg-[#0b3d2a] text-white font-semibold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#0F5238]/15 active:scale-[0.98] transition-all cursor-pointer mt-2"
+        class="w-full bg-[#0F5238] dark:bg-[#1D6045] hover:bg-[#0b3d2a] dark:hover:bg-[#154D36] text-white font-semibold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg shadow-[#0F5238]/15 active:scale-[0.98] transition-all cursor-pointer mt-2"
       >
         <LogOut class="w-4 h-4" />
         <span>Se déconnecter</span>
       </button>
 
       <!-- Version -->
-      <p class="text-center text-[11px] font-semibold text-gray-400 uppercase tracking-wider mt-1">
+      <p class="text-center text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mt-1">
         Version 1.0.0
       </p>
     </div>
@@ -263,6 +263,7 @@ import { useUserPreferences } from '~/composables/useUserPreferences';
 import { useUserProfile } from '~/composables/useUserProfile';
 import { usePwaInstall } from '~/composables/usePwaInstall';
 import { useGeoStore } from '~/stores/geo';
+import { useTheme } from '~/composables/useTheme';
 
 definePageMeta({
   middleware: 'auth',
@@ -274,11 +275,10 @@ const toast = useToast();
 const { loadPreferences } = useUserPreferences();
 const { isInstalled, installApp, checkInstallStatus } = usePwaInstall();
 const geoStore = useGeoStore();
+const { isDark, toggleTheme } = useTheme();
 
 const { profile, isLoading, loadProfile: loadUserProfile, setProfile } = useUserProfile();
 const isPreferencesPopupOpen = ref(false);
-
-const isDarkMode = ref(false);
 
 async function loadProfile() {
   await loadUserProfile(true);

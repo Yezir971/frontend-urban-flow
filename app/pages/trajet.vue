@@ -25,6 +25,7 @@ definePageMeta({
 const { preferences, speedCoefficient, loadPreferences } = useUserPreferences()
 const { loadProfile } = useUserProfile()
 const navStore = useNavigationStore()
+const route = useRoute()
 const sheetRef = ref<any>(null)
 const geo = useGeoStore()
 const toast = useToast()
@@ -233,7 +234,7 @@ const handleDeviationReroute = async (deviatedCoords: [number, number]) => {
 
     const filtered = filterProposalsByPreferences(rawProposals, preferences.value)
     if (filtered.length > 0) {
-      selectedProposal.value = filtered[0]
+      selectedProposal.value = filtered[0]!
       activeMapData.value = selectedProposal.value
       navStore.updateRoute(selectedProposal.value)
       toast.add({
@@ -412,13 +413,14 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- Bottom Sheet Mobile (visible sur mobile uniquement) -->
-    <div class="block md:hidden">
+    <div class="block md:hidden z-999">
       <BottomSheet
         :hideScrollbar="true"
         ref="sheetRef"
         :overlay="false"
         :canSwipeClose="false"
-        class="mobile-bottom-sheet"
+        :snapPoints="['50%','3%', '100%']"
+        :initialSnapPoint="1"
       >
         <template #header>
           <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-2"></div>

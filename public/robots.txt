@@ -1,2 +1,8 @@
-User-Agent: *
-Disallow:
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Disallow: /confirm
+Disallow: /profil
+
+# Sitemap location
+Sitemap: https://urban-flow-lyon.fr/sitemap.xml

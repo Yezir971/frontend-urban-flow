@@ -2,8 +2,15 @@
 import { ShieldCheck } from 'lucide-vue-next'
 
 definePageMeta({
-  title: 'Politique de Confidentialité - Urban Flow',
   layout: 'juridique',
+});
+
+useSeoMeta({
+  title: 'Politique de Confidentialité & RGPD',
+  ogTitle: 'Politique de Confidentialité & Données Personnelles · Urban Flow',
+  description: 'Consultez la politique de confidentialité d\'Urban Flow. Traitement local et temps réel de la géolocalisation, conformité RGPD et protection de vos données.',
+  ogDescription: 'Consultez la politique de confidentialité d\'Urban Flow. Traitement local et temps réel de la géolocalisation, conformité RGPD et protection de vos données.',
+  ogUrl: 'https://urban-flow-lyon.fr/confidentialite',
 });
 </script>
 

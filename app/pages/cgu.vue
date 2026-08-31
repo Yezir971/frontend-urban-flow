@@ -2,8 +2,15 @@
 import { FileText } from 'lucide-vue-next';
 
 definePageMeta({
-  title: 'Conditions Générales d\'Utilisation - Urban Flow',
   layout: 'juridique',
+});
+
+useSeoMeta({
+  title: 'Conditions Générales d\'Utilisation',
+  ogTitle: 'Conditions Générales d\'Utilisation (CGU) · Urban Flow',
+  description: 'Consultez les Conditions Générales d\'Utilisation de la plateforme d\'éco-mobilité Urban Flow à Lyon.',
+  ogDescription: 'Consultez les Conditions Générales d\'Utilisation de la plateforme d\'éco-mobilité Urban Flow à Lyon.',
+  ogUrl: 'https://urban-flow-lyon.fr/cgu',
 });
 </script>
 

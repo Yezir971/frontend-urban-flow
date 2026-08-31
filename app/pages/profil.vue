@@ -269,6 +269,12 @@ definePageMeta({
   middleware: 'auth',
 });
 
+useSeoMeta({
+  title: 'Mon Profil Éco-citoyen & Préférences',
+  description: 'Gérez vos préférences de mobilité, votre vitesse de marche et personnalisez vos modes de transport favoris à Lyon.',
+  robots: 'noindex, nofollow',
+});
+
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 const toast = useToast();

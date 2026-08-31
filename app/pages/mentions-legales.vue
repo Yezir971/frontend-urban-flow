@@ -150,4 +150,12 @@ const router = useRouter()
 definePageMeta({
   layout: 'juridique'
 })
+
+useSeoMeta({
+  title: 'Mentions Légales',
+  ogTitle: 'Mentions Légales · Urban Flow Lyon',
+  description: 'Mentions légales, éditeur, hébergeur OVHcloud France et propriété intellectuelle de l\'application Urban Flow.',
+  ogDescription: 'Mentions légales, éditeur, hébergeur OVHcloud France et propriété intellectuelle de l\'application Urban Flow.',
+  ogUrl: 'https://urban-flow-lyon.fr/mentions-legales',
+});
 </script>

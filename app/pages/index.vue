@@ -39,6 +39,14 @@ definePageMeta({
   middleware: 'auth',
 });
 
+useSeoMeta({
+  title: "Accueil & Éco-Statistiques CO₂",
+  ogTitle: "Urban Flow Lyon — Accueil & Suivi CO₂",
+  description: "Suivez vos économies de CO₂ en temps réel, consultez votre historique de trajets et accédez à vos destinations favorites sur la Métropole de Lyon.",
+  ogDescription: "Suivez vos économies de CO₂ en temps réel, consultez votre historique de trajets et accédez à vos destinations favorites sur la Métropole de Lyon.",
+  ogUrl: "https://urban-flow-lyon.fr/",
+});
+
 const { profile, isLoading, loadProfile } = useUserProfile();
 
 onMounted(() => {

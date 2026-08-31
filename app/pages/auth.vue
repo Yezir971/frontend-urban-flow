@@ -117,6 +117,14 @@ definePageMeta({
   middleware: 'guest',
 });
 
+useSeoMeta({
+  title: 'Connexion & Inscription',
+  ogTitle: 'Connexion & Inscription · Urban Flow Lyon',
+  description: 'Créez votre compte Urban Flow ou connectez-vous pour retrouver vos favoris, suivre vos points éco-citoyens et vos économies de CO₂.',
+  ogDescription: 'Créez votre compte Urban Flow ou connectez-vous pour retrouver vos favoris, suivre vos points éco-citoyens et vos économies de CO₂.',
+  ogUrl: 'https://urban-flow-lyon.fr/auth',
+});
+
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 const toast = useToast();

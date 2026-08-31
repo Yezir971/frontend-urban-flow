@@ -22,6 +22,14 @@ definePageMeta({
   layout: 'map'
 })
 
+useSeoMeta({
+  title: 'Calculateur d\'Itinéraires & Guidage Multimodal',
+  ogTitle: 'Calculateur d\'Itinéraires Multimodaux à Lyon · Urban Flow',
+  description: 'Planifiez vos déplacements à Lyon : métro, tramway, bus TCL, vélo et marche. Guidage en direct avec alertes déviations et mesure de CO₂.',
+  ogDescription: 'Planifiez vos déplacements à Lyon : métro, tramway, bus TCL, vélo et marche. Guidage en direct avec alertes déviations et mesure de CO₂.',
+  ogUrl: 'https://urban-flow-lyon.fr/trajet',
+})
+
 const { preferences, speedCoefficient, loadPreferences } = useUserPreferences()
 const { loadProfile } = useUserProfile()
 const navStore = useNavigationStore()

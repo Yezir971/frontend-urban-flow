@@ -43,38 +43,38 @@
 ## 📸 Galerie d'Écrans & Démonstrations
 
 ### 1. Page d'Accueil & Graphique Hebdomadaire CO₂
-```markdown
-![Page d'accueil Urban Flow](./docs/screens/home-dashboard.png)
 
-![Suite page d'accueil Urban Flow](./docs/screens/home-dashboard-2.png)
-```
+![Page d'accueil Urban Flow](docs/screens/home-dashboard.png)
+
+![Suite page d'accueil Urban Flow](docs/screens/home-dashboard-2.png)
+
 
 ---
 
 ### 2. Mode Nuit & Adaptation Dynamique des Cartes Leaflet
-```markdown
-![Mode Sombre et Carte Leaflet](./docs/screens/dark-mode-map.png)
-```
+
+![Mode Sombre et Carte Leaflet](docs/screens/dark-mode-map.png)
+
 
 ---
 
 ### 3. Recherche d'Itinéraire & Autocomplétion Photon Lyon
-```markdown
-![Recherche d'adresses Photon](./docs/screens/search-autocomplete.png)
-```
+
+![Recherche d'adresses Photon](docs/screens/search-autocomplete.png)
+
 
 ---
 
 ### 4. Guidage en Direct & Alerte de Déviation (Turn-by-Turn)
-```markdown
-![Guidage Turn-by-Turn et Déviation](./docs/screens/navigation-banner.png)
-```
+
+![Guidage Turn-by-Turn et Déviation](docs/screens/navigation-banner.png)
+
 ---
 
 ### 5. Profil Éco-Citoyen & Préférences de Mobilité
-```markdown
-![Profil et Préférences](./docs/screens/profile-preferences.png)
-```
+
+![Profil et Préférences](docs/screens/profile-preferences.png)
+
 
 
 ---

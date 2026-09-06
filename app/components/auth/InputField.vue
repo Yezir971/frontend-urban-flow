@@ -41,11 +41,13 @@ const inputType = computed(() => {
   }
   return props.type;
 });
+
+const inputId = computed(() => `input-${props.label.toLowerCase().replace(/[^a-z0-9]/g, '-')}`);
 </script>
 
 <template>
   <div class="flex flex-col gap-1.5">
-    <label class="text-xs font-semibold text-gray-600 uppercase tracking-wide">{{ label }}</label>
+    <label :for="inputId" class="text-xs font-semibold text-gray-600 uppercase tracking-wide">{{ label }}</label>
     <div class="relative flex items-center bg-[#F3F4F6] rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#0F5238] focus-within:bg-white transition-all duration-200">
       
       <!-- Input Icons -->
@@ -54,6 +56,7 @@ const inputType = computed(() => {
       <Lock v-else-if="icon === 'lock'" class="absolute left-4 text-gray-400 w-5 h-5 shrink-0" />
 
       <input 
+        :id="inputId"
         :value="modelValue"
         @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
         :type="inputType" 

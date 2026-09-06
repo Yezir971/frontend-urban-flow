@@ -69,10 +69,11 @@
 
             <!-- 3. Nom du favori -->
             <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-bold text-gray-700 dark:text-gray-300">
+              <label for="favorite-name-input" class="text-xs font-bold text-gray-700 dark:text-gray-300">
                 Nom du favori <span class="text-red-500">*</span>
               </label>
               <input
+                id="favorite-name-input"
                 v-model="favoriteName"
                 type="text"
                 required

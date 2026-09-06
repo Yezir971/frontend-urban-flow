@@ -60,7 +60,7 @@
           <div class="py-6 flex flex-col gap-6">
             <!-- Zone photo avec preview et sélecteur de fichier -->
             <div class="flex flex-col items-center gap-3">
-              <label class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Photo de profil</label>
+              <label for="profile-avatar-file-input" class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Photo de profil</label>
               
               <div
                 class="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200 dark:border-emerald-900/60 cursor-pointer group bg-[#E1F6EB] dark:bg-[#162D24] flex items-center justify-center shadow-inner"
@@ -85,10 +85,12 @@
 
               <!-- Input file masqué -->
               <input
+                id="profile-avatar-file-input"
                 ref="fileInputRef"
                 type="file"
                 accept="image/png, image/jpeg, image/webp, image/jpg"
                 class="hidden"
+                aria-label="Téléverser une photo de profil"
                 @change="handleFileSelected"
               />
 
@@ -108,10 +110,11 @@
 
             <!-- Champ Nom Complet -->
             <div class="flex flex-col gap-1.5">
-              <label class="text-xs font-semibold text-gray-600 dark:text-gray-300">Nom complet</label>
+              <label for="edit-profile-username-input" class="text-xs font-semibold text-gray-600 dark:text-gray-300">Nom complet</label>
               <div class="relative flex items-center">
                 <UIcon name="i-lucide-user" class="absolute left-3.5 w-4 h-4 text-gray-400" />
                 <input
+                  id="edit-profile-username-input"
                   v-model="editUsername"
                   type="text"
                   placeholder="Ex: Alexandre Dupont"

@@ -174,6 +174,7 @@ const selectLocation = async (feature: ResponseFeaturePhoton, isCurrentPosition:
         @blur="handleBlur"
         type="text"
         :placeholder="placeholder"
+        :aria-label="placeholder || 'Rechercher une adresse'"
         autocomplete="off"
         class="w-full bg-transparent py-1.5 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border-none outline-none focus:outline-none pr-6"
       />
